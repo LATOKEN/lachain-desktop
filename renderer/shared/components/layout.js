@@ -1,14 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import {useRouter} from 'next/router'
 import {useTranslation} from 'react-i18next'
 import Sidebar from './sidebar'
 import Notifications from './notifications'
 import SyncingApp, {OfflineApp, LoadingApp} from './syncing-app'
 import {GlobalModals} from './modal'
 import {useDebounce} from '../hooks/use-debounce'
-import {EpochPeriod, useEpochState} from '../providers/epoch-context'
-import {useIdentityState} from '../providers/identity-context'
 import {addWheelHandler} from '../utils/mouse'
 import {loadPersistentStateValue, persistItem} from '../utils/persist'
 import {DnaSignInDialog, DnaSendDialog, DnaLinkHandler} from './dna-link'
@@ -83,11 +80,6 @@ Layout.propTypes = {
 }
 
 function NormalApp(props) {
-  const router = useRouter()
-
-  const epoch = useEpochState()
-  const identity = useIdentityState()
-
   const {t} = useTranslation()
 
   const {addNotification, addError} = useNotificationDispatch()
@@ -118,12 +110,4 @@ function NormalApp(props) {
       </DnaLinkHandler>
     </section>
   )
-}
-
-function showWindowNotification(title, notificationBody, onclick) {
-  const notification = new window.Notification(title, {
-    body: notificationBody,
-  })
-  notification.onclick = onclick
-  return true
 }

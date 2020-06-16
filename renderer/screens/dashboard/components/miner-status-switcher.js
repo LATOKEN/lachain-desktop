@@ -20,6 +20,7 @@ import {
   AccountStatus,
   useIdentityState,
 } from '../../../shared/providers/identity-context'
+import {useNotificationDispatch} from '../../../shared/providers/notification-context'
 
 const defaultState = {
   online: null,
@@ -100,9 +101,9 @@ function miningReducer(
 
 function MinerStatusSwitcher() {
   const identity = useIdentityState()
+  const {t} = useTranslation()
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{}, callRpc] = useRpc()
+  const [{result, error, isReady}, callRpc] = useRpc()
 
   const [state, dispatch] = useReducer(miningReducer, defaultState)
 
@@ -126,9 +127,31 @@ function MinerStatusSwitcher() {
     dispatch([identity.isWalletLocked ? 'walletLocked' : 'walletUnlocked'])
   }, [identity.isWalletLocked])
 
-  const {t} = useTranslation()
+  const {addError, addNotification} = useNotificationDispatch()
 
-  const [password, setPassword] = React.useState()
+  useEffect(() => {
+    if (error) {
+      addError({
+        title: t('error:Error while unlocking wallet'),
+        body: error.toString(),
+      })
+      return
+    }
+    if (!isReady) return
+    if (result === '0x1') {
+      addNotification({
+        title: t('Wallet unlocked'),
+        body: t('Unlock period is 30 seconds'),
+      })
+    } else {
+      addError({
+        title: t('error:Error while unlocking wallet'),
+        body: t('Incorrect password'),
+      })
+    }
+  }, [result, error, isReady, addError, t, addNotification])
+
+  const [walletPassword, setWalletPassword] = React.useState()
 
   if (!identity.canMine) {
     return null
@@ -234,19 +257,19 @@ function MinerStatusSwitcher() {
               {t(`Unlock wallet for 30 sec to make changes.`)}
               <br />
               <br />
-              {t('You can lock wallet at any time.')}
+              {t('You still need apikey to access private functionality.')}
               <br />
               <br />
               {t('Password')}
               <Input
-                value={password}
+                value={walletPassword}
                 type="password"
                 style={{
                   ...margin(0, theme.spacings.normal, 0, 0),
                   width: rem(300),
                 }}
                 disabled={!state.showModal}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => setWalletPassword(e.target.value)}
               />
             </span>
           </Text>
@@ -257,7 +280,7 @@ function MinerStatusSwitcher() {
               variant="secondary"
               onClick={() => {
                 dispatch(['close'])
-                setPassword('')
+                setWalletPassword('')
               }}
             >
               {t('Cancel')}
@@ -267,8 +290,8 @@ function MinerStatusSwitcher() {
             <Button
               onClick={() => {
                 dispatch(['submitted'])
-                callRpc('fe_unlock', password, 30)
-                setPassword('')
+                callRpc('fe_unlock', walletPassword, 30)
+                setWalletPassword('')
               }}
               disabled={state.isProcessing}
             >

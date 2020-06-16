@@ -87,6 +87,7 @@ export default function useRpc(initialMethod, ...initialParams) {
     }
 
     if (rpcBody.method) {
+      dataDispatch({type: 'start'})
       fetchData()
     }
 

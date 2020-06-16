@@ -31,16 +31,18 @@ import {useChainState} from '../../shared/providers/chain-context'
 import {FlatButton} from '../../shared/components/button'
 import useRpc from '../../shared/hooks/use-rpc'
 import {useIdentityState} from '../../shared/providers/identity-context'
+import {useNotificationDispatch} from '../../shared/providers/notification-context'
 
 export default function Index() {
   const {t} = useTranslation()
   const {wallets, totalAmount, txs, status} = useWallets()
+  const {addError, addNotification} = useNotificationDispatch()
 
   const [isReceiveFormOpen, setIsReceiveFormOpen] = React.useState(false)
   const [isTransferFormOpen, setIsTransferFormOpen] = React.useState(false)
   const [showModal, setShowModal] = React.useState(false)
   const [isWalletLocked, setIsWalletLocked] = React.useState(false)
-  const [password, setPassword] = React.useState(false)
+  const [walletPassword, setWalletPassword] = React.useState()
   const [isWithdrawStakeFormOpen, setIsWithdrawStakeFormOpen] = React.useState(
     false
   )
@@ -52,8 +54,7 @@ export default function Index() {
   const {syncing, offline} = useChainState()
   const {isWalletLocked: walletState} = useIdentityState()
 
-  // eslint-disable-next-line no-empty-pattern
-  const [{}, callRpc] = useRpc()
+  const [{result, error, isReady}, callRpc] = useRpc()
 
   useEffect(() => {
     if (!activeWallet && wallets && wallets.length > 0) {
@@ -64,6 +65,28 @@ export default function Index() {
   useEffect(() => {
     setIsWalletLocked(walletState)
   }, [walletState])
+
+  useEffect(() => {
+    if (error) {
+      addError({
+        title: t('error:Error while unlocking wallet'),
+        body: error.toString(),
+      })
+      return
+    }
+    if (!isReady) return
+    if (result === '0x1') {
+      addNotification({
+        title: t('Wallet unlocked'),
+        body: t('Unlock period is 30 seconds'),
+      })
+    } else {
+      addError({
+        title: t('error:Error while unlocking wallet'),
+        body: t('Incorrect password'),
+      })
+    }
+  }, [result, error, isReady])
 
   return (
     <Layout syncing={syncing} offline={offline}>
@@ -184,7 +207,13 @@ export default function Index() {
           />
         </Drawer>
 
-        <Modal show={showModal} onHide={() => setShowModal(false)}>
+        <Modal
+          show={showModal}
+          onHide={() => {
+            setShowModal(false)
+            setWalletPassword('')
+          }}
+        >
           <Box m="0 0 18px">
             <SubHeading>{t('Unlock wallet')}</SubHeading>
             <Text>
@@ -192,18 +221,18 @@ export default function Index() {
                 {t(`Unlock wallet for 30 sec to make changes.`)}
                 <br />
                 <br />
-                {t('You can lock wallet at any time.')}
+                {t('You still need apikey to access private functionality.')}
                 <br />
                 <br />
                 {t('Password')}
                 <Input
-                  value={password}
+                  value={walletPassword}
                   type="password"
                   style={{
                     ...margin(0, theme.spacings.normal, 0, 0),
                     width: rem(300),
                   }}
-                  onChange={e => setPassword(e.target.value)}
+                  onChange={e => setWalletPassword(e.target.value)}
                 />
               </span>
             </Text>
@@ -214,7 +243,7 @@ export default function Index() {
                 variant="secondary"
                 onClick={() => {
                   setShowModal(false)
-                  setPassword('')
+                  setWalletPassword('')
                 }}
               >
                 {t('Cancel')}
@@ -224,8 +253,8 @@ export default function Index() {
               <Button
                 onClick={() => {
                   setShowModal(false)
-                  callRpc('fe_unlock', password, 30)
-                  setPassword('')
+                  callRpc('fe_unlock', walletPassword, 30)
+                  setWalletPassword('')
                 }}
               >
                 {t('Submit')}

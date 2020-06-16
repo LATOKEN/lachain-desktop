@@ -103,10 +103,16 @@ function TransferForm({onSuccess, onFail}) {
                     title: t('error:Error while sending transaction'),
                     body: error.message,
                   })
-                } else {
+                } else if (result !== '0x0') {
                   addNotification({
                     title: t('translation:Transaction sent'),
                     body: result,
+                  })
+                  if (onSuccess) onSuccess(result)
+                } else {
+                  addError({
+                    title: t('error:Error while sending transaction'),
+                    body: 'Wallet locked',
                   })
                   if (onSuccess) onSuccess(result)
                 }
