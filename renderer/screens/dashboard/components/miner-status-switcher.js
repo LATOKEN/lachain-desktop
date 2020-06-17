@@ -70,7 +70,6 @@ function miningReducer(
         isProcessing: false,
       }
     case 'toggle':
-      console.log('TOGGLE')
       return {
         ...state,
         isProcessing: true,
@@ -88,7 +87,6 @@ function miningReducer(
         showModal: false,
       }
     case 'error':
-      console.log('error')
       return {
         ...state,
         showModal: false,
@@ -130,11 +128,13 @@ function MinerStatusSwitcher() {
   const {addError, addNotification} = useNotificationDispatch()
 
   useEffect(() => {
+    console.log({result, error, isReady})
     if (error) {
       addError({
-        title: t('error:Error while unlocking wallet'),
-        body: error.toString(),
+        title: t('error:Error occured'),
+        body: error.message.toString(),
       })
+      dispatch(['error'])
       return
     }
     if (!isReady) return
@@ -149,7 +149,7 @@ function MinerStatusSwitcher() {
         body: t('Incorrect password'),
       })
     }
-  }, [result, error, isReady, addError, t, addNotification])
+  }, [result, error, isReady])
 
   const [walletPassword, setWalletPassword] = React.useState()
 
@@ -197,7 +197,10 @@ function MinerStatusSwitcher() {
       </FormGroup>
       <Modal
         show={state.showModal && !state.isWalletLocked}
-        onHide={() => dispatch(['close'])}
+        onHide={() => {
+          dispatch(['close'])
+          setWalletPassword('')
+        }}
       >
         <Box m="0 0 18px">
           <SubHeading>
@@ -248,7 +251,10 @@ function MinerStatusSwitcher() {
       </Modal>
       <Modal
         show={state.showModal && state.isWalletLocked}
-        onHide={() => dispatch(['close'])}
+        onHide={() => {
+          dispatch(['close'])
+          setWalletPassword('')
+        }}
       >
         <Box m="0 0 18px">
           <SubHeading>{t('Unlock wallet')}</SubHeading>
