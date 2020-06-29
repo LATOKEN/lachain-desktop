@@ -9,25 +9,22 @@ const kill = require('tree-kill')
 const lineReader = require('reverse-line-reader')
 // eslint-disable-next-line import/no-extraneous-dependencies
 const appDataPath = require('./app-data-path')
+const {sleep} = require('./utils')
 
-const nodeBin = 'node-go'
+const nodeBin = 'node'
 const nodeNodeReleasesUrl =
-  'https://api.github.com/repos/node-network/node-go/releases/latest'
+  'https://api.github.com/repos/LAToken/lachain/releases/latest'
 const nodeChainDbFolder = 'nodechain.db'
 
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
 const getNodeDir = () => path.join(appDataPath('userData'), 'node')
 
-const getNodeDataDir = () => path.join(getNodeDir(), 'datadir')
+const getNodeDataDir = () => path.join(getNodeDir(), 'ChainLachain')
 
-// const getNodeFile = () => path.join(getNodeDir(), nodeBin + getBinarySuffix())
-const getNodeFile = () =>
-  '~/Projects/latoken/lachain/blockchain/dist/linux-x64/Lachain-x86_64.AppImage'
+const getNodeFile = () => path.join(getNodeDir(), nodeBin + getBinarySuffix())
 
-// const getNodeConfigFile = () => path.join(getNodeDir(), 'config.json')
-const getNodeConfigFile = () =>
-  '~/Projects/latoken/lachain/blockchain/src/Lachain.Console/config.json'
+const getNodeConfigFile = () => path.join(getNodeDir(), 'config.json')
 
 const getTempNodeFile = () =>
   path.join(getNodeDir(), `new-${nodeBin}${getBinarySuffix()}`)
@@ -35,21 +32,19 @@ const getTempNodeFile = () =>
 const getNodeChainDbFolder = () =>
   path.join(getNodeDataDir(), nodeChainDbFolder)
 
-// const getNodeLogsFile = () => path.join(getNodeDataDir(), 'logs', 'output.log')
-const getNodeLogsFile = () => path.join(appDataPath('logs'), 'node-output.log')
+const getNodeLogsFile = () => path.join(getNodeDir(), 'logs', 'output.log')
 
-// const getNodeErrorFile = () => path.join(getNodeDataDir(), 'logs', 'error.log')
-const getNodeErrorFile = () => path.join(appDataPath('logs'), 'node-error.log')
+const getNodeErrorFile = () => path.join(getNodeDir(), 'logs', 'error.log')
 
 const getReleaseUrl = async () => {
   const {data} = await axios.get(nodeNodeReleasesUrl)
-  let assetName = 'node-node-linux'
+  let assetName = 'lachain-linux-x64'
   switch (process.platform) {
     case 'win32':
-      assetName = 'node-node-win'
+      assetName = 'lachain-win-x64'
       break
     case 'darwin':
-      assetName = 'node-node-mac'
+      assetName = 'lachain-osx-x64'
       break
     default:
   }
@@ -120,7 +115,6 @@ function writeError(err) {
 async function startNode(
   port,
   tcpPort,
-  ipfsPort,
   apiKey,
   useLogging = true,
   onLog,
@@ -133,8 +127,6 @@ async function startNode(
     port,
     '--port',
     tcpPort,
-    '--ipfsport',
-    ipfsPort,
   ]
   // const version = await getCurrentVersion(false)
   paramters.push('--apikey')
@@ -144,7 +136,9 @@ async function startNode(
     paramters.push('--config')
     paramters.push(configFile)
   }
-  const nodeProcess = spawn(getNodeFile(), paramters)
+  const nodeProcess = spawn(getNodeFile(), paramters, {
+    cwd: getNodeDir(),
+  })
   console.log('node starting...')
 
   nodeProcess.stdout.on('data', data => {
@@ -177,7 +171,7 @@ async function startNode(
 }
 
 async function stopNode(node) {
-  console.log('RECEIVED: node stopping: ', node.pid)
+  console.log('RECEIVED: node stopping: ', node && node.pid)
   return new Promise(async (resolve, reject) => {
     try {
       if (!node) {
@@ -211,7 +205,9 @@ function getCurrentVersion(tempNode) {
     const node = tempNode ? getTempNodeFile() : getNodeFile()
 
     try {
-      const nodeVersion = spawn(node, ['--version'])
+      const nodeVersion = spawn(node, ['--version'], {
+        cwd: getNodeDir(),
+      })
       nodeVersion.stdout.on('data', data => {
         const {version} = semver.coerce(data.toString())
         return semver.valid(version)
@@ -246,36 +242,35 @@ function getCurrentVersion(tempNode) {
 
 function updateNode() {
   return new Promise(async (resolve, reject) => {
-    // try {
-    //   const currentNode = getNodeFile()
-    //   const tempNode = getTempNodeFile()
-    //   let num = 5
-    //   let done = false
-    //   while (num > 0) {
-    //     try {
-    //       if (fs.existsSync(currentNode)) {
-    //         fs.unlinkSync(currentNode)
-    //       }
-    //       done = true
-    //     } catch (e) {
-    //       await sleep(1000)
-    //     } finally {
-    //       num -= 1
-    //     }
-    //   }
-    //   if (!done) {
-    //     return reject(new Error('cannot remove old node-go file'))
-    //   }
-    //
-    //   fs.renameSync(tempNode, currentNode)
-    //   if (process.platform !== 'win32') {
-    //     fs.chmodSync(currentNode, '755')
-    //   }
-    //   return resolve()
-    // } catch (e) {
-    //   return reject(e)
-    // }
-    resolve()
+    try {
+      const currentNode = getNodeFile()
+      const tempNode = getTempNodeFile()
+      let num = 5
+      let done = false
+      while (num > 0) {
+        try {
+          if (fs.existsSync(currentNode)) {
+            fs.unlinkSync(currentNode)
+          }
+          done = true
+        } catch (e) {
+          await sleep(1000)
+        } finally {
+          num -= 1
+        }
+      }
+      if (!done) {
+        return reject(new Error('cannot remove old node executable file'))
+      }
+
+      fs.renameSync(tempNode, currentNode)
+      if (process.platform !== 'win32') {
+        fs.chmodSync(currentNode, '755')
+      }
+      return resolve()
+    } catch (e) {
+      return reject(e)
+    }
   })
 }
 

@@ -404,7 +404,6 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
       startNode(
         data.rpcPort,
         data.tcpPort,
-        data.ipfsPort,
         data.apiKey,
         isDev,
         log => {

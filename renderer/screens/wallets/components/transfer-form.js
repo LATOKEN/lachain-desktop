@@ -112,7 +112,7 @@ function TransferForm({onSuccess, onFail}) {
                 } else {
                   addError({
                     title: t('error:Error while sending transaction'),
-                    body: 'Wallet locked',
+                    body: 'Something went wrong',
                   })
                   if (onSuccess) onSuccess(result)
                 }

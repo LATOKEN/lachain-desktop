@@ -111,7 +111,6 @@ function NodeProvider({children}) {
       global.ipcRenderer.send(NODE_COMMAND, 'start-local-node', {
         rpcPort: settings.internalPort,
         tcpPort: settings.tcpPort,
-        ipfsPort: settings.ipfsPort,
         apiKey: settings.internalApiKey,
       })
     }
@@ -121,7 +120,6 @@ function NodeProvider({children}) {
     state.nodeStarted,
     settings.runInternalNode,
     settings.tcpPort,
-    settings.ipfsPort,
     state.nodeFailed,
     settings.internalApiKey,
   ])
