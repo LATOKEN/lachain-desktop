@@ -35,10 +35,7 @@ function Settings() {
   const {runInternalNode, useExternalNode} = useSettingsState()
   return (
     <SettingsLayout>
-      {global.isDev && (
-        <>
-        </>
-      )}
+      {global.isDev && <></>}
       <ExportPK />
       {runInternalNode && !useExternalNode && <ImportPK />}
       <LocaleSwitcher />
