@@ -500,9 +500,13 @@ autoUpdater.on('update-downloaded', info => {
 
 ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
   logger.info(`new autoupdate command`, command, data)
+  console.log('AUTO_UPDATE_COMMAND', command, data)
   switch (command) {
     case 'start-checking': {
-      // nodeUpdater.checkForUpdates(data.nodeCurrentVersion, data.isInternalNode)
+      await nodeUpdater.checkForUpdates(
+        data.nodeCurrentVersion,
+        data.isInternalNode
+      )
       break
     }
     case 'update-ui': {
@@ -516,6 +520,7 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
           await updateNode()
           sendMainWindowMsg(NODE_EVENT, 'node-ready')
           sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated')
+          console.log('node updated')
         })
         .catch(e => {
           sendMainWindowMsg(NODE_EVENT, 'node-failed')

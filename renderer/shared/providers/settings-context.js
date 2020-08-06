@@ -129,6 +129,7 @@ function SettingsProvider({children}) {
       global.appVersion &&
       semver.lt(state.uiVersion, global.appVersion)
     ) {
+      console.log('useEffect semver')
       dispatch({type: UPDATE_UI_VERSION, data: global.appVersion})
     }
   })

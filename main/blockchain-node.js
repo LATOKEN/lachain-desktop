@@ -55,6 +55,7 @@ const getReleaseUrl = async () => {
 }
 
 const getRemoteVersion = async () => {
+  console.log('getRemoteVersion')
   try {
     const {
       data: {tag_name: tag},
@@ -243,8 +244,11 @@ function getCurrentVersion(tempNode) {
 function updateNode() {
   return new Promise(async (resolve, reject) => {
     try {
+      console.log('updating node file')
       const currentNode = getNodeFile()
       const tempNode = getTempNodeFile()
+
+      console.log({currentNode, tempNode})
       let num = 5
       let done = false
       while (num > 0) {

@@ -41,6 +41,7 @@ class NodeUpdater extends events.EventEmitter {
       }
 
       this.logger.info('got remote version', remoteVersion)
+      console.log('got remote version', remoteVersion)
 
       if (semver.lt(this.currentVersion, remoteVersion)) {
         this.logger.info('update available')

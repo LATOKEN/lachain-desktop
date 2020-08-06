@@ -138,18 +138,46 @@ function MinerStatusSwitcher() {
       return
     }
     if (!isReady) return
-    if (result === '0x1') {
-      addNotification({
-        title: t('Wallet unlocked'),
-        body: t('Unlock period is 30 seconds'),
-      })
-    } else {
-      addError({
-        title: t('error:Error while unlocking wallet'),
-        body: t('Incorrect password'),
-      })
+
+    switch (result) {
+      case 'wallet_locked':
+        addNotification({
+          title: t('Wallet locked'),
+          body: t('You need to unlock wallet first'),
+        })
+        break
+      case 'unlocked':
+        addNotification({
+          title: t('Wallet unlocked'),
+          body: t('Unlocked for 30 seconds'),
+        })
+        break
+      case 'incorrect_password':
+        addError({
+          title: t('Incorrect password'),
+          body: t('Invalid password provided'),
+        })
+        break
+      case 'validator_stopped':
+        addNotification({
+          title: t('Stopping validator command successfully submitted'),
+          body: t('You can track the progress at account page'),
+        })
+        break
+      case 'validator_started':
+        addNotification({
+          title: t('Starting validator command successfully submitted'),
+          body: t('You can track the progress at account page'),
+        })
+        break
+      default:
+        addError({
+          title: t('Unknown result'),
+          body: t(result),
+        })
+        break
     }
-  }, [result, error, isReady])
+  }, [result, error, isReady, addError, t, addNotification])
 
   const [walletPassword, setWalletPassword] = React.useState()
 

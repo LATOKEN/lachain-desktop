@@ -75,18 +75,27 @@ export default function Index() {
       return
     }
     if (!isReady) return
-    if (result === '0x1') {
-      addNotification({
-        title: t('Wallet unlocked'),
-        body: t('Unlock period is 30 seconds'),
-      })
-    } else {
-      addError({
-        title: t('error:Error while unlocking wallet'),
-        body: t('Incorrect password'),
-      })
+
+    switch (result) {
+      case 'unlocked':
+        addNotification({
+          title: t('Wallet unlocked'),
+          body: t('Unlock period is 30 seconds'),
+        })
+        break
+      case 'incorrect_password':
+        addError({
+          title: t('Incorrect password'),
+          body: t('Invalid password provided'),
+        })
+        break
+      default:
+        addError({
+          title: t('Unknown result'),
+          body: t(result),
+        })
     }
-  }, [result, error, isReady])
+  }, [result, error, isReady, addError, t, addNotification])
 
   return (
     <Layout syncing={syncing} offline={offline}>
@@ -165,7 +174,7 @@ export default function Index() {
                 color={theme.colors.primary}
                 onClick={() => {
                   global.openExternal(
-                    `http://payments.nekotal.tech:8484/account/${activeWallet.address}`
+                    `https://lachain-blockscout.dev3.nekotal.tech/address/${activeWallet.address}`
                   )
                 }}
                 style={{
