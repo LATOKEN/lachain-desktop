@@ -49,7 +49,8 @@
     },
     "linux": {
       "target": [
-        "deb"
+        "deb",
+        "AppImage"
       ],
       "publish": [
         "github"
