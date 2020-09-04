@@ -335,11 +335,10 @@ function checkConfigs() {
     const key = keccak('12345')
     const wallet = {
       ecdsaPrivateKey: crypto.randomBytes(32).toString('hex'),
+      tpkeKeys: {},
+      thresholdSignatureKeys: {},
     }
-    const encryptedWallet = encrypt(
-      Buffer.from(JSON.stringify(wallet), 'hex'),
-      key
-    )
+    const encryptedWallet = encrypt(JSON.stringify(wallet), key)
     fs.writeFileSync(getNodeWalletFile(), encryptedWallet)
   }
 }
