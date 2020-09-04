@@ -7,9 +7,12 @@ const progress = require('progress-stream')
 const semver = require('semver')
 const kill = require('tree-kill')
 const lineReader = require('reverse-line-reader')
+const crypto = require('crypto')
+const keccak = require('keccak256')
 // eslint-disable-next-line import/no-extraneous-dependencies
 const appDataPath = require('./app-data-path')
 const {sleep} = require('./utils')
+const {defaultConfig} = require('./default-config')
 
 const nodeBin = 'node'
 const nodeNodeReleasesUrl =
@@ -25,6 +28,8 @@ const getNodeDataDir = () => path.join(getNodeDir(), 'ChainLachain')
 const getNodeFile = () => path.join(getNodeDir(), nodeBin + getBinarySuffix())
 
 const getNodeConfigFile = () => path.join(getNodeDir(), 'config.json')
+
+const getNodeWalletFile = () => path.join(getNodeDir(), 'wallet.json')
 
 const getTempNodeFile = () =>
   path.join(getNodeDir(), `new-${nodeBin}${getBinarySuffix()}`)
@@ -308,7 +313,39 @@ function getLastLogs() {
   })
 }
 
+function encrypt(plaintext, secret) {
+  const nonce = crypto.randomBytes(12)
+  const cipher = crypto.createCipheriv('aes-256-gcm', secret, nonce)
+  const ciphertext = Buffer.concat([
+    cipher.update(plaintext, 'utf8'),
+    cipher.final(),
+  ])
+  const tag = cipher.getAuthTag()
+  return Buffer.concat([tag, nonce, ciphertext])
+}
+
+function checkConfigs() {
+  if (!fs.existsSync(getNodeConfigFile())) {
+    console.info('no config.json file found, creating default config.json')
+    fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfig))
+  }
+  if (!fs.existsSync(getNodeWalletFile())) {
+    console.log('no wallet.json file found, generating default wallet.json')
+    // TODO: prompt password
+    const key = keccak('12345')
+    const wallet = {
+      ecdsaPrivateKey: crypto.randomBytes(32).toString('hex'),
+    }
+    const encryptedWallet = encrypt(
+      Buffer.from(JSON.stringify(wallet), 'hex'),
+      key
+    )
+    fs.writeFileSync(getNodeWalletFile(), encryptedWallet)
+  }
+}
+
 module.exports = {
+  checkConfigs,
   downloadNode,
   getCurrentVersion,
   getRemoteVersion,

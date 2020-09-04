@@ -55,6 +55,7 @@ const {
   getCurrentVersion,
   cleanNodeState,
   getLastLogs,
+  checkConfigs,
 } = require('./blockchain-node')
 
 const NodeUpdater = require('./node-updater')
@@ -401,6 +402,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
     }
     case 'start-local-node': {
       console.log('RECEIVED: start-local-node')
+      checkConfigs()
       startNode(
         data.rpcPort,
         data.tcpPort,
