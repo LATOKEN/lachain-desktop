@@ -71,6 +71,32 @@ const getRemoteVersion = async () => {
   }
 }
 
+async function purgeNode() {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log('PURGING NODE IN FUCKING FIRE')
+      if (fs.existsSync(getNodeChainDbFolder())) {
+        fs.removeSync(getNodeChainDbFolder())
+      }
+      if (fs.existsSync(getNodeFile())) {
+        fs.removeSync(getNodeFile())
+      }
+      if (fs.existsSync(getTempNodeFile())) {
+        fs.removeSync(getTempNodeFile())
+      }
+      if (fs.existsSync(getNodeLogsFile())) {
+        fs.removeSync(getNodeLogsFile())
+      }
+      if (fs.existsSync(getNodeErrorFile())) {
+        fs.removeSync(getNodeErrorFile())
+      }
+      resolve()
+    } catch (e) {
+      reject(e)
+    }
+  })
+}
+
 async function downloadNode(onProgress) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -214,22 +240,18 @@ function getCurrentVersion(tempNode) {
       const nodeVersion = spawn(node, ['--version'], {
         cwd: getNodeDir(),
       })
-      nodeVersion.stdout.on('data', data => {
-        const {version} = semver.coerce(data.toString())
+      nodeVersion.stderr.on('data', data => {
+        const {version} = semver.coerce(
+          data.toString().match(/\d+\.\d+\.\d+/g)[0]
+        )
         return semver.valid(version)
           ? resolve(version)
           : reject(
               new Error(
-                `cannot resolve node version, stdout: ${data.toString()}`
+                `cannot resolve node version, stderr: ${data.toString()}`
               )
             )
       })
-
-      nodeVersion.stderr.on('data', data =>
-        reject(
-          new Error(`cannot resolve node version, stderr: ${data.toString()}`)
-        )
-      )
 
       nodeVersion.on('exit', code => {
         if (code) {
@@ -354,4 +376,5 @@ module.exports = {
   nodeExists,
   cleanNodeState,
   getLastLogs,
+  purgeNode,
 }

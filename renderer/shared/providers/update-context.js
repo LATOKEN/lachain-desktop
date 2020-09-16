@@ -27,6 +27,7 @@ const initialState = {
 }
 
 function settingsReducer(state, action) {
+  console.log('settingsReducer', state, action)
   switch (action.type) {
     case NEW_NODE_VERSION: {
       return {
@@ -82,6 +83,7 @@ function settingsReducer(state, action) {
     case NODE_UPDATE_SUCCESS: {
       return {
         ...state,
+        nodeCurrentVersion: action.data,
         nodeUpdating: false,
         nodeUpdateReady: false,
         nodeUpdateAvailable: false,
@@ -109,6 +111,7 @@ function AutoUpdateProvider({children}) {
 
   useEffect(() => {
     const onEvent = (_sender, event, data) => {
+      console.log('onEvent', event, data)
       switch (event) {
         case 'node-update-available':
           if (!state.nodeUpdateAvailable)
@@ -125,7 +128,7 @@ function AutoUpdateProvider({children}) {
             dispatch({type: NODE_UPDATE_READY, data: data.version})
           break
         case 'node-updated':
-          dispatch({type: NODE_UPDATE_SUCCESS})
+          dispatch({type: NODE_UPDATE_SUCCESS, data: data.nodeCurrentVersion})
           break
         case 'node-update-failed':
           dispatch({type: NODE_UPDATE_FAIL})
@@ -147,13 +150,9 @@ function AutoUpdateProvider({children}) {
   })
 
   useEffect(() => {
-    console.log(`nodeCurrentVersion ${state.nodeCurrentVersion}`)
-    if (state.nodeCurrentVersion !== '0.0.0') {
-      global.ipcRenderer.send(AUTO_UPDATE_COMMAND, 'start-checking', {
-        nodeCurrentVersion: state.nodeCurrentVersion,
-        isInternalNode: !settings.useExternalNode,
-      })
-    }
+    global.ipcRenderer.send(AUTO_UPDATE_COMMAND, 'start-checking', {
+      isInternalNode: !settings.useExternalNode,
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [settings.useExternalNode, settings.url, state.nodeCurrentVersion])
 

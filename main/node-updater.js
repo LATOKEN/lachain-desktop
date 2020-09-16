@@ -11,10 +11,11 @@ const {promiseTimeout} = require('./utils')
 const checkingInterval = 10 * 60 * 1000
 
 class NodeUpdater extends events.EventEmitter {
-  constructor(logger) {
+  constructor(logger, currentVersionUpdated) {
     super()
 
     this.logger = logger
+    this.currentVersionUpdated = currentVersionUpdated
     this.timeout = 0
   }
 
@@ -42,6 +43,9 @@ class NodeUpdater extends events.EventEmitter {
 
       this.logger.info('got remote version', remoteVersion)
       console.log('got remote version', remoteVersion)
+
+      this.currentVersion = await getCurrentVersion(false)
+      this.currentVersionUpdated(this.currentVersion)
 
       if (semver.lt(this.currentVersion, remoteVersion)) {
         this.logger.info('update available')

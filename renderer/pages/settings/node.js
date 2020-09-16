@@ -31,6 +31,10 @@ import {
 } from '../../shared/providers/node-context'
 import {NODE_EVENT, NODE_COMMAND} from '../../../main/channels'
 
+const purgeData = () => {
+  global.ipcRenderer.send(NODE_COMMAND, 'purge-node', {})
+}
+
 function NodeSettings() {
   const {addNotification} = useNotificationDispatch()
   const {t} = useTranslation()
@@ -128,6 +132,11 @@ function NodeSettings() {
   return (
     <SettingsLayout>
       <Box py={theme.spacings.xlarge}>
+        <Box align="center">
+          <Button onClick={purgeData}>
+            PURGE NODE AND ITS DATA IN FUCKING FIRE
+          </Button>
+        </Box>
         <Flex align="center">
           <Box>
             <Switcher

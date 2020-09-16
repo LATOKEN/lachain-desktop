@@ -59,6 +59,7 @@ const {
 } = require('./blockchain-node')
 
 const NodeUpdater = require('./node-updater')
+const {purgeNode} = require('./blockchain-node')
 
 let mainWindow
 let node
@@ -67,7 +68,14 @@ let searchWindow
 let tray
 let expressPort = 3051
 
-const nodeUpdater = new NodeUpdater(logger)
+const nodeUpdater = new NodeUpdater(logger, version => {
+  console.log('updated to version', version)
+  sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
+    nodeCurrentVersion: version,
+    isInternalNode: true,
+  })
+  // global.ipcRenderer.send(, '', )
+})
 
 let dnaUrl
 
@@ -459,6 +467,21 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
           sendMainWindowMsg(NODE_EVENT, 'node-stopped')
           cleanNodeState()
           sendMainWindowMsg(NODE_EVENT, 'state-cleaned')
+        })
+        .catch(e => {
+          sendMainWindowMsg(NODE_EVENT, 'node-failed')
+          logger.error('error while stopping node', e.toString())
+        })
+      break
+    }
+    case 'purge-node': {
+      stopNode(node)
+        .then(log => {
+          logger.info(log)
+          node = null
+          sendMainWindowMsg(NODE_EVENT, 'node-stopped')
+          purgeNode()
+          sendMainWindowMsg(NODE_EVENT, 'node-purged')
         })
         .catch(e => {
           sendMainWindowMsg(NODE_EVENT, 'node-failed')
