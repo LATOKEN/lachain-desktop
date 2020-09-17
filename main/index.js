@@ -409,12 +409,13 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
       break
     }
     case 'start-local-node': {
-      console.log('RECEIVED: start-local-node')
+      console.log('RECEIVED: start-local-node', data)
       checkConfigs()
       startNode(
         data.rpcPort,
         data.tcpPort,
         data.apiKey,
+        data.logLevel,
         isDev,
         log => {
           sendMainWindowMsg(NODE_EVENT, 'node-log', log)
@@ -482,6 +483,10 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
           sendMainWindowMsg(NODE_EVENT, 'node-stopped')
           purgeNode()
           sendMainWindowMsg(NODE_EVENT, 'node-purged')
+          sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
+            nodeCurrentVersion: '0.0.0-test0',
+            isInternalNode: true,
+          })
         })
         .catch(e => {
           sendMainWindowMsg(NODE_EVENT, 'node-failed')
@@ -544,7 +549,10 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
           sendMainWindowMsg(NODE_EVENT, 'node-stopped')
           await updateNode()
           sendMainWindowMsg(NODE_EVENT, 'node-ready')
-          sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated')
+          sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
+            nodeCurrentVersion: await getCurrentVersion(false),
+            isInternalNode: true,
+          })
           console.log('node updated')
         })
         .catch(e => {

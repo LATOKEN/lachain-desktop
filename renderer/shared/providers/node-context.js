@@ -112,6 +112,7 @@ function NodeProvider({children}) {
         rpcPort: settings.internalPort,
         tcpPort: settings.tcpPort,
         apiKey: settings.internalApiKey,
+        logLevel: settings.logLevel || 'Info',
       })
     }
   }, [

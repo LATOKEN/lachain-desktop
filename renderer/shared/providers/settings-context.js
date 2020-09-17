@@ -10,6 +10,7 @@ const SETTINGS_INITIALIZE = 'SETTINGS_INITIALIZE'
 const TOGGLE_USE_EXTERNAL_NODE = 'TOGGLE_USE_EXTERNAL_NODE'
 const TOGGLE_RUN_INTERNAL_NODE = 'TOGGLE_RUN_INTERNL_NODE'
 const SAVE_EXTERNAL_URL = 'SAVE_EXTERNAL_URL'
+const SAVE_LOG_LEVEL = 'SAVE_LOG_LEVEL'
 const UPDATE_UI_VERSION = 'UPDATE_UI_VERSION'
 const SET_INTERNAL_KEY = 'SET_INTERNAL_KEY'
 const SET_EXTERNAL_KEY = 'SET_EXTERNAL_KEY'
@@ -37,6 +38,7 @@ const initialState = {
   internalApiKey: randomKey(),
   externalApiKey: '',
   lng: AVAILABLE_LANGS[0],
+  logLevel: 'Info',
 }
 
 if (global.env && global.env.NODE_ENV === 'e2e') {
@@ -59,6 +61,9 @@ function settingsReducer(state, action) {
     }
     case SAVE_EXTERNAL_URL:
       return {...state, url: action.data}
+    case SAVE_LOG_LEVEL:
+      console.log('SAVE LOG LEVEL', action.data)
+      return {...state, logLevel: action.data}
     case SETTINGS_INITIALIZE:
       return {
         ...initialState,
@@ -138,6 +143,10 @@ function SettingsProvider({children}) {
     dispatch({type: SAVE_EXTERNAL_URL, data: url})
   }
 
+  const saveLogLevel = logLevel => {
+    dispatch({type: SAVE_LOG_LEVEL, data: logLevel})
+  }
+
   const toggleUseExternalNode = enable => {
     dispatch({type: TOGGLE_USE_EXTERNAL_NODE, data: enable})
   }
@@ -161,6 +170,7 @@ function SettingsProvider({children}) {
           toggleRunInternalNode,
           saveExternalApiKey,
           changeLanguage,
+          saveLogLevel,
         }}
       >
         {children}

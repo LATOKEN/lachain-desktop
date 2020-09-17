@@ -90,6 +90,9 @@ async function purgeNode() {
       if (fs.existsSync(getNodeErrorFile())) {
         fs.removeSync(getNodeErrorFile())
       }
+      if (fs.existsSync(getNodeConfigFile())) {
+        fs.removeSync(getNodeConfigFile())
+      }
       resolve()
     } catch (e) {
       reject(e)
@@ -148,11 +151,12 @@ async function startNode(
   port,
   tcpPort,
   apiKey,
+  logLevel,
   useLogging = true,
   onLog,
   onExit
 ) {
-  const paramters = [
+  const parameters = [
     '--datadir',
     getNodeDataDir(),
     '--rpcport',
@@ -161,17 +165,24 @@ async function startNode(
     tcpPort,
   ]
   // const version = await getCurrentVersion(false)
-  paramters.push('--apikey')
-  paramters.push(apiKey)
+  parameters.push('--apikey')
+  parameters.push(apiKey)
+  parameters.push('--log')
+  parameters.push(logLevel)
   const configFile = getNodeConfigFile()
   if (fs.existsSync(configFile)) {
-    paramters.push('--config')
-    paramters.push(configFile)
+    parameters.push('--config')
+    parameters.push(configFile)
   }
-  const nodeProcess = spawn(getNodeFile(), paramters, {
+  const nodeProcess = spawn(getNodeFile(), parameters, {
     cwd: getNodeDir(),
   })
-  console.log('node starting...')
+  console.log(
+    'node starting, command: ',
+    getNodeFile(),
+    parameters,
+    `. working directory: "${getNodeDir()}"`
+  )
 
   nodeProcess.stdout.on('data', data => {
     const str = data.toString()

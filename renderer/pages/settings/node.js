@@ -44,6 +44,7 @@ function NodeSettings() {
     toggleUseExternalNode,
     toggleRunInternalNode,
     saveExternalApiKey,
+    saveLogLevel,
   } = useSettingsDispatch()
   const {nodeFailed} = useNodeState()
   const {tryRestartNode} = useNodeDispatch()
@@ -132,7 +133,14 @@ function NodeSettings() {
   return (
     <SettingsLayout>
       <Box py={theme.spacings.xlarge}>
-        <Box align="center">
+        <Box>
+          Log level:
+          <select onChange={e => saveLogLevel(e.target.value)}>
+            <option value="Info">Errors & general info</option>
+            <option value="Error">Errors only</option>
+            <option value="Debug">Debug information</option>
+            <option value="Trace">Trace information</option>
+          </select>
           <Button onClick={purgeData}>
             PURGE NODE AND ITS DATA IN FUCKING FIRE
           </Button>
