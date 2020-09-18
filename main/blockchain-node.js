@@ -347,14 +347,14 @@ function getLastLogs() {
 }
 
 function encrypt(plaintext, secret) {
-  const nonce = crypto.randomBytes(12)
+  const nonce = crypto.randomBytes(16)
   const cipher = crypto.createCipheriv('aes-256-gcm', secret, nonce)
   const ciphertext = Buffer.concat([
     cipher.update(plaintext, 'utf8'),
     cipher.final(),
   ])
   const tag = cipher.getAuthTag()
-  return Buffer.concat([tag, nonce, ciphertext])
+  return Buffer.concat([nonce, ciphertext, tag])
 }
 
 function checkConfigs() {
