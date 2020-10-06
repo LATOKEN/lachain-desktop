@@ -119,6 +119,7 @@
     "react-i18next": "^11.2.5",
     "react-icons": "^3.7.0",
     "reverse-line-reader": "^0.2.6",
+    "rimraf": "^3.0.2",
     "rlp": "^2.2.2",
     "semver": "^6.3.0",
     "styled-jsx": "^3.2.2",

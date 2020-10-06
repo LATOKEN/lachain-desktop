@@ -132,19 +132,29 @@ function NodeSettings() {
 
   return (
     <SettingsLayout>
-      <Box py={theme.spacings.xlarge}>
-        <Box>
-          Log level:
+      <Box py={theme.spacings.large}>
+        <div
+          style={{
+            ...margin(rem(theme.spacings.small12, theme.fontSizes.base)),
+          }}
+        >
+          Log level:{' '}
           <select onChange={e => saveLogLevel(e.target.value)}>
             <option value="Info">Errors & general info</option>
             <option value="Error">Errors only</option>
             <option value="Debug">Debug information</option>
             <option value="Trace">Trace information</option>
           </select>
+        </div>
+        <div
+          style={{
+            ...margin(rem(theme.spacings.small12, theme.fontSizes.base)),
+          }}
+        >
           <Button onClick={purgeData}>
             PURGE NODE AND ITS DATA IN FUCKING FIRE
           </Button>
-        </Box>
+        </div>
         <Flex align="center">
           <Box>
             <Switcher
@@ -274,7 +284,7 @@ function NodeSettings() {
                   ...margin(0, theme.spacings.normal, 0, theme.spacings.small),
                   width: rem(300),
                 }}
-              ></Input>
+              />
               <Box
                 style={{
                   background: theme.colors.gray2,

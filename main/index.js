@@ -69,12 +69,10 @@ let tray
 let expressPort = 3051
 
 const nodeUpdater = new NodeUpdater(logger, version => {
-  console.log('updated to version', version)
   sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
     nodeCurrentVersion: version,
     isInternalNode: true,
   })
-  // global.ipcRenderer.send(, '', )
 })
 
 let dnaUrl

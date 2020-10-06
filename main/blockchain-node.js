@@ -10,14 +10,14 @@ const lineReader = require('reverse-line-reader')
 const crypto = require('crypto')
 const keccak = require('keccak256')
 // eslint-disable-next-line import/no-extraneous-dependencies
+const rimraf = require('rimraf')
 const appDataPath = require('./app-data-path')
 const {sleep} = require('./utils')
-const {defaultConfig} = require('./default-config')
+const defaultConfig = require('./default-config.json')
 
 const nodeBin = 'node'
 const nodeNodeReleasesUrl =
   'https://api.github.com/repos/LAToken/lachain/releases/latest'
-const nodeChainDbFolder = 'nodechain.db'
 
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
@@ -33,9 +33,6 @@ const getNodeWalletFile = () => path.join(getNodeDir(), 'wallet.json')
 
 const getTempNodeFile = () =>
   path.join(getNodeDir(), `new-${nodeBin}${getBinarySuffix()}`)
-
-const getNodeChainDbFolder = () =>
-  path.join(getNodeDataDir(), nodeChainDbFolder)
 
 const getNodeLogsFile = () => path.join(getNodeDir(), 'logs', 'output.log')
 
@@ -75,23 +72,23 @@ async function purgeNode() {
   return new Promise(async (resolve, reject) => {
     try {
       console.log('PURGING NODE IN FUCKING FIRE')
-      if (fs.existsSync(getNodeChainDbFolder())) {
-        fs.removeSync(getNodeChainDbFolder())
+      if (fs.existsSync(getNodeDataDir())) {
+        rimraf.sync(getNodeDataDir())
       }
       if (fs.existsSync(getNodeFile())) {
-        fs.removeSync(getNodeFile())
+        rimraf.sync(getNodeFile())
       }
       if (fs.existsSync(getTempNodeFile())) {
-        fs.removeSync(getTempNodeFile())
+        rimraf.sync(getTempNodeFile())
       }
       if (fs.existsSync(getNodeLogsFile())) {
-        fs.removeSync(getNodeLogsFile())
+        rimraf.sync(getNodeLogsFile())
       }
       if (fs.existsSync(getNodeErrorFile())) {
-        fs.removeSync(getNodeErrorFile())
+        rimraf.sync(getNodeErrorFile())
       }
       if (fs.existsSync(getNodeConfigFile())) {
-        fs.removeSync(getNodeConfigFile())
+        rimraf.sync(getNodeConfigFile())
       }
       resolve()
     } catch (e) {
@@ -102,6 +99,7 @@ async function purgeNode() {
 
 async function downloadNode(onProgress) {
   return new Promise(async (resolve, reject) => {
+    console.log('DOWNLOADING THE FUCKING NODE')
     try {
       const url = await getReleaseUrl()
       const version = await getRemoteVersion()
@@ -255,6 +253,7 @@ function getCurrentVersion(tempNode) {
         const {version} = semver.coerce(
           data.toString().match(/\d+\.\d+\.\d+/g)[0]
         )
+        console.log(`NODE VERSION ${version}`)
         return semver.valid(version)
           ? resolve(version)
           : reject(
@@ -292,7 +291,7 @@ function updateNode() {
       while (num > 0) {
         try {
           if (fs.existsSync(currentNode)) {
-            fs.unlinkSync(currentNode)
+            rimraf.sync(currentNode)
           }
           done = true
         } catch (e) {
@@ -321,9 +320,9 @@ function nodeExists() {
 }
 
 function cleanNodeState() {
-  const chainDbDirectory = getNodeChainDbFolder()
+  const chainDbDirectory = getNodeDataDir()
   if (fs.existsSync(chainDbDirectory)) {
-    fs.removeSync(chainDbDirectory)
+    rimraf.sync(chainDbDirectory)
   }
 }
 

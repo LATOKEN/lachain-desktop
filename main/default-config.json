@@ -1,0 +1,193 @@
+{
+  "network": {
+    "port": 5050,
+    "peers": [
+      "02143043bb250e5ff4c512ebcceabb32603cd4c63b78c6c027e1f7e918005c398e",
+      "02285d1e59f36600adad049ac7536cd934ca81ebfa95f8a597df89976ea15f8feb",
+      "02a16106ab5b7d443a39a2a6fd0888be04ff4dbf7db1ebc6e78a2ac930d8452dc0",
+      "03de85b9a9adbc2c016ca0fb99a0ffd6099bb003785327a65f43d8c488bd9c03a8",
+      "03c29ed2e059fef83f289935c4fea3926785ca69e8b07e6d52adc1277d2b740ba7",
+      "026b762c09a882666ce155dc661302a0c731bd9ce0820a64259eadd6fdcf04c122",
+      "03a669de6c5477f101039cb9f8f64126988b4e1ff8cbe7ffd51257ce474cd5acb3",
+      "0254d46cffe28a75cbf90ba95702f240de79c2baa027d404084a999b63d97e92bb",
+      "0286acc51e1477e3e2a062dc371eed0ef5032d9899165f9752d73da79cc532f13a",
+      "039cccb0dc82621baa3fcf05b5ed95470d07f5e4df61b71676eb7f2351f53d3d90",
+      "03a621643b28733f0acf77af5b1540b4ac0060dfaca2b78c6f29748207ed80ebf6",
+      "02d58803fb474eee9d3a0472ea6a2aaef8d6aae85f13d45f3408bb69813f0b3c62",
+      "02c72889e690d487ff1e1323964aecc1e9899ca087c52a83809152319d1a146634",
+      "03ae34d314c470f6503413ab999552347a76522532016410ceb0943dbf76ae1870",
+      "03392ac6d8aabc7c3bbfd9930705459e5dfbd0fa0409b630cb0ce5e0024211726b",
+      "022b6ae08fd9d6462cd59e2e88c5dba11521dd29dbb365ed125f649dfb9f04d4f4",
+      "03c0140e16036cb5037aa475a7ae696d5eaac3cff040fdcc8de7e4af3b869522d6",
+      "03440349744c6310239ea3f4e500d174b055182cd20cbaae39103583f4ea9adc11",
+      "037c2153bb929de7963e50d379230b5dc8fe3df9752da652dc65e4f511d0c9136f",
+      "036b9f11c37387e9a9ee3ed3d8bf27cd8841a1eb07a66a65333a31af8bc88fb8eb",
+      "030d008bdf0a84678802f47fd22339d2487b72f690e0365d393d89747e333e7d60",
+      "023f1d5aee9a79ca14ca36f0023d0bd02ab474339c2a3f349eecfec3b723ee94f3"
+    ],
+    "forceIPv6": false,
+    "maxPeers": 100,
+    "bootstrapAddresses": [
+      "QmX6QkkMPaiXzYgpfohxuM5YGXsUgUxLzm6QTcvGhaEAxH@116.203.75.72:41011",
+      "QmYopFiwba671RGPtPEDnw8VFoS6ezrfV4Z6xHYpHP2HFC@178.128.113.97:41012",
+      "QmddajBBsydxFYkknE7uA9e6n73M1CTuqLBi5KV6XEz5zu@165.227.45.119:41013",
+      "QmXvef5fkR4etvJdXmSRHmcpZ94ZzvZMUX6LCLe4rgMBHK@206.189.137.112:41014",
+      "QmWd9EJxtEmKLwDpycTk7gxBp6to86i8XEDubNz1GcFn4n@157.245.160.201:41015",
+      "Qmb2RmhHt14cae4PDUhFaZk78x4AJPph6hEKqgUeXdChUq@95.217.6.171:41016",
+      "QmT3mNwXobUoD4HPss6xaNG8jMWknkVzztBX3DH6uuSpmc@88.99.190.191:41017",
+      "QmRgDX9xV8tkXx37vogE7QwDsPyhzJj1r3YUNcqmUdvyqj@94.130.78.183:41018",
+      "QmZChM8sPn6M27JxmivTuSrAPtb29ih72m7q3T5TjTVdsE@94.130.24.163:41019",
+      "QmQpSV3hCr4etSjq3LpyJd6PbtJCYVLDq4DD1Vd5szj23A@94.130.110.127:41020",
+      "QmeizP8WQCbGDV5s598s9fpJvLArS6qimUYWhE118nczjN@94.130.110.95:41021",
+      "QmY9vwCv6ZZfF1uwdSDECaZMU2utu712fN5viyvui71F8U@94.130.58.63:41022",
+      "QmfQHQQTxkdD5hmB5H4oaSYJqeLLkUL8UkE5hhyo1kysPq@88.99.86.166:41023",
+      "QmbTyjfofnqC4TSyXPVWe1NbABAAbBmb32drUodjtSPCn4@88.198.78.106:41024",
+      "QmT4FpAz9L3B2AL9vCiqwJSHEnLoD5xuQuW77XatgDtL8e@88.198.78.141:41025",
+      "QmbnXHVnXmYaF6tff1dGSfSSGJnWxWQW8Tyj9J3qY76pgN@88.99.126.144:41026",
+      "QmWR7GzsSZRQWYg1o3dXPiQ15Y8TzUb39uUegjjUWK56QB@88.99.87.58:41027",
+      "QmcPccDKAHtMDyCj4631H1z6EYmKYvA9cLqDTrkoZK9Z6L@95.217.6.234:41028",
+      "QmTkKYGyhR3D3GrBkjutjn1obobFfXD3SPizHSjZeiEp7g@95.217.12.226:41029",
+      "Qmag5vZe7adknhfft6JwiCSDrHhhwEup8iCks5i59KJqh1@95.217.14.117:41030",
+      "QmXACTXsDFW2LxNDWQYR1PcQ5WsWq1Ra3Zd76osLWhE8vZ@95.217.17.248:41031",
+      "QmctYjJqodqNFUynRStocsUQHpZEap8quZSEp2Ps5Kewe1@95.217.12.230:41032"
+    ]
+  },
+  "genesis": {
+    "TPKEPublicKey": "0x07000000b01bd8e31026eaeab53b3407bef78ae822bbe4906c636c97ea46dc3287815cb6c00010ab042bf084c21180d237246312",
+    "blockReward": "5.000000000000000000",
+    "basicGasPrice": "0.000000100000000000",
+    "balances": {
+      "0x6bc32575acb8754886dc283c2c8ac54b1bd93195": "1000000",
+      "0x2cd78349dbcc0d6c8b3fe431c1798e904a491aa3": "1000000",
+      "0x70bbb6521c29be103d2c127eca851630ff82d4a4": "1000000",
+      "0x00d03c0fc9645765b6578c9f512d3fd6438be229": "1000000",
+      "0x44a674a790e251994623e1da93fd0d7eb5f66503": "1000000",
+      "0x82c6e607e930426f6abe7daacf0eced2bdc58017": "1000000",
+      "0xc4f69c3f5012b70c64229441eed2fedc7f852742": "1000000",
+      "0x20441b12dbeca2b36c9c40afba54db8a6dd8dd3b": "1000000",
+      "0xd32c57e01b4ee0584c83c7fcd1517fa48d91421f": "1000000",
+      "0xb37d69dee4d66542de8fecbebac6b6d209db82dc": "1000000",
+      "0xb39d9c4eb482b77601295a1cda6a09fcabfff66f": "1000000",
+      "0x63bc1fbcc57be0627c339d243615c2f70a57a180": "1000000",
+      "0x363fadd0392b56b482ab9d3384cf9027740a8d48": "1000000",
+      "0x6ab5e57143386b9a8c80cd306bddee18bd125c73": "1000000",
+      "0xd9a2d7ef75aeba8ecb7c179d00e38ce98850a58e": "1000000",
+      "0xf69ba62d30ae2e3d1e2886205c2d209d1f7e6f5f": "1000000",
+      "0xddac6884886ffc470b5cef30695fabdd56db96d8": "1000000",
+      "0x6c68a6c716d6864f25b7aefbe94d09ee0e4a0ad0": "1000000",
+      "0xb15c9ad0e83cc5fecc5580bdb151bc042ed33626": "1000000",
+      "0x5ec57e2d001cfdb46fda15ffde37753b11ba1a5a": "1000000",
+      "0xe1437663f3992b14fdebb2b2e85590f1bc2bd522": "1000000",
+      "0xf78e10d7bd4b7a1ecf46e796b810867608c89b41": "1000000",
+      "0xcf2cf8214d331a0b657db46318a318656405afb3": "1000000"
+    },
+    "validators": [
+      {
+        "ECDSAPublicKey": "02143043bb250e5ff4c512ebcceabb32603cd4c63b78c6c027e1f7e918005c398e",
+        "thresholdSignaturePublicKey": "0x25306ceda283fe0051520c861247141f1192c63d9951037e2029e21ea9efd38ac75d998ae539cbde0ca0fb390222430e"
+      },
+      {
+        "ECDSAPublicKey": "02285d1e59f36600adad049ac7536cd934ca81ebfa95f8a597df89976ea15f8feb",
+        "thresholdSignaturePublicKey": "0x478889d51a7ca1820092ddd673f948e82047fa5c659d668d98b6444e0b71e53956136ddc4105809127afab4d0f46078f"
+      },
+      {
+        "ECDSAPublicKey": "02a16106ab5b7d443a39a2a6fd0888be04ff4dbf7db1ebc6e78a2ac930d8452dc0",
+        "thresholdSignaturePublicKey": "0x0ffd2a04522500344b7ee806abf96169ba364dd6658276ca1416869ed04b75eae759256ff4f2c05fb9f2c04bf0dbdb15"
+      },
+      {
+        "ECDSAPublicKey": "03de85b9a9adbc2c016ca0fb99a0ffd6099bb003785327a65f43d8c488bd9c03a8",
+        "thresholdSignaturePublicKey": "0xba231e2ca396ddd1bb561362fe4b23de237781dd5006a97b4a19483140a11617eb8b4b3ee525cb5ca0ec2d494be09e16"
+      },
+      {
+        "ECDSAPublicKey": "03c29ed2e059fef83f289935c4fea3926785ca69e8b07e6d52adc1277d2b740ba7",
+        "thresholdSignaturePublicKey": "0xecb7a606f90e937e8b07b126a96bb968ddcba960be3017f3a947e595d8a110b21e42a911f490c143bb758c2f49de940e"
+      },
+      {
+        "ECDSAPublicKey": "026b762c09a882666ce155dc661302a0c731bd9ce0820a64259eadd6fdcf04c122",
+        "thresholdSignaturePublicKey": "0x0debb2bf82e204cf2045f679e0b65553d5c39f0ef8aacacf0ff8e422ca61862f50b075f0c746ea79156cd7fa8f481b82"
+      },
+      {
+        "ECDSAPublicKey": "03a669de6c5477f101039cb9f8f64126988b4e1ff8cbe7ffd51257ce474cd5acb3",
+        "thresholdSignaturePublicKey": "0x26c873d3265c576d99d949e82ca84ad8aa288d0f88da4c7d7da2b39a3419f876017cbc1e7eeebc5a2158cfcd1572c28f"
+      },
+      {
+        "ECDSAPublicKey": "0254d46cffe28a75cbf90ba95702f240de79c2baa027d404084a999b63d97e92bb",
+        "thresholdSignaturePublicKey": "0x0981d8352dd73a755d1cb8c3a69b883bb28f2db3d802d7b031980686ccded6571e9b199ee1a097c68d818dd75dbd458e"
+      },
+      {
+        "ECDSAPublicKey": "0286acc51e1477e3e2a062dc371eed0ef5032d9899165f9752d73da79cc532f13a",
+        "thresholdSignaturePublicKey": "0xef0c28926eebda1bde73fd8df9b716b72053dd6c85305d8fd4e17c5d6e344bbdb809c107ee43225192549cf4849f530c"
+      },
+      {
+        "ECDSAPublicKey": "039cccb0dc82621baa3fcf05b5ed95470d07f5e4df61b71676eb7f2351f53d3d90",
+        "thresholdSignaturePublicKey": "0x44d28e2412670cbface183ad77bd750ff5696c7eafdbf0befd862383eaf2602b5bf07ca1d44c19cbfc5de18a16420f86"
+      },
+      {
+        "ECDSAPublicKey": "03a621643b28733f0acf77af5b1540b4ac0060dfaca2b78c6f29748207ed80ebf6",
+        "thresholdSignaturePublicKey": "0xf437b65455b685b7947051e28693639b20a710cdb6b1a8fbbbf60af2fdfc0d9dbd51c3e3a10512f0ded730d0e6e0b08d"
+      },
+      {
+        "ECDSAPublicKey": "02d58803fb474eee9d3a0472ea6a2aaef8d6aae85f13d45f3408bb69813f0b3c62",
+        "thresholdSignaturePublicKey": "0xaf2b1955c3fbacaf7dbcecff9c17c23a75a16fb7289af2cf4e65ec7eff8fef9c20435a76d7e61dc4f3b2f07274795a8b"
+      },
+      {
+        "ECDSAPublicKey": "02c72889e690d487ff1e1323964aecc1e9899ca087c52a83809152319d1a146634",
+        "thresholdSignaturePublicKey": "0x51c00aaca895b10f1d847833aa82233338be6aa08b36fa91329dd4a5a609f7e8c7ca4557f51f79b69b393b1e94f48710"
+      },
+      {
+        "ECDSAPublicKey": "03ae34d314c470f6503413ab999552347a76522532016410ceb0943dbf76ae1870",
+        "thresholdSignaturePublicKey": "0xf6c36c576adf3932b8a062dfedac431b11afd8af5d0f43828a65f9bc0d7787bee390a6f04cfc629100227be310bf3b12"
+      },
+      {
+        "ECDSAPublicKey": "03392ac6d8aabc7c3bbfd9930705459e5dfbd0fa0409b630cb0ce5e0024211726b",
+        "thresholdSignaturePublicKey": "0x64019579d5119db9ac702134005907358c26ac7295f8bc2da3dd37c8dda0e8afff53a96450a148d7e8efcc41b5e7ec8d"
+      },
+      {
+        "ECDSAPublicKey": "022b6ae08fd9d6462cd59e2e88c5dba11521dd29dbb365ed125f649dfb9f04d4f4",
+        "thresholdSignaturePublicKey": "0x6ef4b7c3ff512ab96973d87f303b7b6c2ce35e8ecc301a47df45bf49548f8964167904453b10bde7af019eb7af88370b"
+      },
+      {
+        "ECDSAPublicKey": "03c0140e16036cb5037aa475a7ae696d5eaac3cff040fdcc8de7e4af3b869522d6",
+        "thresholdSignaturePublicKey": "0x310daf1b42323d283bd876ef28fbff2cda309fd3528d2c1e40ed3df70b49a840201e435ea78d1ee850db32e18adcaf04"
+      },
+      {
+        "ECDSAPublicKey": "03440349744c6310239ea3f4e500d174b055182cd20cbaae39103583f4ea9adc11",
+        "thresholdSignaturePublicKey": "0xdea893b75845c453056133ae0c5bfdf9a246d87adc556d6ce0749bc1f53e897708682b30ce83be213aa0824e5b095385"
+      },
+      {
+        "ECDSAPublicKey": "037c2153bb929de7963e50d379230b5dc8fe3df9752da652dc65e4f511d0c9136f",
+        "thresholdSignaturePublicKey": "0xbbbf3e10d409eb466f904e787cb04c9abc4b33b19138fa57cd2f5737e5f5278e4aca7880b035bce225f547af67969297"
+      },
+      {
+        "ECDSAPublicKey": "036b9f11c37387e9a9ee3ed3d8bf27cd8841a1eb07a66a65333a31af8bc88fb8eb",
+        "thresholdSignaturePublicKey": "0x397547190cdaf3665b558eb9aaadab4f06c0f8ce96538bed1b00becde4500526a94857385a5c2e24385309e25a4e0780"
+      },
+      {
+        "ECDSAPublicKey": "030d008bdf0a84678802f47fd22339d2487b72f690e0365d393d89747e333e7d60",
+        "thresholdSignaturePublicKey": "0xdcef63684059c2853e19fa692b82044d70d1a193301aba691f553dc0ea1a28652e55c1aefe877885a76bbab6afb0df83"
+      },
+      {
+        "ECDSAPublicKey": "023f1d5aee9a79ca14ca36f0023d0bd02ab474339c2a3f349eecfec3b723ee94f3",
+        "thresholdSignaturePublicKey": "0x2bda2cec25ac8e7591c63e4a9e36dec37c2aee06c3c86dba798bb1e89ffdc3476b460ea58d7ed9025a3ec23705765092"
+      }
+    ]
+  },
+  "rpc": {
+    "hosts": [
+      "+"
+    ],
+    "port": 7070,
+    "apiKey": "asdasdasd"
+  },
+  "vault": {
+    "path": "wallet.json",
+    "password": "12345"
+  },
+  "storage": {
+    "provider": "RocksDB",
+    "path": "ChainLachain"
+  },
+  "blockchain": {
+    "targetBlockTime": 0
+  }
+}
