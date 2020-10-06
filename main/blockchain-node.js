@@ -97,8 +97,19 @@ async function purgeNode() {
   })
 }
 
+let downloading
+let progressNotifier
+let downloadingPromiseGlobal
+
 async function downloadNode(onProgress) {
-  return new Promise(async (resolve, reject) => {
+  if (downloading) {
+    console.log('TRYING TO DOWNLOAD NODE WHILE DOWNLOADING')
+    progressNotifier = onProgress
+    return downloadingPromiseGlobal
+  }
+  downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
+    downloading = true
+    progressNotifier = onProgress
     console.log('DOWNLOADING THE FUCKING NODE')
     try {
       const url = await getReleaseUrl()
@@ -109,8 +120,16 @@ async function downloadNode(onProgress) {
       }
 
       const writer = fs.createWriteStream(getTempNodeFile())
-      writer.on('finish', () => writer.close(() => resolve(version)))
-      writer.on('error', reject)
+      writer.on('finish', () =>
+        writer.close(() => {
+          downloading = false
+          resolve(version)
+        })
+      )
+      writer.on('error', err => {
+        downloading = false
+        reject(err)
+      })
 
       const response = await axios.request({
         method: 'get',
@@ -124,14 +143,16 @@ async function downloadNode(onProgress) {
       })
 
       str.on('progress', function(p) {
-        onProgress({...p, version})
+        progressNotifier({...p, version})
       })
 
       response.data.pipe(str).pipe(writer)
     } catch (error) {
+      downloading = false
       return reject(error)
     }
   })
+  return downloadingPromiseGlobal
 }
 
 function writeError(err) {
