@@ -87,17 +87,24 @@ class NodeUpdater extends events.EventEmitter {
       !!this.downloadPromise
     )
     if (this.downloadPromise) return
-    this.downloadPromise = downloadNode(progress => {
+
+    const onProgress = progress => {
       this.emit('download-progress', progress)
-    })
-      .then(() => {
+    }
+
+    const onFinish = () => {
+      this.emit('update-downloaded', {version: remoteVersion})
+    }
+
+    const onError = e => {
+      this.logger.error('error while downloading update', e.toString())
+      this.emit('update-failed')
+    }
+
+    this.downloadPromise = downloadNode(onProgress, onFinish, onError)
+      .then()
+      .finally(() => {
         this.downloadPromise = null
-        this.emit('update-downloaded', {version: remoteVersion})
-      })
-      .catch(e => {
-        this.downloadPromise = null
-        this.logger.error('error while downloading update', e.toString())
-        this.emit('update-failed')
       })
   }
 }

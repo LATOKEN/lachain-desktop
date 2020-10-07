@@ -13,6 +13,7 @@ import {
   Switcher,
   Text,
   SubHeading,
+  Modal,
 } from '../../shared/components'
 import theme from '../../shared/theme'
 import {FlatButton} from '../../shared/components/button'
@@ -44,8 +45,9 @@ function NodeSettings() {
     toggleUseExternalNode,
     toggleRunInternalNode,
     saveExternalApiKey,
-    saveLogLevel,
   } = useSettingsDispatch()
+
+  const [showConfirmModal, setConfirmModalShow] = useState(false)
   const {nodeFailed} = useNodeState()
   const {tryRestartNode} = useNodeDispatch()
   const logsRef = useRef(null)
@@ -135,24 +137,11 @@ function NodeSettings() {
       <Box py={theme.spacings.large}>
         <div
           style={{
-            ...margin(rem(theme.spacings.small12, theme.fontSizes.base)),
+            ...margin(rem(theme.spacings.small12, theme.fontSizes.base), 0),
           }}
         >
-          Log level:{' '}
-          <select onChange={e => saveLogLevel(e.target.value)}>
-            <option value="Info">Errors & general info</option>
-            <option value="Error">Errors only</option>
-            <option value="Debug">Debug information</option>
-            <option value="Trace">Trace information</option>
-          </select>
-        </div>
-        <div
-          style={{
-            ...margin(rem(theme.spacings.small12, theme.fontSizes.base)),
-          }}
-        >
-          <Button onClick={purgeData}>
-            PURGE NODE AND ITS DATA IN FUCKING FIRE
+          <Button onClick={() => setConfirmModalShow(true)} danger>
+            Purge local node
           </Button>
         </div>
         <Flex align="center">
@@ -342,6 +331,45 @@ function NodeSettings() {
           </div>
         </div>
       )}
+
+      <Modal
+        show={showConfirmModal}
+        onHide={() => {
+          setConfirmModalShow(false)
+        }}
+      >
+        <Box m="0 0 18px">
+          <SubHeading>{t('Confirm action')}</SubHeading>
+          <Text>
+            <span>
+              {t('The node and its data will be irreversible removed.')}
+              <br />
+            </span>
+          </Text>
+        </Box>
+        <Flex align="center" justify="flex-end">
+          <Box px="4px">
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setConfirmModalShow(false)
+              }}
+            >
+              {t('Cancel')}
+            </Button>
+          </Box>
+          <Box px="4px">
+            <Button
+              onClick={() => {
+                setConfirmModalShow(false)
+                purgeData()
+              }}
+            >
+              {t('Submit')}
+            </Button>
+          </Box>
+        </Flex>
+      </Modal>
     </SettingsLayout>
   )
 }

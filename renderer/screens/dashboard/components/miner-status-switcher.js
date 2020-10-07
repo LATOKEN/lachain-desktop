@@ -288,9 +288,6 @@ function MinerStatusSwitcher() {
           <SubHeading>{t('Unlock wallet')}</SubHeading>
           <Text>
             <span>
-              {t(`Unlock wallet for 30 sec to make changes.`)}
-              <br />
-              <br />
               {t('You still need apikey to access private functionality.')}
               <br />
               <br />

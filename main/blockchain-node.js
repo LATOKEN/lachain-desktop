@@ -78,9 +78,6 @@ async function purgeNode() {
       if (fs.existsSync(getNodeFile())) {
         rimraf.sync(getNodeFile())
       }
-      if (fs.existsSync(getTempNodeFile())) {
-        rimraf.sync(getTempNodeFile())
-      }
       if (fs.existsSync(getNodeLogsFile())) {
         rimraf.sync(getNodeLogsFile())
       }
@@ -98,18 +95,24 @@ async function purgeNode() {
 }
 
 let downloading
-let progressNotifier
+let onProgressCb
+let onFinishCb
 let downloadingPromiseGlobal
+let onErrorCb
 
-async function downloadNode(onProgress) {
+async function downloadNode(onProgress, onFinish, onError) {
   if (downloading) {
     console.log('TRYING TO DOWNLOAD NODE WHILE DOWNLOADING')
-    progressNotifier = onProgress
+    onProgressCb = onProgress
+    onFinishCb = onFinish
+    onErrorCb = onError
     return downloadingPromiseGlobal
   }
   downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
     downloading = true
-    progressNotifier = onProgress
+    onProgressCb = onProgress
+    onFinishCb = onFinish
+    onErrorCb = onError
     console.log('DOWNLOADING THE FUCKING NODE')
     try {
       const url = await getReleaseUrl()
@@ -123,11 +126,13 @@ async function downloadNode(onProgress) {
       writer.on('finish', () =>
         writer.close(() => {
           downloading = false
+          onFinishCb()
           resolve(version)
         })
       )
       writer.on('error', err => {
         downloading = false
+        onErrorCb()
         reject(err)
       })
 
@@ -143,12 +148,13 @@ async function downloadNode(onProgress) {
       })
 
       str.on('progress', function(p) {
-        progressNotifier({...p, version})
+        onProgressCb({...p, version})
       })
 
       response.data.pipe(str).pipe(writer)
     } catch (error) {
       downloading = false
+      onErrorCb()
       return reject(error)
     }
   })

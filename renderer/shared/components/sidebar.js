@@ -7,7 +7,7 @@ import {Box, List, Link, Text} from '.'
 import Flex from './flex'
 import theme, {rem} from '../theme'
 import Loading from './loading'
-import {useIdentityState, AccountStatus} from '../providers/identity-context'
+import {useIdentityState} from '../providers/identity-context'
 import {useEpochState, EpochPeriod} from '../providers/epoch-context'
 import {useChainState} from '../providers/chain-context'
 import {
@@ -93,7 +93,7 @@ function NodeStatus() {
                   !offline ? `Peers: ${(peers || []).length}` : '',
                   syncing
                     ? `Blocks: ${currentBlock} out of ${highestBlock}`
-                    : `Current block: ${currentBlock}`,
+                    : `Current block: ${parseInt(currentBlock, 16)}`,
                 ].map((t, idx) => (
                   <div
                     key={idx}

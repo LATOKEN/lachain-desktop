@@ -384,22 +384,28 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
           if (nodeDownloadPromise) {
             return
           }
-          nodeDownloadPromise = downloadNode(info => {
+
+          const onProgress = info => {
             sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-download-progress', info)
-          })
-            .then(() => {
-              stopNode(node).then(async log => {
-                logger.info(log)
-                node = null
-                sendMainWindowMsg(NODE_EVENT, 'node-stopped')
-                await updateNode()
-                sendMainWindowMsg(NODE_EVENT, 'node-ready')
-              })
+          }
+
+          const onFinish = () => {
+            stopNode(node).then(async log => {
+              logger.info(log)
+              node = null
+              sendMainWindowMsg(NODE_EVENT, 'node-stopped')
+              await updateNode()
+              sendMainWindowMsg(NODE_EVENT, 'node-ready')
             })
-            .catch(err => {
-              sendMainWindowMsg(NODE_EVENT, 'node-failed')
-              logger.error('error while downloading node', err.toString())
-            })
+          }
+
+          const onError = err => {
+            sendMainWindowMsg(NODE_EVENT, 'node-failed')
+            logger.error('error while downloading node', err.toString())
+          }
+
+          nodeDownloadPromise = downloadNode(onProgress, onFinish, onError)
+            .then()
             .finally(() => {
               nodeDownloadPromise = null
             })
