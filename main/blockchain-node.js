@@ -126,7 +126,7 @@ async function downloadNode(onProgress, onFinish, onError) {
       writer.on('finish', () =>
         writer.close(() => {
           downloading = false
-          onFinishCb()
+          onFinishCb(version)
           resolve(version)
         })
       )

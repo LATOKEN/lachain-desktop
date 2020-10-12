@@ -203,7 +203,10 @@ export default function Index() {
         </Drawer>
 
         <Drawer show={isReceiveFormOpen} onHide={handleCloseReceiveForm}>
-          <ReceiveForm address={wallets[0] && wallets[0].address} />
+          <ReceiveForm
+            address={wallets[0] && wallets[0].address}
+            onClose={handleCloseReceiveForm}
+          />
         </Drawer>
 
         <Drawer

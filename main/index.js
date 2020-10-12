@@ -389,7 +389,11 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
             sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-download-progress', info)
           }
 
-          const onFinish = () => {
+          const onFinish = version => {
+            sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
+              nodeCurrentVersion: version,
+              isInternalNode: true,
+            })
             stopNode(node).then(async log => {
               logger.info(log)
               node = null

@@ -1,4 +1,4 @@
-import {useEffect, useCallback, useReducer} from 'react'
+import {useCallback, useEffect, useReducer} from 'react'
 import * as api from '../api/dna'
 import {useInterval} from './use-interval'
 import {HASH_IN_MEMPOOL} from '../utils/tx'
@@ -6,8 +6,8 @@ import {useIdentityState} from '../providers/identity-context'
 import {
   fetchAccountList,
   fetchBalance,
-  fetchTransactions,
   fetchPendingTransactions,
+  fetchTransactions,
 } from '../api/wallet'
 
 function isAddress(address) {
@@ -51,14 +51,14 @@ async function fetchTxs({address, wallets}) {
 
   const joinedTxs = [].concat(txsPending).concat(txs)
 
-  const hiddenDerections = [
+  const hiddenDirections = [
     '0x0300000000000000000000000000000000000000',
     '0x0200000000000000000000000000000000000000',
   ]
 
   return joinedTxs
     .filter(
-      tx => tx && !hiddenDerections.find(direction => tx.to === direction)
+      tx => tx && !hiddenDirections.find(direction => tx.to === direction)
     )
     .map(tx => {
       const fromWallet = wallets.find(wallet => wallet.address === tx.from)
@@ -74,7 +74,7 @@ async function fetchTxs({address, wallets}) {
       const counterPartyWallet = fromWallet ? toWallet : fromWallet
       const isMining = tx.blockHash === HASH_IN_MEMPOOL
 
-      const nextTx = {
+      return {
         ...tx,
         typeName,
         wallet: sourceWallet,
@@ -84,7 +84,6 @@ async function fetchTxs({address, wallets}) {
         counterPartyWallet,
         isMining,
       }
-      return nextTx
     })
 }
 
