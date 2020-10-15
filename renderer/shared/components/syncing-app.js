@@ -92,7 +92,7 @@ function SyncingIdentity() {
         <h2>Synchronizing blocks</h2>
         <div>
           <h3>
-            {currentBlock} out of {highestBlock}
+            {parseInt(currentBlock, 16)} out of {parseInt(highestBlock, 16)}
           </h3>
           <div>
             <span>Peers connected:</span> {(peers || []).length}

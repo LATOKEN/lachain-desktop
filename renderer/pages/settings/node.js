@@ -362,6 +362,7 @@ function NodeSettings() {
             <Button
               onClick={() => {
                 setConfirmModalShow(false)
+                toggleRunInternalNode(false)
                 purgeData()
               }}
             >

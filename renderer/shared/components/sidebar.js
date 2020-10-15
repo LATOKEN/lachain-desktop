@@ -92,7 +92,10 @@ function NodeStatus() {
               : [
                   !offline ? `Peers: ${(peers || []).length}` : '',
                   syncing
-                    ? `Blocks: ${currentBlock} out of ${highestBlock}`
+                    ? `Blocks: ${parseInt(currentBlock, 16)} out of ${parseInt(
+                        highestBlock,
+                        16
+                      )}`
                     : `Current block: ${parseInt(currentBlock, 16)}`,
                 ].map((t, idx) => (
                   <div

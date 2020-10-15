@@ -16,7 +16,7 @@ import {
 } from '../../../shared/components'
 import Flex from '../../../shared/components/flex'
 
-const faucetUrl = 'http://95.217.19.254:3020'
+const faucetUrl = 'http://95.217.215.141:3020'
 
 async function requestTestLA(address) {
   const data = {
