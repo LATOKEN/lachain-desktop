@@ -330,9 +330,7 @@ app.on('ready', async () => {
 
     createTray()
 
-    if (isWin) {
-      checkForUpdates()
-    }
+    checkForUpdates()
   })
 })
 
