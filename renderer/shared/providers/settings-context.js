@@ -31,7 +31,6 @@ const CHANGE_LANGUAGE = 'CHANGE_LANGUAGE'
 const initialState = {
   url: BASE_API_URL,
   internalPort: BASE_INTERNAL_API_PORT,
-  tcpPort: 7070,
   uiVersion: global.appVersion,
   useExternalNode: false,
   runInternalNode: true,

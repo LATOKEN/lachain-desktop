@@ -73,19 +73,24 @@ async function purgeNode() {
     try {
       console.log('PURGING NODE IN FUCKING FIRE')
       if (fs.existsSync(getNodeDataDir())) {
+        console.log('Delete', getNodeDataDir())
         rimraf.sync(getNodeDataDir())
       }
-      if (fs.existsSync(getNodeFile())) {
-        rimraf.sync(getNodeFile())
-      }
       if (fs.existsSync(getNodeLogsFile())) {
+        console.log('Delete', getNodeLogsFile())
         rimraf.sync(getNodeLogsFile())
       }
       if (fs.existsSync(getNodeErrorFile())) {
+        console.log('Delete', getNodeErrorFile())
         rimraf.sync(getNodeErrorFile())
       }
       if (fs.existsSync(getNodeConfigFile())) {
+        console.log('Delete', getNodeConfigFile())
         rimraf.sync(getNodeConfigFile())
+      }
+      if (fs.existsSync(getNodeFile())) {
+        console.log('Delete', getNodeFile())
+        rimraf.sync(getNodeFile())
       }
       resolve()
     } catch (e) {
@@ -174,21 +179,13 @@ function writeError(err) {
 
 async function startNode(
   port,
-  tcpPort,
   apiKey,
   logLevel,
   useLogging = true,
   onLog,
   onExit
 ) {
-  const parameters = [
-    '--datadir',
-    getNodeDataDir(),
-    '--rpcport',
-    port,
-    '--port',
-    tcpPort,
-  ]
+  const parameters = ['--datadir', getNodeDataDir(), '--rpcport', port]
   // const version = await getCurrentVersion(false)
   parameters.push('--apikey')
   parameters.push(apiKey)

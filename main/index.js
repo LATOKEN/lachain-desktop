@@ -419,7 +419,6 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
       checkConfigs()
       startNode(
         data.rpcPort,
-        data.tcpPort,
         data.apiKey,
         data.logLevel,
         isDev,
