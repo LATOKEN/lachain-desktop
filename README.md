@@ -2,53 +2,47 @@
 
 > Lachain Desktop client for Windows, Mac, and Linux.
 
+Forked from [idena-desktop](https://github.com/idena-network/idena-desktop) under MIT license.
+
 Backed by [Electron](https://www.electronjs.org), [React](https://reactjs.org) and [Next.js](https://nextjs.org/).
 
 [![Build Status](https://travis-ci.org/github/LAToken/lachain-desktop.svg?branch=master)](https://travis-ci.org/github/LAToken/lachain-desktop)
-[![dependencies Status](https://img.shields.io/david/idena-network/idena-desktop.svg)](https://david-dm.org/idena-network/idena-desktop)
-[![devDependency Status](https://img.shields.io/david/dev/idena-network/idena-desktop.svg)](https://david-dm.org/idena-network/idena-desktop?type=dev)
 
 ## Getting started
 
 ### Download latest release
 
-https://github.com/idena-network/idena-desktop/releases/latest
+https://github.com/LAToken/lachain/releases/latest
 
 ### Install
 
 Follow installation instructions for your system.
 
-### Get to know Idena
-
-Visit [Idena](https://idena.io) for the [most common questions](https://idena.io/?view=faq) and [guidelines](https://idena.io/?view=guide).
-
 ### Configuration
 
 Most of the configuration is available in `userData` directory:
 
-- `%APPDATA%\Idena` on Windows
-- `~/Library/Application Support/Idena` on macOS
-- `~/.config/Idena` on Linux
+- `%APPDATA%\Lachain desktop` on Windows
+- `~/Library/Application Support/Lachain desktop` on macOS
+- `~/.config/Lachain desktop` on Linux
 
-**Note**: Manual configuration is a danger zone that may corrupt your Idena installation and lead to unexpected behavior. Only edit configuration files if you're 💯sure what you do.
+**Note**: Manual configuration is a danger zone that may corrupt your installation and lead to unexpected behavior. Only edit configuration files if you're 💯sure what you do.
 
 ### Logs
 
 Logs are available in `logs` directory:
 
-- `%APPDATA%\Idena\logs` on Windows
-- `~/Library/Logs/Idena` on macOS
-- `~/.config/Idena/idena.log` on Linux
+- `%APPDATA%\Lachain desktop\logs` on Windows
+- `~/Library/Application Support/Lachain desktop/logs` on macOS
+- `~/.config/Lachain desktop/logs` on Linux
 
 ### Built-in node
 
 Node configuration and data files located in `node` directory inside `userData`:
 
-- `%APPDATA%\Idena\node` on Windows
-- `~/Library/Application Support/Idena/node` on macOS
-- `~/.config/Idena/node` on Linux
-
-The built-in node directory structure is the same as for standalone node.
+- `%APPDATA%\Lachain desktop\node` on Windows
+- `~/Library/Application Support/Lachain desktop/node` on macOS
+- `~/.config/Lachain desktop/node` on Linux
 
 ## Development
 
@@ -88,7 +82,7 @@ npm run dist:mac
 npm run dist:linux
 ```
 
-Currently, only `deb` target supported for Linux.
+Currently, only `deb` and `AppImage` targets are supported for Linux.
 
 PRs are welcome! 👐
 

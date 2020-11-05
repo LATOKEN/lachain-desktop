@@ -22,7 +22,7 @@
     "e2e": "dotenv -e .env.e2e testcafe electron"
   },
   "build": {
-    "appId": "io.lachain",
+    "appId": "com.latoken.lachain",
     "artifactName": "lachain-client-${os}-${version}.${ext}",
     "files": [
       "**/*",
@@ -56,7 +56,7 @@
         "github"
       ],
       "icon": "main/static/icons/icon-512@2x.icns",
-      "maintainer": "Idena <info@idena.io> (https://idena.io/)"
+      "maintainer": "Lachain <lachain@latoken.com> (https://latoken.com/lachain/)"
     }
   },
   "devDependencies": {
