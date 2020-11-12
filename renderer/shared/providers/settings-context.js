@@ -61,7 +61,6 @@ function settingsReducer(state, action) {
     case SAVE_EXTERNAL_URL:
       return {...state, url: action.data}
     case SAVE_LOG_LEVEL:
-      console.log('SAVE LOG LEVEL', action.data)
       return {...state, logLevel: action.data}
     case SETTINGS_INITIALIZE:
       return {
@@ -133,7 +132,6 @@ function SettingsProvider({children}) {
       global.appVersion &&
       semver.lt(state.uiVersion, global.appVersion)
     ) {
-      console.log('useEffect semver')
       dispatch({type: UPDATE_UI_VERSION, data: global.appVersion})
     }
   })

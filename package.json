@@ -1,7 +1,7 @@
 {
   "name": "lachain-desktop",
   "productName": "Lachain desktop",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "main": "main/index.js",
   "repository": "LAToken/lachain-desktop",
   "scripts": {
@@ -110,6 +110,7 @@
     "next": "^9.3.3",
     "nprogress": "^0.2.0",
     "pino": "^5.13.2",
+    "pino-multi-stream": "^5.1.1",
     "polished": "^3.3.0",
     "progress-stream": "^2.0.0",
     "prop-types": "^15.6.2",

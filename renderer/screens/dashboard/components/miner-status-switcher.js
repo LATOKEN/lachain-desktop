@@ -128,7 +128,6 @@ function MinerStatusSwitcher() {
   const {addError, addNotification} = useNotificationDispatch()
 
   useEffect(() => {
-    console.log({result, error, isReady})
     if (error) {
       addError({
         title: t('error:Error occured'),

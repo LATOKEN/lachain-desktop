@@ -14,6 +14,7 @@ const rimraf = require('rimraf')
 const appDataPath = require('./app-data-path')
 const {sleep} = require('./utils')
 const defaultConfig = require('./default-config.json')
+const logger = require('./logger')
 
 const nodeBin = 'node'
 const nodeNodeReleasesUrl =
@@ -57,7 +58,7 @@ const getReleaseUrl = async () => {
 }
 
 const getRemoteVersion = async () => {
-  console.log('getRemoteVersion')
+  logger.info('getRemoteVersion')
   try {
     const {
       data: {tag_name: tag},
@@ -71,25 +72,25 @@ const getRemoteVersion = async () => {
 async function purgeNode() {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log('PURGING NODE IN FUCKING FIRE')
+      logger.info('PURGING NODE')
       if (fs.existsSync(getNodeDataDir())) {
-        console.log('Delete', getNodeDataDir())
+        logger.info('Delete', getNodeDataDir())
         rimraf.sync(getNodeDataDir())
       }
       if (fs.existsSync(getNodeLogsFile())) {
-        console.log('Delete', getNodeLogsFile())
+        logger.info('Delete', getNodeLogsFile())
         rimraf.sync(getNodeLogsFile())
       }
       if (fs.existsSync(getNodeErrorFile())) {
-        console.log('Delete', getNodeErrorFile())
+        logger.info('Delete', getNodeErrorFile())
         rimraf.sync(getNodeErrorFile())
       }
       if (fs.existsSync(getNodeConfigFile())) {
-        console.log('Delete', getNodeConfigFile())
+        logger.info('Delete', getNodeConfigFile())
         rimraf.sync(getNodeConfigFile())
       }
       if (fs.existsSync(getNodeFile())) {
-        console.log('Delete', getNodeFile())
+        logger.info('Delete', getNodeFile())
         rimraf.sync(getNodeFile())
       }
       resolve()
@@ -107,7 +108,7 @@ let onErrorCb
 
 async function downloadNode(onProgress, onFinish, onError) {
   if (downloading) {
-    console.log('TRYING TO DOWNLOAD NODE WHILE DOWNLOADING')
+    logger.info('TRYING TO DOWNLOAD NODE WHILE DOWNLOADING')
     onProgressCb = onProgress
     onFinishCb = onFinish
     onErrorCb = onError
@@ -118,7 +119,7 @@ async function downloadNode(onProgress, onFinish, onError) {
     onProgressCb = onProgress
     onFinishCb = onFinish
     onErrorCb = onError
-    console.log('DOWNLOADING THE FUCKING NODE')
+    logger.info('DOWNLOADING THE NODE')
     try {
       const url = await getReleaseUrl()
       const version = await getRemoteVersion()
@@ -170,10 +171,10 @@ function writeError(err) {
   try {
     fs.appendFileSync(
       getNodeErrorFile(),
-      `-- node error, time: ${new Date().toUTCString()} --\n${err}\n -- end of error -- \n`
+      `====== NODE ERROR, TIME: ${new Date().toUTCString()}======\n${err}\n====== END OF ERROR ======\n\n`
     )
   } catch (e) {
-    console.log(`cannot write error to file: ${e.toString()}`)
+    logger.error(`cannot write error to file: ${e.toString()}`)
   }
 }
 
@@ -199,7 +200,7 @@ async function startNode(
   const nodeProcess = spawn(getNodeFile(), parameters, {
     cwd: getNodeDir(),
   })
-  console.log(
+  logger.info(
     'node starting, command: ',
     getNodeFile(),
     parameters,
@@ -210,7 +211,7 @@ async function startNode(
     const str = data.toString()
     if (onLog) onLog(str.split('\n').filter(x => x))
     if (useLogging) {
-      console.log(str)
+      logger.info(str)
     }
   })
 
@@ -236,7 +237,7 @@ async function startNode(
 }
 
 async function stopNode(node) {
-  console.log('RECEIVED: node stopping: ', node && node.pid)
+  logger.info('RECEIVED: node stopping: ', node && node.pid)
   return new Promise(async (resolve, reject) => {
     try {
       if (!node) {
@@ -250,11 +251,11 @@ async function stopNode(node) {
           if (err) {
             return reject(err)
           }
-          console.log(`node ${node.pid} stopped successfully`)
+          logger.info(`node ${node.pid} stopped successfully`)
           return resolve(`node ${node.pid} stopped successfully`)
         })
       } else {
-        console.log(`node ${node.pid} stopped successfully`)
+        logger.info(`node ${node.pid} stopped successfully`)
         node.on('exit', () => resolve(`node ${node.pid} stopped successfully`))
         node.on('error', reject)
         node.kill()
@@ -277,7 +278,7 @@ function getCurrentVersion(tempNode) {
         const {version} = semver.coerce(
           data.toString().match(/\d+\.\d+\.\d+/g)[0]
         )
-        console.log(`NODE VERSION ${version}`)
+        logger.info(`NODE VERSION ${version}`)
         return semver.valid(version)
           ? resolve(version)
           : reject(
@@ -305,11 +306,11 @@ function getCurrentVersion(tempNode) {
 function updateNode() {
   return new Promise(async (resolve, reject) => {
     try {
-      console.log('updating node file')
+      logger.info('updating node file')
       const currentNode = getNodeFile()
       const tempNode = getTempNodeFile()
 
-      console.log({currentNode, tempNode})
+      logger.info({currentNode, tempNode})
       let num = 5
       let done = false
       while (num > 0) {
@@ -386,7 +387,7 @@ function checkConfigs() {
     fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfig))
   }
   if (!fs.existsSync(getNodeWalletFile())) {
-    console.log('no wallet.json file found, generating default wallet.json')
+    logger.info('no wallet.json file found, generating default wallet.json')
     // TODO: prompt password
     const key = keccak('12345')
     const wallet = {

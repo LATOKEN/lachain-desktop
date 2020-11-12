@@ -123,14 +123,18 @@ const createMainWindow = () => {
   })
 
   mainWindow.on('close', e => {
-    if (mainWindow.forceClose) {
+    logger.info('close main window')
+    if (mainWindow.forceClose || isLinux) {
+      logger.info('FORCE')
       return
     }
     e.preventDefault()
+    logger.info('hide main window')
     mainWindow.hide()
   })
 
   mainWindow.on('closed', () => {
+    logger.info('closed window')
     mainWindow = null
   })
 }
@@ -351,7 +355,8 @@ app.on('will-finish-launching', function() {
   })
 })
 
-app.on('before-quit', () => {
+app.on('before-quit', async () => {
+  stopNode(node)
   if (searchWindow && !searchWindow.isDestroyed()) {
     searchWindow.destroy()
   }
@@ -361,7 +366,9 @@ app.on('before-quit', () => {
 app.on('activate', showMainWindow)
 
 app.on('window-all-closed', () => {
+  logger.info('All windows closed')
   if (!isMac) {
+    logger.info('All windows closed, so quit!')
     app.quit()
   }
 })
@@ -415,7 +422,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
       break
     }
     case 'start-local-node': {
-      console.log('RECEIVED: start-local-node', data)
+      logger.info('RECEIVED: start-local-node', data)
       checkConfigs()
       startNode(
         data.rpcPort,
@@ -436,7 +443,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
         }
       )
         .then(n => {
-          console.log('RECEIVED: node started', n.pid)
+          logger.info('RECEIVED: node started', n.pid)
           logger.info(
             `node started, PID: ${n.pid}, previous PID: ${
               node ? node.pid : 'undefined'
@@ -452,7 +459,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
       break
     }
     case 'stop-local-node': {
-      console.log('stop-local-node recieved')
+      logger.info('stop-local-node recieved')
       stopNode(node)
         .then(log => {
           logger.info(log)
@@ -535,7 +542,7 @@ autoUpdater.on('update-downloaded', info => {
 
 ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
   logger.info(`new autoupdate command`, command, data)
-  console.log('AUTO_UPDATE_COMMAND', command, data)
+  logger.info('AUTO_UPDATE_COMMAND', command, data)
   switch (command) {
     case 'start-checking': {
       await nodeUpdater.checkForUpdates(
@@ -558,7 +565,7 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
             nodeCurrentVersion: await getCurrentVersion(false),
             isInternalNode: true,
           })
-          console.log('node updated')
+          logger.info('node updated')
         })
         .catch(e => {
           sendMainWindowMsg(NODE_EVENT, 'node-failed')
