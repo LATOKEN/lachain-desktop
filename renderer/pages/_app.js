@@ -1,8 +1,10 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import App from 'next/app'
 import Router from 'next/router'
 import NProgress from 'nprogress'
 import '../i18n'
+import Zendesk, {ZendeskAPI} from 'react-zendesk'
+
 import GlobalStyle from '../shared/components/global-style'
 import {EpochProvider} from '../shared/providers/epoch-context'
 import {IdentityProvider} from '../shared/providers/identity-context'
@@ -23,8 +25,28 @@ export default class MyApp extends App {
     // Workaround for https://github.com/zeit/next.js/issues/8592
     const {err} = this.props
 
+    const ZENDESK_KEY = 'e2f8c06e-3097-4ce6-835d-851fec8fd502'
+
+    const settings = {
+      color: {
+        theme: '#000',
+      },
+      launcher: {
+        chatLabel: {
+          'en-US': 'Need Help',
+        },
+      },
+      helpCenter: {
+        suppress: true,
+      },
+      chat: {
+        suppress: false,
+      },
+    }
+
     return (
       <>
+        <Zendesk zendeskKey={ZENDESK_KEY} {...settings} />
         <GlobalStyle />
         <AppProviders>
           <Component {...{...pageProps, err}} />
