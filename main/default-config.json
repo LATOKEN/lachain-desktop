@@ -50,7 +50,8 @@
       "Qmag5vZe7adknhfft6JwiCSDrHhhwEup8iCks5i59KJqh1@95.217.14.117:41030",
       "QmXACTXsDFW2LxNDWQYR1PcQ5WsWq1Ra3Zd76osLWhE8vZ@95.217.17.248:41031",
       "QmctYjJqodqNFUynRStocsUQHpZEap8quZSEp2Ps5Kewe1@95.217.12.230:41032"
-    ]
+    ],
+    "hubMetricsPort": 7072
   },
   "genesis": {
     "TPKEPublicKey": "0x07000000b01bd8e31026eaeab53b3407bef78ae822bbe4906c636c97ea46dc3287815cb6c00010ab042bf084c21180d237246312",
@@ -177,7 +178,11 @@
       "+"
     ],
     "port": 7070,
-    "apiKey": "asdasdasd"
+    "metricsPort": 7071,
+    "apiKey": "asdasdasd",
+    "peers": [
+      "95.217.6.171:7070"
+    ]
   },
   "vault": {
     "path": "wallet.json",

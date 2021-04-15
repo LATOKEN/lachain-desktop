@@ -1,7 +1,7 @@
 {
   "name": "lachain-desktop",
   "productName": "Lachain desktop",
-  "version": "0.0.19",
+  "version": "0.0.20",
   "main": "main/index.js",
   "repository": "LAToken/lachain-desktop",
   "scripts": {
@@ -126,8 +126,7 @@
     "styled-jsx": "^3.2.2",
     "tree-kill": "^1.2.2",
     "use-deep-compare-effect": "^1.2.0",
-    "xstate": "^4.11.0",
-    "react-zendesk": "^0.1.10"
+    "xstate": "^4.11.0"
   },
   "prettier": {
     "trailingComma": "es5",
