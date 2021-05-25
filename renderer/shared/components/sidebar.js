@@ -162,6 +162,12 @@ function Nav() {
         >
           {t('Wallets')}
         </NavItem>
+          <NavItem
+              href="/validators"
+              icon={<i className="icon icon--small_status" />}
+          >
+              {t('Validators')}
+          </NavItem>
         <NavItem href="/settings" icon={<i className="icon icon--settings" />}>
           {t('Settings')}
         </NavItem>
