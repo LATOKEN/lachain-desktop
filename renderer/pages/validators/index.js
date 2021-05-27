@@ -8,40 +8,15 @@ import TableList from '../../screens/validators/components/table-list'
 import {Box, PageTitle} from '../../shared/components'
 import ListInformation from '../../screens/validators/components/list-information'
 import Loading from '../../shared/components/loading'
+import {ValidatorsListModel} from '../../models/validators/ValidatorsListModel'
 
 export default function Index() {
   const {t} = useTranslation()
-  const nodeIps = [
-    '116.203.75.72:7070',
-    '178.128.113.97:7070',
-    '165.227.45.119:7070',
-    '206.189.137.112:7070',
-    '157.245.160.201:7070',
-    '95.217.6.171:7070',
-    '88.99.190.191:7070',
-    '94.130.78.183:7070',
-    '94.130.24.163:7070',
-    '94.130.110.127:7070',
-    '94.130.110.95:7070',
-    '94.130.58.63:7070',
-    '88.99.86.166:7070',
-    '88.198.78.106:7070',
-    '88.198.78.141:7070',
-    '88.99.126.144:7070',
-    '88.99.87.58:7070',
-    '95.217.6.234:7070',
-    '95.217.12.226:7070',
-    '95.217.14.117:7070',
-    '95.217.17.248:7070',
-    '95.217.12.230:7070',
-  ]
 
-  // ;(async () => {
-  //   start()
-  // })()
   useEffect(() => {
     start()
-  }, [start])
+  }, [])
+
   const [dataList, setDataList] = useState([])
   const [maxBlock, setMaxBlock] = useState(0)
   const [validatorsOnline, setValidatorsOnline] = useState(0)
@@ -50,74 +25,67 @@ export default function Index() {
   const [isLoading, setIsLoading] = useState(false)
   const [isFirstLod, setFirstLoad] = useState(false)
 
-  const columns = {
-    connections: 'connections',
-    status: 'status',
-    block: 'block',
-    address: 'address',
-    txes: 'pool',
+  async function getConsensusPublicKeysValue(maxBlockNodeId) {
+    const {getConsensusPublicKeys} = requester()
+    const validatorItem = new ValidatorsListModel()
+
+    let maxHeightValidators
+    try {
+      maxHeightValidators = (
+        await (
+          await getConsensusPublicKeys(validatorItem.nodeIps[maxBlockNodeId])
+        ).json()
+      )[0].result
+    } catch (e) {
+      maxHeightValidators = []
+    }
+    return maxHeightValidators
   }
 
-  async function start(removeLinesCount) {
-    let nodes = []
-    try {
-      const {getPeers, getConsensusPublicKeys} = requester()
-      let promises = nodeIps.map(x => getPeers(x))
-      if (!isFirstLod) {
-        setIsLoading(true)
-        setFirstLoad(true)
-      }
-      promises = await Promise.all(promises.map(x => x.catch(e => e)))
-      promises = promises.map(x => (x && x.json ? x.json() : {}))
-      const results = await Promise.all(promises)
-
+  async function setNodeData(nodeList) {
+    if (nodeList.length) {
       let maxBlock = 0
-      let maxBlockNodeId
+      let maxBlockNodeId = null
+      let newNodeList = []
 
-      results.forEach((res, i) => {
-        const node = {
-          ip: nodeIps[i],
-          connections:
-            res && res[0] && res[1].result ? res[0].result.length : 'X',
-          status: res && res[1] && res[1].result ? res[1].result.state : 'X',
-          // pubKeys: res.result.map(x => x.publicKey),
-        }
-        if (res && res[0] && res[0].result && res[1] && res[1].result) {
-          node[columns.connections] = res[0].result.length
-          node[columns.status] = res[1].result.state
-          node[columns.address] = res[1].result.address
-          node.publicKey = res[1].result.publicKey
-          node[columns.block] = Number(res[2].result)
-          if (node[columns.block] > maxBlock) {
-            maxBlock = node[columns.block]
-            maxBlockNodeId = i
+      nodeList.forEach((items, index) => {
+        const validatorItem = new ValidatorsListModel()
+        validatorItem.ip = validatorItem.nodeIps[index]
+
+        // console.log(items)
+        if (
+          items &&
+          items[0] &&
+          items[0].result &&
+          items[1] &&
+          items[1].result
+        ) {
+          validatorItem.connections = items[0].result.length
+          validatorItem.status = items[1].result.state
+          validatorItem.address = items[1].result.address
+          validatorItem.publicKey = items[1].result.publicKey
+          validatorItem.block = Number(items[2].result)
+          if (validatorItem.block > maxBlock) {
+            maxBlock = validatorItem.block
+            maxBlockNodeId = index
           }
-          if (res && res[3] && res[3].result) {
-            node[columns.txes] = res[3].result.length
-          }
-          setIsLoading(false)
-        } else {
-          Object.values(columns).forEach(x => {
-            node[x] = 'X'
-          })
         }
-        nodes.push(node)
-        setIsLoading(false)
+        if (items && items[3] && items[3].result) {
+          validatorItem.txes = items[3].result.length
+        }
+        newNodeList.push(validatorItem)
       })
+      let maxHeightValidators = []
 
-      let maxHeightValidators
-      try {
-        maxHeightValidators = (
-          await (await getConsensusPublicKeys(nodeIps[maxBlockNodeId])).json()
-        )[0].result
-      } catch (e) {
-        maxHeightValidators = []
+      if (maxBlockNodeId) {
+        maxHeightValidators = await getConsensusPublicKeysValue(maxBlockNodeId)
       }
+
       const consensusParticipants = maxHeightValidators.length
       let validatorsOnline = 0
       let synced = 0
 
-      nodes = nodes.map(x => {
+      newNodeList = newNodeList.map(x => {
         x.validatorAtMaxHeight = maxHeightValidators.includes(x.publicKey)
           ? true
           : '-'
@@ -127,20 +95,35 @@ export default function Index() {
         return x
       })
 
-      if (JSON.stringify(dataList) !== JSON.stringify(nodes)) {
-        setDataList(nodes)
+      if (JSON.stringify(dataList) !== JSON.stringify(newNodeList)) {
+        setDataList(newNodeList)
         setMaxBlock(maxBlock)
         setConsensusParticipants(consensusParticipants)
         setValidatorsOnline(validatorsOnline)
         setSynced(synced)
       }
-    } catch (e) {
-      console.error(e)
-    } finally {
-      setTimeout(() => {
-        start(nodes.length + 4)
-      }, 2000)
+      return Promise.resolve(dataList)
     }
+  }
+
+  async function start(removeLinesCount) {
+    const nodeList = new ValidatorsListModel()
+    const {getPeers} = requester()
+    let promises = nodeList.nodeIps.map(x => getPeers(x))
+    if (!isFirstLod) {
+      setIsLoading(true)
+      setFirstLoad(true)
+    }
+    promises = await Promise.all(promises.map(x => x.catch(e => e)))
+    promises = promises.map(x => (x && x.json ? x.json() : {}))
+    await Promise.all(promises).then(data => {
+      setNodeData(data).then(newData => {
+        if (newData.length) {
+          start()
+        }
+      })
+      setIsLoading(false)
+    })
   }
 
   function requester() {

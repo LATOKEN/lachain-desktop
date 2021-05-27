@@ -29,7 +29,7 @@ function TableList({dataList = []}) {
             <li title={item.status ? item.status.toString() : 'x'}>{item.status || '—'}</li>
             <li title={item.address ? item.address.toString() : 'x'}>{item.address || '—'}</li>
             <li title={item.block ? item.block.toString() : 'x'}>{item.block || '—'}</li>
-            <li title={item.pool ? item.pool.toString() : 'x'}>{item.pool || '—'}</li>
+            <li title={item.pool ? item.pool.toString() : 'x'}>{item.txes || '—'}</li>
             <li title={item.validatorAtMaxHeight ? item.validatorAtMaxHeight.toString() : 'x'}>
               {item.validatorAtMaxHeight.toString() || '—'}
             </li>
@@ -41,6 +41,7 @@ function TableList({dataList = []}) {
           display: flex;
           margin: 0;
           padding: 0;
+          width: 100%;
         }
 
         .table-header .table-tr li {
@@ -53,7 +54,9 @@ function TableList({dataList = []}) {
         }
 
         .table-tr li {
-          min-width: 150px;
+          min-width: 170px;
+          max-width: 100%;
+          width: 100%;
           list-style: none;
           white-space: nowrap;
           overflow: hidden;
@@ -61,8 +64,8 @@ function TableList({dataList = []}) {
           padding: 4px 10px;
         }
 
-        .table-tr li:nth-child(3) {
-          min-width: 100px;
+        .table-tr li:nth-child(4) {
+          min-width: 400px;
         }
 
         .table-tr li:nth-child(5),
