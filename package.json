@@ -89,7 +89,9 @@
     "testcafe-react-selectors": "^4.0.0"
   },
   "dependencies": {
+    "@analytics/google-analytics": "^0.5.2",
     "@toast-ui/react-image-editor": "https://github.com/nhn/toast-ui.react-image-editor",
+    "analytics": "^0.7.5",
     "ansi-to-react": "^6.0.5",
     "axios": "^0.18.1",
     "dayjs": "^1.8.14",
