@@ -44,6 +44,7 @@ export default function Layout({loading, syncing, offline, ...props}) {
   })
   analytics.page()
   analytics.track('buttonClicked', {})
+
   return (
     <main>
       <Sidebar />
