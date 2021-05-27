@@ -1,6 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {useTranslation} from 'react-i18next'
+import Analytics from 'analytics'
+import googleAnalytics from '@analytics/google-analytics'
 import Sidebar from './sidebar'
 import Notifications from './notifications'
 import SyncingApp, {OfflineApp, LoadingApp} from './syncing-app'
@@ -32,6 +34,16 @@ export default function Layout({loading, syncing, offline, ...props}) {
 
   const {addError} = useNotificationDispatch()
 
+  const analytics = Analytics({
+    app: 'lachain-desktop',
+    plugins: [
+      googleAnalytics({
+        trackingId: 'UA-198032624-1',
+      }),
+    ],
+  })
+  analytics.page()
+  analytics.track('buttonClicked', {})
   return (
     <main>
       <Sidebar />
