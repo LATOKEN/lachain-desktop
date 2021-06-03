@@ -206,3 +206,6 @@
 .icon--menu_editor:before {
   content: '\e908';
 }
+.icon--process:before {
+  content: '\e910';
+}

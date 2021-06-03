@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import {useTranslation} from 'react-i18next'
+
 import Sidebar from './sidebar'
 import Notifications from './notifications'
 import SyncingApp, {OfflineApp, LoadingApp} from './syncing-app'
@@ -10,6 +11,7 @@ import {addWheelHandler} from '../utils/mouse'
 import {loadPersistentStateValue, persistItem} from '../utils/persist'
 import {DnaSignInDialog, DnaSendDialog, DnaLinkHandler} from './dna-link'
 import {useNotificationDispatch} from '../providers/notification-context'
+import {useAnalytics} from '../hooks/use-analytics'
 
 global.getZoomLevel = global.getZoomLevel || {}
 
@@ -32,6 +34,8 @@ export default function Layout({loading, syncing, offline, ...props}) {
 
   const {addError} = useNotificationDispatch()
 
+  const analyics = useAnalytics()
+  analyics.page()
   return (
     <main>
       <Sidebar />
