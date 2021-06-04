@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import {ValidatorsListModel} from '../../models/validators/ValidatorsListModel'
+import {useAnalytics} from './use-analytics'
 
 export function useValidators() {
   useEffect(() => {
@@ -17,12 +18,14 @@ export function useValidators() {
   const [synced, setSynced] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isFirstLod, setFirstLoad] = useState(false)
-  let controller = new AbortController()
+  const controller = new AbortController()
   const {signal} = controller
+  const analytics = useAnalytics()
 
-  function abortFunctions(){
+  function abortFunctions() {
     controller.abort()
   }
+
   async function getConsensusPublicKeysValue(maxBlockNodeId) {
     const {getConsensusPublicKeys} = requester()
     const validatorItem = new ValidatorsListModel()
@@ -42,15 +45,12 @@ export function useValidators() {
 
   async function setNodeData(nodeList) {
     if (nodeList.length) {
-      let maxBlock = 0
+      let maxBlocks = 0
       let maxBlockNodeId = null
       let newNodeList = []
-
       nodeList.forEach((items, index) => {
         const validatorItem = new ValidatorsListModel()
         validatorItem.ip = validatorItem.nodeIps[index]
-
-        // console.log(items)
         if (
           items &&
           items[0] &&
@@ -58,13 +58,13 @@ export function useValidators() {
           items[1] &&
           items[1].result
         ) {
-          validatorItem.connections = items[0].result.length
-          validatorItem.status = items[1].result.state
-          validatorItem.address = items[1].result.address
-          validatorItem.publicKey = items[1].result.publicKey
-          validatorItem.block = Number(items[2].result)
+          validatorItem.connections = items[0] ? items[0].result.length : '-'
+          validatorItem.status = items[1] ? items[1].result.state : '-'
+          validatorItem.address = items[1] ? items[1].result.address : '-'
+          validatorItem.publicKey = items[1] ? items[1].result.publicKey : '-'
+          validatorItem.block = items[2] ? Number(items[2].result) : '-'
           if (validatorItem.block > maxBlock) {
-            maxBlock = validatorItem.block
+            maxBlocks = validatorItem.block
             maxBlockNodeId = index
           }
         }
@@ -75,30 +75,26 @@ export function useValidators() {
       })
 
       let maxHeightValidators = []
+      maxHeightValidators = await getConsensusPublicKeysValue(maxBlockNodeId)
 
-      if (maxBlockNodeId) {
-        maxHeightValidators = await getConsensusPublicKeysValue(maxBlockNodeId)
-      }
-
-      const consensusParticipants = maxHeightValidators.length
-      let validatorsOnline = 0
-      let synced = 0
+      let validatorsOnlines = 0
+      let synceds = 0
 
       newNodeList = newNodeList.map(x => {
         x.validatorAtMaxHeight = maxHeightValidators.includes(x.publicKey)
           ? true
           : '-'
         delete x.publicKey
-        if (x.address && x.validatorAtMaxHeight === true) validatorsOnline++
-        if (maxBlock - x.block <= 100) synced++
+        if (x.address && x.validatorAtMaxHeight === true) validatorsOnlines += 1
+        if (maxBlock - x.block <= 100) synceds += 1
         return x
       })
 
       setDataList(newNodeList)
-      setMaxBlock(maxBlock)
-      setConsensusParticipants(consensusParticipants)
-      setValidatorsOnline(validatorsOnline)
-      setSynced(synced)
+      setMaxBlock(maxBlocks)
+      setConsensusParticipants(maxHeightValidators.length)
+      setValidatorsOnline(validatorsOnlines)
+      setSynced(synceds)
       return Promise.resolve(newNodeList)
     }
   }
@@ -130,29 +126,29 @@ export function useValidators() {
             jsonrpc: '2.0',
             method: 'net_peers',
             params: [],
-            id: requestId++,
+            id: (requestId += 1),
           },
           {
             jsonrpc: '2.0',
             method: 'fe_account',
             params: [],
-            id: requestId++,
+            id: (requestId += 1),
           },
           {
             jsonrpc: '2.0',
             method: 'eth_blockNumber',
             params: [],
-            id: requestId++,
+            id: (requestId += 1),
           },
           {
             jsonrpc: '2.0',
             method: 'getTransactionPool',
             params: [],
-            id: requestId++,
+            id: (requestId += 1),
           },
         ]
 
-        return r(nodeUrl, data).catch(e => undefined)
+        return r(nodeUrl, data).catch(() => undefined)
       },
       async getConsensusPublicKeys(nodeUrl) {
         const request = [
@@ -160,11 +156,11 @@ export function useValidators() {
             jsonrpc: '2.0',
             method: 'bcn_validators',
             params: [],
-            id: requestId++,
+            id: (requestId += 1),
           },
         ]
 
-        return r(nodeUrl, request).catch(e => undefined)
+        return r(nodeUrl, request).catch(() => undefined)
       },
     }
   }
@@ -182,10 +178,16 @@ export function useValidators() {
 
   function timedFetch(url, options, timeout = 2000) {
     return Promise.race([
-      fetch(url, {...options, signal},),
-      // new Promise((_, reject) =>
-      //   setTimeout(() => reject(new Error('timeout')), timeout)
-      // ),
+      fetch(url, {...options, signal}).catch(error => {
+        analytics.event({
+          category: 'Error',
+          action: 'ValidatorGetPeers',
+          label: error,
+        })
+      }),
+      new Promise((_, reject) =>
+        setTimeout(() => reject(new Error('timeout')), timeout)
+      ),
     ])
   }
 

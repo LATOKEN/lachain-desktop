@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import {useInterval} from '../hooks/use-interval'
 import {fetchSync} from '../api'
 import {useSettingsState} from './settings-context'
+import {useAnalytics} from '../hooks/use-analytics'
 
 const FETCH_SYNC_SUCCEEDED = 'FETCH_SYNC_SUCCEEDED'
 const FETCH_SYNC_FAILED = 'FETCH_SYNC_FAILED'
@@ -45,6 +46,7 @@ function chainReducer(state, action) {
 }
 
 const ChainStateContext = React.createContext()
+const analytics = useAnalytics()
 
 // eslint-disable-next-line react/prop-types
 function ChainProvider({children}) {
@@ -61,6 +63,11 @@ function ChainProvider({children}) {
         const sync = await fetchSync()
         dispatch({type: FETCH_SYNC_SUCCEEDED, payload: sync})
       } catch (error) {
+        analytics.event({
+          category: 'Error',
+          action: 'chainProvider',
+          label: error,
+        })
         dispatch({type: FETCH_SYNC_FAILED})
       }
     },
@@ -78,6 +85,11 @@ function ChainProvider({children}) {
 function useChainState() {
   const context = React.useContext(ChainStateContext)
   if (context === undefined) {
+    analytics.event({
+      category: 'Error',
+      action: 'useChainState',
+      label: 'useChainState must be used within a ChainProvider',
+    })
     throw new Error('useChainState must be used within a ChainProvider')
   }
   return context

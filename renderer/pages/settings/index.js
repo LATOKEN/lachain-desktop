@@ -25,20 +25,21 @@ import {
   useSettingsDispatch,
 } from '../../shared/providers/settings-context'
 import {AVAILABLE_LANGS} from '../../i18n'
+import {useAnalytics} from "../../shared/hooks/use-analytics";
 
-const {clear: clearFlips} = global.flipStore || {}
-const inviteDb = global.invitesDb || {}
+// const {clear: clearFlips} = global.flipStore || {}
+// const inviteDb = global.invitesDb || {}
 
 function Settings() {
-  const {t} = useTranslation()
-  const {addNotification} = useNotificationDispatch()
+  // const {t} = useTranslation()
+  // const {addNotification} = useNotificationDispatch()
   const {runInternalNode, useExternalNode} = useSettingsState()
   return (
     <SettingsLayout>
       {global.isDev && <></>}
-      <ExportPK />
-      {runInternalNode && !useExternalNode && <ImportPK />}
-      <LocaleSwitcher />
+      <ExportPK/>
+      {runInternalNode && !useExternalNode && <ImportPK/>}
+      <LocaleSwitcher/>
     </SettingsLayout>
   )
 }
@@ -96,7 +97,7 @@ function ExportPK() {
             textAlign: 'center',
           }}
         >
-          <QRCode value={pk} />
+          <QRCode value={pk}/>
         </Box>
         <Box>
           <Field
@@ -112,6 +113,8 @@ function ExportPK() {
     </Section>
   )
 }
+
+const analytics = useAnalytics()
 
 function ImportPK() {
   const {t} = useTranslation('error')
@@ -140,6 +143,11 @@ function ImportPK() {
         setPassword('')
       }
     } catch (e) {
+      analytics.event({
+        category: 'Error',
+        action: 'importPK',
+        label: e,
+      })
       addError({
         title: t('error:Error while importing key'),
         body: t(
