@@ -5,7 +5,7 @@ import {useAnalytics} from './use-analytics'
 export function useValidators() {
   useEffect(() => {
     start()
-      // todo find an alternative way to the abortController to prevent memory lake, as it is not supported by the current next.js version
+    // todo find an alternative way to the abortController to prevent memory lake, as it is not supported by the current next.js version
   }, [])
 
   const [dataList, setDataList] = useState([])

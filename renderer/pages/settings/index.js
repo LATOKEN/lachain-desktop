@@ -37,9 +37,9 @@ function Settings() {
   return (
     <SettingsLayout>
       {global.isDev && <></>}
-      <ExportPK/>
-      {runInternalNode && !useExternalNode && <ImportPK/>}
-      <LocaleSwitcher/>
+      <ExportPK />
+      {runInternalNode && !useExternalNode && <ImportPK />}
+      <LocaleSwitcher />
     </SettingsLayout>
   )
 }
@@ -97,7 +97,7 @@ function ExportPK() {
             textAlign: 'center',
           }}
         >
-          <QRCode value={pk}/>
+          <QRCode value={pk} />
         </Box>
         <Box>
           <Field
