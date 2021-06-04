@@ -1,0 +1,56 @@
+
+.table-tr {
+    display : flex;
+    margin  : 0;
+    padding : 0;
+    width   : 100%;
+}
+
+
+.table-header .table-tr li {
+    font-weight      : 600;
+    padding          : 5px 10px;
+    background-color : rgba(0, 0, 0, 0.05);
+}
+
+.table-body .table-tr:nth-child(even) li {
+    background-color : rgba(0, 0, 0, 0.05);
+}
+
+.table-tr li {
+    min-width     : 200px;
+    max-width     : 100%;
+    width         : 100%;
+    list-style    : none;
+    white-space   : nowrap;
+    overflow      : hidden;
+    text-overflow : ellipsis;
+    padding       : 7px 10px;
+}
+
+.table-block {
+    overflow   : hidden;
+    overflow-x : auto;
+}
+
+
+/*  For transaction table block*/
+
+.P-transaction-table .table-tr li:nth-child(4) {
+    min-width : 80px;
+    max-width : 50px;
+}
+
+
+/*  For validators table block*/
+
+.P-validators-table .table-tr li:nth-child(4) {
+    min-width : 400px;
+}
+
+.P-validators-table .table-tr li:nth-child(5),
+.P-validators-table .table-tr li:nth-child(6),
+.P-validators-table .table-tr li:nth-child(2) {
+    min-width : 100px;
+}
+

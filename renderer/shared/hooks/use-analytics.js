@@ -1,16 +1,6 @@
-import Analytics from 'analytics'
-import googleAnalytics from '@analytics/google-analytics'
+import ReactGA from 'react-ga'
 
 export function useAnalytics() {
-  return Analytics({
-    app: 'lachain-desktop',
-    plugins: [
-      googleAnalytics({
-        trackingId: 'UA-198032624-1',
-        customDimensions: {
-          buttonName: 'dimension1',
-        },
-      }),
-    ],
-  })
+  ReactGA.initialize('UA-198032624-1')
+  return ReactGA
 }
