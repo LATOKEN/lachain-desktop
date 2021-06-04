@@ -25,7 +25,7 @@ import {
   useSettingsDispatch,
 } from '../../shared/providers/settings-context'
 import {AVAILABLE_LANGS} from '../../i18n'
-import {useAnalytics} from "../../shared/hooks/use-analytics";
+import {useAnalytics} from '../../shared/hooks/use-analytics';
 
 // const {clear: clearFlips} = global.flipStore || {}
 // const inviteDb = global.invitesDb || {}

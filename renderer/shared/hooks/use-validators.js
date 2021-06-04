@@ -5,10 +5,7 @@ import {useAnalytics} from './use-analytics'
 export function useValidators() {
   useEffect(() => {
     start()
-
-    return () => {
-      abortFunctions()
-    }
+      //todo find an alternative way to the abortController to prevent memory lake, as it is not supported by the current next.js version
   }, [])
 
   const [dataList, setDataList] = useState([])
@@ -18,13 +15,7 @@ export function useValidators() {
   const [synced, setSynced] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isFirstLod, setFirstLoad] = useState(false)
-  const controller = new AbortController()
-  const {signal} = controller
   const analytics = useAnalytics()
-
-  function abortFunctions() {
-    controller.abort()
-  }
 
   async function getConsensusPublicKeysValue(maxBlockNodeId) {
     const {getConsensusPublicKeys} = requester()
@@ -178,7 +169,7 @@ export function useValidators() {
 
   function timedFetch(url, options, timeout = 2000) {
     return Promise.race([
-      fetch(url, {...options, signal}).catch(error => {
+      fetch(url, {...options}).catch(error => {
         analytics.event({
           category: 'Error',
           action: 'ValidatorGetPeers',
