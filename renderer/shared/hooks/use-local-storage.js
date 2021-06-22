@@ -2,7 +2,9 @@ import React from 'react'
 import {useAnalytics} from './use-analytics'
 
 function useLocalStorage(key, initialValue) {
+
   const {setAnalytics} = useAnalytics()
+
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = React.useState(() => {

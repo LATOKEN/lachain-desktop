@@ -38,6 +38,7 @@ export default function Layout({loading, syncing, offline, ...props}) {
   const {setAnalyticBasePath} = useAnalytics()
   setAnalyticBasePath(path)
 
+  const analyics = useAnalytics()
   return (
     <main>
       <Sidebar />

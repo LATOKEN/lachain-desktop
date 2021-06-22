@@ -35,6 +35,8 @@ export default function useRpc(initialMethod, ...initialParams) {
       id: 0,
     }
   )
+
+  const analytics = useAnalytics()
   const [dataState, dataDispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -83,6 +85,11 @@ export default function useRpc(initialMethod, ...initialParams) {
       } catch (error) {
         setAnalytics('Error', 'Use RPC', JSON.stringify(error))
         if (!ignore) {
+          analytics.event({
+            category: 'Error',
+            action: 'useRpcFetchData',
+            label: JSON.stringify(error),
+          })
           dataDispatch({type: 'fail', error})
         }
       }

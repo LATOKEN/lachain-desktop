@@ -17,7 +17,6 @@ function TransactionList({dataList = []}) {
       'openTransactionViewModal',
       'openTransactionViewModal'
     )
-
     setTransactionDetails(item)
     setIsOpenModal(true)
   }

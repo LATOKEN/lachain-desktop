@@ -15,4 +15,5 @@ export function useAnalytics() {
     ReactGA.pageview(path)
   }
   return {setAnalytics, setAnalyticBasePath}
+
 }
