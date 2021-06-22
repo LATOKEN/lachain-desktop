@@ -115,6 +115,7 @@ function NodeProvider({children}) {
       })
     }
   }, [
+    settings.logLevel,
     settings.internalPort,
     state.nodeReady,
     state.nodeStarted,

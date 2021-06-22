@@ -1,11 +1,12 @@
 import React from 'react'
 import * as api from '../api'
+import {useAnalytics} from '../hooks/use-analytics'
 
 const db = global.contactsDb || {}
 
 const ContactStateContext = React.createContext()
 const ContactDispatchContext = React.createContext()
-
+const analytics = useAnalytics()
 // eslint-disable-next-line react/prop-types
 function ContactProvider({children}) {
   const [contacts, setContacts] = React.useState([])
@@ -57,6 +58,11 @@ function ContactProvider({children}) {
 function useContactState() {
   const context = React.useContext(ContactStateContext)
   if (context === undefined) {
+    analytics.event({
+      category: 'Error',
+      action: 'useContactState',
+      label: 'useContactState must be used within a ContactProvider',
+    })
     throw new Error('useContactState must be used within a ContactProvider')
   }
   return context
@@ -65,6 +71,11 @@ function useContactState() {
 function useContactDispatch() {
   const context = React.useContext(ContactDispatchContext)
   if (context === undefined) {
+    analytics.event({
+      category: 'Error',
+      action: 'useContactDispatch',
+      label: 'useContactDispatch must be used within a ContactProvider',
+    })
     throw new Error('useContactDispatch must be used within a ContactProvider')
   }
   return context

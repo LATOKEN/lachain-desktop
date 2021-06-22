@@ -8,7 +8,7 @@ import {Figure} from '../../../shared/components/utils'
 import {
   useIdentityState,
   mapToFriendlyStatus,
-  AccountStatus,
+  // AccountStatus,
 } from '../../../shared/providers/identity-context'
 
 export function NetProfile() {

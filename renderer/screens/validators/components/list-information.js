@@ -11,8 +11,14 @@ function ListInformation({
   return (
     <div className="information-table">
       <p>
-          Current block: <strong>{maxBlock}</strong>; online validators: <strong>{validatorsOnline}/
-          {consensusParticipants}</strong>; online nodes : <strong>{synced}/{nodes}</strong>
+        Current block: <strong>{maxBlock}</strong>; online validators:{' '}
+        <strong>
+          {validatorsOnline}/{consensusParticipants}
+        </strong>
+        ; online nodes :{' '}
+        <strong>
+          {synced}/{nodes}
+        </strong>
       </p>
       <style jsx>{`
         .information-table {

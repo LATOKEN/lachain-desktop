@@ -78,6 +78,11 @@ function ChainProvider({children}) {
 function useChainState() {
   const context = React.useContext(ChainStateContext)
   if (context === undefined) {
+    // analytics.event({
+    //   category: 'Error',
+    //   action: 'useChainState',
+    //   label: 'useChainState must be used within a ChainProvider',
+    // })
     throw new Error('useChainState must be used within a ChainProvider')
   }
   return context

@@ -41,6 +41,7 @@ const getNodeErrorFile = () => path.join(getNodeDir(), 'logs', 'error.log')
 
 const getReleaseUrl = async () => {
   const {data} = await axios.get(nodeNodeReleasesUrl)
+
   let assetName = 'lachain-linux-x64'
   switch (process.platform) {
     case 'win32':

@@ -1,31 +1,45 @@
 /* eslint-disable import/prefer-default-export */
 import api from './api-client'
 import {strip} from '../utils/obj'
+import {useAnalytics} from '../hooks/use-analytics'
 
+const {setAnalytics} = useAnalytics()
 export async function sendInvite({to, amount}) {
-  const {data} = await api().post('/', {
-    method: 'dna_sendInvite',
-    params: [strip({to, amount})],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_sendInvite',
+      params: [strip({to, amount})],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Dna send invite', JSON.stringify(e))
+    })
   return data
 }
 
 export async function activateInvite(to, key) {
-  const {data} = await api().post('/', {
-    method: 'dna_activateInvite',
-    params: [strip({to, key})],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_activateInvite',
+      params: [strip({to, key})],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Dna active  invite', JSON.stringify(e))
+    })
   return data
 }
 
 export async function fetchIdentities() {
-  const {data} = await api().post('/', {
-    method: 'dna_identities',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_identities',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Dna fetch  identities', JSON.stringify(e))
+    })
   const {result} = data
   return result
 }
@@ -56,11 +70,19 @@ export async function fetchIdentities() {
  * @returns {Identity} Identity details
  */
 export async function fetchIdentity(address) {
-  const {data} = await api().post('/', {
-    method: 'fe_account',
-    params: address ? [address] : [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'fe_account',
+      params: address ? [address] : [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics(
+        'Error',
+        'Fetch identity info for the address',
+        JSON.stringify(e)
+      )
+    })
   const {result, error} = data
   if (error) throw new Error(error.message)
   return result
@@ -81,11 +103,19 @@ export async function fetchIdentity(address) {
  * @returns {Epoch} Epoch details
  */
 export async function fetchEpoch() {
-  const {data} = await api().post('/', {
-    method: 'bcn_cycle',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'bcn_cycle',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics(
+        'Error',
+        'Fetch current epoch information',
+        JSON.stringify(e)
+      )
+    })
   const {result, error} = data
   if (error) throw new Error(error.message)
   return result
@@ -104,11 +134,19 @@ export async function fetchEpoch() {
   }
  */
 export async function fetchCeremonyIntervals() {
-  const {data} = await api().post('/', {
-    method: 'fe_phase',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'fe_phase',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics(
+        'Error',
+        'Fetch timings specific to validation ceremony',
+        JSON.stringify(e)
+      )
+    })
   const {result, error} = data
   if (error) throw new Error(error.message)
   console.log(result)
@@ -122,11 +160,15 @@ export async function fetchCeremonyIntervals() {
  * @example 0xf228fa1e9236343c7d44283b5ffcf9ba50df37e8
  */
 export async function fetchCoinbaseAddress() {
-  const {data} = await api().post('/', {
-    method: 'dna_getCoinbaseAddr',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_getCoinbaseAddr',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Fetches coinbase address', JSON.stringify(e))
+    })
   const {result, error} = data
   if (error) throw new Error(error.message)
   return result
@@ -146,114 +188,162 @@ export async function fetchCoinbaseAddress() {
  */
 export async function fetchFlip(hash) {
   global.logger.debug(`flip_get request`, hash)
-  const {data} = await api().post('/', {
-    method: 'flip_get',
-    params: [hash],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'flip_get',
+      params: [hash],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics(
+        'Error',
+        'Fetches hex representation of the FLIP published in the network',
+        JSON.stringify(e)
+      )
+    })
   global.logger.debug(`flip_get response`, hash)
   return data
 }
 
 export async function submitFlip(hex, publicHex, privateHex, pairId) {
   console.warn('hex will be depreacted soon, consider using pub/priv parts')
-  const {data} = await api().post('/', {
-    method: 'flip_submit',
-    params: [{publicHex, privateHex, pairId}],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'flip_submit',
+      params: [{publicHex, privateHex, pairId}],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics(
+        'Error',
+        'Submit flip,hex will be depreacted soon, consider using pub/priv parts',
+        JSON.stringify(e)
+      )
+    })
   return data
 }
 
 export async function deleteFlip(hash) {
-  const {data} = await api().post('/', {
-    method: 'flip_delete',
-    params: [hash],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'flip_delete',
+      params: [hash],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Flip delete', JSON.stringify(e))
+    })
   return data
 }
 
 export async function killIdentity(from, to) {
-  const {data} = await api().post('/', {
-    method: 'dna_sendTransaction',
-    params: [
-      {
-        type: 3,
-        from,
-        to,
-      },
-    ],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_sendTransaction',
+      params: [
+        {
+          type: 3,
+          from,
+          to,
+        },
+      ],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Kill identity', JSON.stringify(e))
+    })
   return data
 }
 
 export async function killInvitee(from, to) {
-  const {data} = await api().post('/', {
-    method: 'dna_sendTransaction',
-    params: [
-      {
-        type: 10,
-        from,
-        to,
-      },
-    ],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_sendTransaction',
+      params: [
+        {
+          type: 10,
+          from,
+          to,
+        },
+      ],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Kill invite', JSON.stringify(e))
+    })
   return data
 }
 
 export async function becomeOnline() {
-  const {data} = await api().post('/', {
-    method: 'dna_becomeOnline',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_becomeOnline',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Become online', JSON.stringify(e))
+    })
   return data
 }
 
 export async function becomeOffline() {
-  const {data} = await api().post('/', {
-    method: 'dna_becomeOffline',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_becomeOffline',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Become offline', JSON.stringify(e))
+    })
   return data
 }
 
 export async function sendTransaction(from, to, amount, payload = null) {
-  const {data} = await api().post('/', {
-    method: 'fe_sendTransaction',
-    params: [
-      strip({
-        from,
-        to,
-        amount,
-        payload,
-      }),
-    ],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'fe_sendTransaction',
+      params: [
+        strip({
+          from,
+          to,
+          amount,
+          payload,
+        }),
+      ],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Send transaction', JSON.stringify(e))
+    })
   return data
 }
 
 export async function fetchNodeVersion() {
-  const {data} = await api().post('/', {
-    method: 'net_version',
-    params: [],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'net_version',
+      params: [],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Fetch node version', JSON.stringify(e))
+    })
   const {result, error} = data
   if (error) throw new Error(error.message)
   return result
 }
 
 export async function importKey(key, password) {
-  const {data} = await api().post('/', {
-    method: 'dna_importKey',
-    params: [{key, password}],
-    id: 1,
-  })
+  const {data} = await api()
+    .post('/', {
+      method: 'dna_importKey',
+      params: [{key, password}],
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Import key', JSON.stringify(e))
+    })
   return data
 }

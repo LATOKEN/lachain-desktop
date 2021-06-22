@@ -1,6 +1,7 @@
 import {useReducer, useCallback} from 'react'
 import useDeepCompareEffect from 'use-deep-compare-effect'
 import api from '../api/api-client'
+import {useAnalytics} from './use-analytics'
 
 /**
  * @typedef UseRpcResult
@@ -20,6 +21,7 @@ import api from '../api/api-client'
  * @returns {[UseRpcResult, *]} Result
  */
 export default function useRpc(initialMethod, ...initialParams) {
+  const {setAnalytics} = useAnalytics()
   const [rpcBody, dispatchRpc] = useReducer(
     (state, [method, ...params]) => ({
       ...state,
@@ -33,7 +35,6 @@ export default function useRpc(initialMethod, ...initialParams) {
       id: 0,
     }
   )
-
   const [dataState, dataDispatch] = useReducer(
     (state, action) => {
       switch (action.type) {
@@ -80,6 +81,7 @@ export default function useRpc(initialMethod, ...initialParams) {
           dataDispatch({type: 'done', ...data})
         }
       } catch (error) {
+        setAnalytics('Error', 'Use RPC', JSON.stringify(error))
         if (!ignore) {
           dataDispatch({type: 'fail', error})
         }

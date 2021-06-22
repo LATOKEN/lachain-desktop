@@ -12,6 +12,7 @@ import {loadPersistentStateValue, persistItem} from '../utils/persist'
 import {DnaSignInDialog, DnaSendDialog, DnaLinkHandler} from './dna-link'
 import {useNotificationDispatch} from '../providers/notification-context'
 import {useAnalytics} from '../hooks/use-analytics'
+import {usePath} from '../hooks/use-path'
 
 global.getZoomLevel = global.getZoomLevel || {}
 
@@ -20,6 +21,7 @@ const AVAILABLE_TIMEOUT = global.isDev ? 0 : 1000 * 5
 export default function Layout({loading, syncing, offline, ...props}) {
   const debouncedSyncing = useDebounce(syncing, AVAILABLE_TIMEOUT)
   const debouncedOffline = useDebounce(offline, AVAILABLE_TIMEOUT)
+  const {path} = usePath()
 
   const [zoomLevel, setZoomLevel] = React.useState(
     () => loadPersistentStateValue('settings', 'zoomLevel') || 0
@@ -33,9 +35,9 @@ export default function Layout({loading, syncing, offline, ...props}) {
   }, [zoomLevel])
 
   const {addError} = useNotificationDispatch()
+  const {setAnalyticBasePath} = useAnalytics()
+  setAnalyticBasePath(path)
 
-  const analyics = useAnalytics()
-  analyics.page()
   return (
     <main>
       <Sidebar />

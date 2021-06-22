@@ -48,6 +48,7 @@ function NodeSettings() {
   } = useSettingsDispatch()
 
   const [showConfirmModal, setConfirmModalShow] = useState(false)
+  const [nodeMode, setNodeMode] = useState(1)
   const {nodeFailed} = useNodeState()
   const {tryRestartNode} = useNodeDispatch()
   const logsRef = useRef(null)
@@ -129,6 +130,18 @@ function NodeSettings() {
       title: t('Settings updated'),
       body: t('Connected to url', {url: state.url}),
     })
+
+  function setNodeModeData(modeData) {
+    setNodeMode(modeData)
+    localStorage.setItem('nodeMode', modeData)
+    global.ipcRenderer.send(NODE_COMMAND, 'change-node-mode', {modeData})
+  }
+  useEffect(() => {
+    const nodeModeValue = +localStorage.getItem('nodeMode')
+    if (nodeModeValue) {
+      setNodeMode(nodeModeValue)
+    }
+  })
 
   const [revealApiKey, setRevealApiKey] = useState(false)
 
@@ -221,6 +234,31 @@ function NodeSettings() {
             </div>
           </div>
         </Flex>
+      </Box>
+      <Box>
+        <div className="P-node-mode">
+          <h3>{t('Download node mode')}</h3>
+          <ul>
+            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+            <li onClick={() => setNodeModeData(1)}>
+              <span
+                className={`G-radio-button ${
+                  nodeMode === 1 ? 'G-active-radio' : ''
+                }`}
+              />
+              <p>TestNet mode</p>
+            </li>
+            {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
+            <li onClick={() => setNodeModeData(2)}>
+              <span
+                className={`G-radio-button ${
+                  nodeMode === 2 ? 'G-active-radio' : ''
+                }`}
+              />
+              <p>DevNet mode</p>
+            </li>
+          </ul>
+        </div>
       </Box>
       {settings.useExternalNode && (
         <Box py={theme.spacings.xlarge}>

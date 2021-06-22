@@ -6,9 +6,11 @@ import theme from '../../shared/theme'
 import Loading from '../../shared/components/loading'
 import TransactionList from '../../screens/transactions/components/table-list'
 import {fetchTransactionsDetails, fetchTransactions} from '../../shared/api'
+import {useChainState} from '../../shared/providers/chain-context'
 
 export default function Index() {
   const {t} = useTranslation()
+  const {syncing, offline} = useChainState()
 
   const [transactionList, setTransactionLst] = useState([])
   const [isLoading, setIsLoading] = useState(false)
@@ -23,19 +25,18 @@ export default function Index() {
         let sum = 0
         setIsLoading(true)
         const array = []
-        resultData.result.forEach((item, index) => {
+        resultData.result.forEach(item => {
           fetchTransactionsDetails(item)
             .then(data => {
               if (data) {
                 array.push(data.result)
-              setDataTransactions(resultData.result.length - 1, sum, array)
+                setDataTransactions(resultData.result.length - 1, sum, array)
                 sum += 1
               }
             })
             .catch(error => {
               console.log(error)
             })
-
         })
       }
     })
@@ -46,20 +47,19 @@ export default function Index() {
       setTransactionLst(array)
       setIsLoading(false)
     }
-
   }
 
   return (
-    <Layout>
+    <Layout syncing={syncing} offline={offline}>
       <Box px={theme.spacings.xxxlarge} py={theme.spacings.large}>
         <PageTitle>{t('Transactions')}</PageTitle>
         {isLoading ? (
           <div>
-            <Loading color={theme.colors.text}/>
+            <Loading color={theme.colors.text} />
           </div>
         ) : null}
         {transactionList.length && !isLoading ? (
-          <TransactionList dataList={transactionList}/>
+          <TransactionList dataList={transactionList} />
         ) : null}
       </Box>
     </Layout>

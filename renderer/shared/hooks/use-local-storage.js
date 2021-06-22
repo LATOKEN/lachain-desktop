@@ -1,6 +1,8 @@
 import React from 'react'
+import {useAnalytics} from './use-analytics'
 
 function useLocalStorage(key, initialValue) {
+  const {setAnalytics} = useAnalytics()
   // State to store our value
   // Pass initial state function to useState so logic is only executed once
   const [storedValue, setStoredValue] = React.useState(() => {
@@ -11,7 +13,8 @@ function useLocalStorage(key, initialValue) {
       return item ? JSON.parse(item) : initialValue
     } catch (error) {
       // If error also return initialValue
-      console.log(error)
+      setAnalytics('Error', 'useLocalStorage', JSON.stringify(error))
+
       return initialValue
     }
   })
@@ -29,7 +32,7 @@ function useLocalStorage(key, initialValue) {
       window.localStorage.setItem(key, JSON.stringify(valueToStore))
     } catch (error) {
       // A more advanced implementation would handle the error case
-      console.log(error)
+      setAnalytics('Error', 'useLocalStorageSetValue', JSON.stringify(error))
     }
   }
 

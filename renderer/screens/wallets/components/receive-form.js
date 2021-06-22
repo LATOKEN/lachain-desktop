@@ -5,6 +5,7 @@ import QRCode from 'qrcode.react'
 import axios from 'axios'
 import {useTranslation} from 'react-i18next'
 import theme from '../../../shared/theme'
+
 import {
   Box,
   SubHeading,
@@ -15,9 +16,10 @@ import {
   Modal,
 } from '../../../shared/components'
 import Flex from '../../../shared/components/flex'
+import {useAnalytics} from '../../../shared/hooks/use-analytics'
 
 const faucetUrl = 'http://116.203.75.72:3020'
-
+const {setAnalytics} = useAnalytics()
 async function requestTestLA(address) {
   const data = {
     jsonrpc: '2.0',
@@ -25,7 +27,11 @@ async function requestTestLA(address) {
     params: [address],
     id: 1,
   }
-  const resp = await axios.post(faucetUrl, data, {crossdomain: true})
+  const resp = await axios
+    .post(faucetUrl, data, {crossdomain: true})
+    .catch(e => {
+      setAnalytics('Error', 'Wallets receive form', JSON.stringify(e))
+    })
   console.log(resp.data)
 }
 

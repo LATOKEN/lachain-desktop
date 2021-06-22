@@ -1,10 +1,13 @@
-const loadDb = global.prepareDb || {}
+import {useAnalytics} from '../hooks/use-analytics'
 
+const loadDb = global.prepareDb || {}
+const {setAnalytics} = useAnalytics()
 export function loadPersistentState(dbName) {
   try {
     const value = loadDb(dbName).getState()
     return Object.keys(value).length === 0 ? null : value || null
   } catch (error) {
+    setAnalytics('Error', 'Get state persist', JSON.stringify(error))
     return null
   }
 }
@@ -24,6 +27,12 @@ export function persistItem(dbName, key, value) {
       .set(key, value)
       .write()
   } catch {
+    setAnalytics(
+      'Error',
+      `error writing to file: ', ${dbName}, ${key}, ${value}`,
+      JSON.stringify({value, dbName, key})
+    )
+
     global.logger.error('error writing to file: ', dbName, key, value)
   }
 }
@@ -34,6 +43,11 @@ export function persistState(name, state) {
       .setState(state)
       .write()
   } catch {
+    setAnalytics(
+      'Error',
+      `error writing to file: ', ${name}, ${state}`,
+      JSON.stringify({name, state})
+    )
     global.logger.error('error writing to file: ', name, state)
   }
 }

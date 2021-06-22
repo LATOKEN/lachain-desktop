@@ -377,7 +377,6 @@ app.on('window-all-closed', () => {
 
 ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
   logger.info(`new node command`, command, data)
-
   switch (command) {
     case 'init-local-node': {
       getCurrentVersion()
