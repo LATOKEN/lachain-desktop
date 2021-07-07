@@ -8,7 +8,7 @@ const {
 } = require('./blockchain-node')
 const {promiseTimeout} = require('./utils')
 
-const checkingInterval = 10 * 60 * 1000
+const checkingInterval = 30 * 60 * 1000
 
 class NodeUpdater extends events.EventEmitter {
   constructor(logger, currentVersionUpdated) {

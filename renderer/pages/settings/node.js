@@ -33,7 +33,8 @@ import {
 import {NODE_EVENT, NODE_COMMAND} from '../../../main/channels'
 
 const purgeData = () => {
-  global.ipcRenderer.send(NODE_COMMAND, 'purge-node', {})
+  const modeData = localStorage.getItem('nodeMode')
+  global.ipcRenderer.send(NODE_COMMAND, 'purge-node', modeData)
 }
 
 function NodeSettings() {
@@ -134,8 +135,11 @@ function NodeSettings() {
   function setNodeModeData(modeData) {
     setNodeMode(modeData)
     localStorage.setItem('nodeMode', modeData)
-    global.ipcRenderer.send(NODE_COMMAND, 'change-node-mode', {modeData})
+    global.ipcRenderer.send(NODE_COMMAND, 'stop-local-node')
+    dispatch('node-failed')
+    global.ipcRenderer.send('reload')
   }
+
   useEffect(() => {
     const nodeModeValue = +localStorage.getItem('nodeMode')
     if (nodeModeValue) {
@@ -237,7 +241,7 @@ function NodeSettings() {
       </Box>
       <Box>
         <div className="P-node-mode">
-          <h3>{t('Download node mode')}</h3>
+          <h3>{t('Local node')}</h3>
           <ul>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <li onClick={() => setNodeModeData(1)}>
@@ -246,7 +250,7 @@ function NodeSettings() {
                   nodeMode === 1 ? 'G-active-radio' : ''
                 }`}
               />
-              <p>TestNet mode</p>
+              <p>TestNet</p>
             </li>
             {/* eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions */}
             <li onClick={() => setNodeModeData(2)}>
@@ -255,7 +259,7 @@ function NodeSettings() {
                   nodeMode === 2 ? 'G-active-radio' : ''
                 }`}
               />
-              <p>DevNet mode</p>
+              <p>DevNet</p>
             </li>
           </ul>
         </div>

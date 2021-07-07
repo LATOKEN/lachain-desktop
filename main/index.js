@@ -9,6 +9,7 @@ const {
   shell,
   // eslint-disable-next-line import/no-extraneous-dependencies
 } = require('electron')
+
 const {autoUpdater} = require('electron-updater')
 const isDev = require('electron-is-dev')
 const prepareNext = require('electron-next')
@@ -377,52 +378,15 @@ app.on('window-all-closed', () => {
 
 ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
   logger.info(`new node command`, command, data)
+  console.log(command, '---------------------------')
   switch (command) {
     case 'init-local-node': {
-      getCurrentVersion()
-        .then(version => {
-          sendMainWindowMsg(NODE_EVENT, 'node-ready', version)
-        })
-        .catch(e => {
-          logger.error('error while getting current node version', e.toString())
-          if (nodeDownloadPromise) {
-            return
-          }
-
-          const onProgress = info => {
-            sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-download-progress', info)
-          }
-
-          const onFinish = version => {
-            sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
-              nodeCurrentVersion: version,
-              isInternalNode: true,
-            })
-            stopNode(node).then(async log => {
-              logger.info(log)
-              node = null
-              sendMainWindowMsg(NODE_EVENT, 'node-stopped')
-              await updateNode()
-              sendMainWindowMsg(NODE_EVENT, 'node-ready')
-            })
-          }
-
-          const onError = err => {
-            sendMainWindowMsg(NODE_EVENT, 'node-failed')
-            logger.error('error while downloading node', err.toString())
-          }
-
-          nodeDownloadPromise = downloadNode(onProgress, onFinish, onError)
-            .then()
-            .finally(() => {
-              nodeDownloadPromise = null
-            })
-        })
+      downlodNodeMode(data)
       break
     }
     case 'start-local-node': {
       logger.info('RECEIVED: start-local-node', data)
-      checkConfigs()
+      checkConfigs(data.localNodeMode)
       startNode(
         data.rpcPort,
         data.apiKey,
@@ -439,7 +403,8 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
           } else {
             logger.info(msg)
           }
-        }
+        },
+        data.localNodeMode
       )
         .then(n => {
           logger.info('RECEIVED: node started', n.pid)
@@ -459,6 +424,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
     }
     case 'stop-local-node': {
       logger.info('stop-local-node recieved')
+      nodeDownloadPromise = null
       stopNode(node)
         .then(log => {
           logger.info(log)
@@ -492,7 +458,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
           logger.info(log)
           node = null
           sendMainWindowMsg(NODE_EVENT, 'node-stopped')
-          purgeNode()
+          purgeNode(data)
           sendMainWindowMsg(NODE_EVENT, 'node-purged')
           sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
             nodeCurrentVersion: '0.0.0-test0',
@@ -515,9 +481,57 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
         })
       break
     }
+
     default:
   }
 })
+
+function downlodNodeMode(nodeMode) {
+  getCurrentVersion(false, nodeMode)
+    .then(version => {
+      sendMainWindowMsg(NODE_EVENT, 'node-ready', version)
+    })
+    .catch(e => {
+      logger.error('error while getting current node version', e.toString())
+      if (nodeDownloadPromise) {
+        return
+      }
+
+      const onProgress = info => {
+        sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-download-progress', info)
+      }
+
+      const onFinish = version => {
+        sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
+          nodeCurrentVersion: version,
+          isInternalNode: true,
+        })
+        stopNode(node).then(async log => {
+          logger.info(log)
+          node = null
+          sendMainWindowMsg(NODE_EVENT, 'node-stopped')
+          await updateNode()
+          sendMainWindowMsg(NODE_EVENT, 'node-ready')
+        })
+      }
+
+      const onError = err => {
+        sendMainWindowMsg(NODE_EVENT, 'node-failed')
+        logger.error('error while downloading node', err.toString())
+      }
+
+      nodeDownloadPromise = downloadNode(
+        onProgress,
+        onFinish,
+        onError,
+        nodeMode
+      )
+        .then()
+        .finally(() => {
+          nodeDownloadPromise = null
+        })
+    })
+}
 
 nodeUpdater.on('update-available', info => {
   sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-update-available', info)

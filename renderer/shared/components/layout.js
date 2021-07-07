@@ -36,8 +36,9 @@ export default function Layout({loading, syncing, offline, ...props}) {
 
   const {addError} = useNotificationDispatch()
   const {setAnalyticBasePath} = useAnalytics()
-  setAnalyticBasePath(path)
-
+  if (path) {
+    setAnalyticBasePath(path)
+  }
   return (
     <main>
       <Sidebar />

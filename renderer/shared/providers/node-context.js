@@ -101,6 +101,7 @@ function NodeProvider({children}) {
   }, [settings.runInternalNode, dispatch])
 
   useEffect(() => {
+    const localNodeMode = +localStorage.getItem('nodeMode')
     if (
       state.nodeReady &&
       !state.nodeFailed &&
@@ -112,6 +113,7 @@ function NodeProvider({children}) {
         rpcPort: settings.internalPort,
         apiKey: settings.internalApiKey,
         logLevel: settings.logLevel || 'Info',
+        localNodeMode,
       })
     }
   }, [
@@ -131,7 +133,8 @@ function NodeProvider({children}) {
     }
     if (settings.runInternalNode) {
       if (!state.nodeStarted) {
-        global.ipcRenderer.send(NODE_COMMAND, 'init-local-node')
+        const localNodeMode = +localStorage.getItem('nodeMode')
+        global.ipcRenderer.send(NODE_COMMAND, 'init-local-node', localNodeMode)
       }
     } else if (state.nodeStarted) {
       global.ipcRenderer.send(NODE_COMMAND, 'stop-local-node')

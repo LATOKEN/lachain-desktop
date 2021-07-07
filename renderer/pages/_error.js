@@ -11,18 +11,15 @@ import {useAnalytics} from '../shared/hooks/use-analytics'
 global.logger = global.logger || {
   error() {},
 }
-const analytics = useAnalytics()
+const {setAnalytics} = useAnalytics()
+
 // eslint-disable-next-line react/prop-types
 function MyError({statusCode, hasGetInitialPropsRun, err}) {
   if (!hasGetInitialPropsRun && err) {
     // getInitialProps is not called in case of
     // https://github.com/zeit/next.js/issues/8592. As a workaround, we pass
     // err via _app.js so it can be captured
-    analytics.event({
-      category: 'Error',
-      action: '_errorMyError',
-      label: JSON.stringify(err),
-    })
+    setAnalytics('Error', '_errorMyError', JSON.stringify(err))
     global.logger.error(err)
   }
 
@@ -112,11 +109,7 @@ MyError.getInitialProps = async ({res, err, asPath}) => {
     }
 
     if (err) {
-      analytics.event({
-        category: 'Error',
-        action: '_errorMyErrorIfRes',
-        label: JSON.stringify(err),
-      })
+      setAnalytics('Error', '_errorMyErrorIfRes', JSON.stringify(err))
       global.logger.error(err)
 
       return errorInitialProps
@@ -133,11 +126,7 @@ MyError.getInitialProps = async ({res, err, asPath}) => {
     //    Boundaries: https://reactjs.org/docs/error-boundaries.html
     // eslint-disable-next-line no-lonely-if
     if (err) {
-      analytics.event({
-        category: 'Error',
-        action: '_errorMyErrorIfNoRes',
-        label: JSON.stringify(err),
-      })
+      setAnalytics('Error', '_errorMyErrorIfNoRes', JSON.stringify(err))
       global.logger.error(err)
 
       return errorInitialProps
@@ -147,11 +136,12 @@ MyError.getInitialProps = async ({res, err, asPath}) => {
   // If this point is reached, getInitialProps was called without any
   // information about what the error might be. This is unexpected and may
   // indicate a bug introduced in Next.js, so record it in Sentry
-  analytics.event({
-    category: 'Error',
-    action: '_errorMyError',
-    label: `_error.js getInitialProps missing data at path: ${asPath}`,
-  })
+  setAnalytics(
+    'Error',
+    '_errorMyError',
+    `_error.js getInitialProps missing data at path: ${asPath}`
+  )
+
   global.logger.error(
     `_error.js getInitialProps missing data at path: ${asPath}`
   )

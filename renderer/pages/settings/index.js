@@ -27,6 +27,7 @@ import {
 import {AVAILABLE_LANGS} from '../../i18n'
 import {useAnalytics} from '../../shared/hooks/use-analytics'
 
+const {setAnalytics} = useAnalytics()
 // const {clear: clearFlips} = global.flipStore || {}
 // const inviteDb = global.invitesDb || {}
 
@@ -143,11 +144,8 @@ function ImportPK() {
         setPassword('')
       }
     } catch (e) {
-      analytics.event({
-        category: 'Error',
-        action: 'importPK',
-        label: e,
-      })
+      setAnalytics('Error', 'importPK', JSON.stringify(e))
+
       addError({
         title: t('error:Error while importing key'),
         body: t(
