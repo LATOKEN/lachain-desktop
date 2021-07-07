@@ -32,10 +32,10 @@ import {Input, FormGroup, Label} from './form'
 import Avatar from './avatar'
 import {Tooltip} from './tooltip'
 import {useNotificationDispatch} from '../providers/notification-context'
+import {useAnalytics} from '../hooks/use-analytics'
 
 export function DnaLinkHandler({children}) {
   const [dnaUrl, setDnaUrl] = React.useState()
-
   const {addError} = useNotificationDispatch()
 
   const {t} = useTranslation()
@@ -69,6 +69,7 @@ export function DnaLinkHandler({children}) {
 export function DnaSignInDialog({url, onHide, onSigninError}) {
   const {t} = useTranslation()
   const {address} = useIdentityState()
+  const {setAnalytics} = useAnalytics()
 
   const {
     callback_url: callbackUrl,
@@ -87,7 +88,12 @@ export function DnaSignInDialog({url, onHide, onSigninError}) {
     try {
       callbackFaviconUrl =
         faviconUrl || new URL('favicon.ico', parsedCallbackUrl.origin)
-    } catch {
+    } catch (e) {
+      setAnalytics(
+        'Error',
+        'Failed to construct favicon url from callback url',
+        JSON.stringify(e)
+      )
       global.logger.error(
         'Failed to construct favicon url from callback url',
         callbackUrl,

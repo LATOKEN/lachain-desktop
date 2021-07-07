@@ -1,6 +1,7 @@
 import React from 'react'
 import {fetchCeremonyIntervals} from '../api'
 import {useInterval} from './use-interval'
+import {useAnalytics} from './use-analytics'
 
 const initialTiming = {
   validation: null,
@@ -14,7 +15,7 @@ const initialTiming = {
 function useTiming() {
   const [timing, setTiming] = React.useState(initialTiming)
   const [interval, setInterval] = React.useState(1000 * 60)
-
+  const {setAnalytics} = useAnalytics()
   useInterval(
     async () => {
       try {
@@ -42,6 +43,11 @@ function useTiming() {
         setInterval(1000 * 60 * 1)
       } catch (error) {
         setInterval(1000 * 5 * 1)
+        setAnalytics(
+          'Error',
+          ' error occured while fetching ceremony intervals',
+          JSON.stringify(error)
+        )
         global.logger.error(
           'An error occured while fetching ceremony intervals',
           error.message

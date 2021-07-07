@@ -5,6 +5,7 @@ import {sendTransaction} from '../api'
 import {bufferToHex} from './string'
 import {Box} from '../components'
 import theme, {rem} from '../theme'
+import {useAnalytics} from '../hooks/use-analytics'
 
 export const DNA_LINK_VERSION = `v1`
 export const DNA_NONCE_PREFIX = 'signin-'
@@ -41,12 +42,17 @@ export function parseQuery(url) {
     {}
   )
 }
+const {setAnalytics} = useAnalytics()
 
 export async function startSession(nonceEndpoint, {token, address}) {
-  const {data} = await axios.post(nonceEndpoint, {
-    token,
-    address,
-  })
+  const {data} = await axios
+    .post(nonceEndpoint, {
+      token,
+      address,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Start session', JSON.stringify(e))
+    })
 
   const {error} = data
 

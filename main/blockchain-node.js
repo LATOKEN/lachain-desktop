@@ -13,16 +13,35 @@ const keccak = require('keccak256')
 const rimraf = require('rimraf')
 const appDataPath = require('./app-data-path')
 const {sleep} = require('./utils')
-const defaultConfig = require('./default-config.json')
+const defaultConfigDevNet = require('./default-config-devNet.json')
+const defaultConfigTestNet = require('./default-config-testNet.json')
 const logger = require('./logger')
 
 const nodeBin = 'node'
 const nodeNodeReleasesUrl =
-  'https://api.github.com/repos/LAToken/lachain/releases/latest'
+  'https://api.github.com/repos/LAToken/lachain/releases'
 
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
-const getNodeDir = () => path.join(appDataPath('userData'), 'node')
+let nodeModeData = null
+
+function changeNodeMode(mode) {
+  switch (mode) {
+    case 1: {
+      nodeModeData = path.join(appDataPath('userData'), 'testNet')
+      break
+    }
+    case 2: {
+      nodeModeData = path.join(appDataPath('userData'), 'devNet')
+      break
+    }
+    default: {
+      nodeModeData = path.join(appDataPath('userData'), 'testNet')
+    }
+  }
+}
+
+const getNodeDir = () => path.join(nodeModeData, 'node')
 
 const getNodeDataDir = () => path.join(getNodeDir(), 'ChainLachain')
 
@@ -39,8 +58,23 @@ const getNodeLogsFile = () => path.join(getNodeDir(), 'logs', 'output.log')
 
 const getNodeErrorFile = () => path.join(getNodeDir(), 'logs', 'error.log')
 
-const getReleaseUrl = async () => {
+const getReleaseUrl = async nodeMode => {
   const {data} = await axios.get(nodeNodeReleasesUrl)
+  let filteredData = null
+  if (data && data.length) {
+    for (let i = 0; i < data.length; i += 1) {
+      if (nodeMode && nodeMode === 2) {
+        if (data[i].tag_name.indexOf('stable') < 0) {
+          filteredData = data[i]
+          break
+        }
+      } else if (data[i].tag_name.indexOf('stable') > 0) {
+        filteredData = data[i]
+        break
+      }
+    }
+  }
+
   let assetName = 'lachain-linux-x64'
   switch (process.platform) {
     case 'win32':
@@ -52,7 +86,7 @@ const getReleaseUrl = async () => {
     default:
   }
 
-  const asset = data.assets.filter(x => x.name.startsWith(assetName))
+  const asset = filteredData.assets.filter(x => x.name.startsWith(assetName))
 
   return asset.length ? asset[0].browser_download_url : null
 }
@@ -69,7 +103,8 @@ const getRemoteVersion = async () => {
   }
 }
 
-async function purgeNode() {
+async function purgeNode(nodeMode) {
+  changeNodeMode(+nodeMode)
   return new Promise(async (resolve, reject) => {
     try {
       logger.info('PURGING NODE')
@@ -85,10 +120,10 @@ async function purgeNode() {
         logger.info('Delete', getNodeErrorFile())
         rimraf.sync(getNodeErrorFile())
       }
-      if (fs.existsSync(getNodeConfigFile())) {
-        logger.info('Delete', getNodeConfigFile())
-        rimraf.sync(getNodeConfigFile())
-      }
+      // if (fs.existsSync(getNodeConfigFile())) {
+      //   logger.info('Delete', getNodeConfigFile())
+      //   rimraf.sync(getNodeConfigFile())
+      // }
       if (fs.existsSync(getNodeFile())) {
         logger.info('Delete', getNodeFile())
         rimraf.sync(getNodeFile())
@@ -106,7 +141,7 @@ let onFinishCb
 let downloadingPromiseGlobal
 let onErrorCb
 
-async function downloadNode(onProgress, onFinish, onError) {
+async function downloadNode(onProgress, onFinish, onError, nodeMode) {
   if (downloading) {
     logger.info('TRYING TO DOWNLOAD NODE WHILE DOWNLOADING')
     onProgressCb = onProgress
@@ -114,6 +149,7 @@ async function downloadNode(onProgress, onFinish, onError) {
     onErrorCb = onError
     return downloadingPromiseGlobal
   }
+  changeNodeMode(+nodeMode)
   downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
     downloading = true
     onProgressCb = onProgress
@@ -121,11 +157,14 @@ async function downloadNode(onProgress, onFinish, onError) {
     onErrorCb = onError
     logger.info('DOWNLOADING THE NODE')
     try {
-      const url = await getReleaseUrl()
+      const url = await getReleaseUrl(nodeMode)
       const version = await getRemoteVersion()
 
-      if (!fs.existsSync(getNodeDir())) {
-        fs.mkdirSync(getNodeDir())
+      if (!fs.existsSync(nodeModeData)) {
+        fs.mkdirSync(nodeModeData)
+        if (!fs.existsSync(getNodeDir())) {
+          fs.mkdirSync(getNodeDir())
+        }
       }
 
       const writer = fs.createWriteStream(getTempNodeFile())
@@ -184,8 +223,10 @@ async function startNode(
   logLevel,
   useLogging = true,
   onLog,
-  onExit
+  onExit,
+  nodeMode
 ) {
+  changeNodeMode(+nodeMode)
   const parameters = ['--datadir', getNodeDataDir(), '--rpcport', port]
   // const version = await getCurrentVersion(false)
   parameters.push('--apikey')
@@ -266,26 +307,29 @@ async function stopNode(node) {
   })
 }
 
-function getCurrentVersion(tempNode) {
+function getCurrentVersion(tempNode, nodeMode) {
+  changeNodeMode(+nodeMode)
+
   return new Promise((resolve, reject) => {
     const node = tempNode ? getTempNodeFile() : getNodeFile()
-
     try {
       const nodeVersion = spawn(node, ['--version'], {
         cwd: getNodeDir(),
       })
       nodeVersion.stderr.on('data', data => {
-        const {version} = semver.coerce(
-          data.toString().match(/\d+\.\d+\.\d+/g)[0]
-        )
-        logger.info(`NODE VERSION ${version}`)
-        return semver.valid(version)
-          ? resolve(version)
-          : reject(
-              new Error(
-                `cannot resolve node version, stderr: ${data.toString()}`
+        if (data) {
+          const {version} = semver.coerce(
+            data.toString().match(/\d+\.\d+\.\d+/g)[0]
+          )
+          logger.info(`NODE VERSION ${version}`)
+          return semver.valid(version)
+            ? resolve(version)
+            : reject(
+                new Error(
+                  `cannot resolve node version, stderr: ${data.toString()}`
+                )
               )
-            )
+        }
       })
 
       nodeVersion.on('exit', code => {
@@ -381,10 +425,26 @@ function encrypt(plaintext, secret) {
   return Buffer.concat([nonce, ciphertext, tag])
 }
 
-function checkConfigs() {
+function checkConfigs(nodeMode) {
+  if (nodeMode === 1) {
+    if (!fs.existsSync(getNodeConfigFile())) {
+      console.info('no config.json file found, creating default config.json')
+      fs.writeFileSync(
+        getNodeConfigFile(),
+        JSON.stringify(defaultConfigTestNet)
+      )
+    }
+  }
+  if (nodeMode === 2) {
+    if (!fs.existsSync(getNodeConfigFile())) {
+      console.info('no config.json file found, creating default config.json')
+      fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfigDevNet))
+    }
+  }
+
   if (!fs.existsSync(getNodeConfigFile())) {
     console.info('no config.json file found, creating default config.json')
-    fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfig))
+    fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfigTestNet))
   }
   if (!fs.existsSync(getNodeWalletFile())) {
     logger.info('no wallet.json file found, generating default wallet.json')

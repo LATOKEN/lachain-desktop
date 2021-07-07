@@ -1,0 +1,30 @@
+
+.P-send-money-modal {
+    background-color : white;
+    padding          : 15px 25px;
+    border-radius    : 15px;
+    min-width        : 400px;
+    position         : relative;
+}
+
+
+.P-send-money-button {
+    width      : 100%;
+    margin-top : 15px;
+
+}
+
+.P-send-money-button button {
+    width            : 100%;
+    height           : 40px;
+    color            : white;
+    background-color : #1fbf1f;
+    border-radius    : 8px;
+    border           : none;
+    cursor           : pointer;
+    font-size        : 18px;
+}
+
+.P-send-money-title h3{
+    font-size: 18px;
+}

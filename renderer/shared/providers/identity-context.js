@@ -3,6 +3,7 @@ import deepEqual from 'dequal'
 import {useInterval} from '../hooks/use-interval'
 import {fetchIdentity, killIdentity} from '../api'
 import useRpc from '../hooks/use-rpc'
+import {useAnalytics} from '../hooks/use-analytics'
 
 export const AccountStatus = {
   Undefined: 'Undefined',
@@ -45,7 +46,7 @@ const IdentityDispatchContext = React.createContext()
 function IdentityProvider({children}) {
   const [identity, setIdentity] = React.useState(null)
   const [{result: balanceResult}, callRpc] = useRpc()
-
+  const {setAnalytics} = useAnalytics()
   React.useEffect(() => {
     let ignore = false
 
@@ -56,8 +57,13 @@ function IdentityProvider({children}) {
           setIdentity(fetchedIdentity)
         }
       } catch (error) {
+        setAnalytics(
+          'Error',
+          'An error occurred while fetching identity',
+          JSON.stringify(error)
+        )
         global.logger.error(
-          'An error occured while fetching identity',
+          'An error occurred while fetching identity',
           error.message
         )
       }
@@ -86,8 +92,13 @@ function IdentityProvider({children}) {
             setIdentity({...nextIdentity, state})
           }
         } catch (error) {
+          setAnalytics(
+            'Error',
+            'An error occurred while fetching identity',
+            JSON.stringify(error)
+          )
           global.logger.error(
-            'An error occured while fetching identity',
+            'An error occurred while fetching identity',
             error.message
           )
         }

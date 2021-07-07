@@ -3,11 +3,6 @@ import {ValidatorsListModel} from '../../models/validators/ValidatorsListModel'
 import {useAnalytics} from './use-analytics'
 
 export function useValidators() {
-  useEffect(() => {
-    start()
-    // todo find an alternative way to the abortController to prevent memory lake, as it is not supported by the current next.js version
-  }, [])
-
   const [dataList, setDataList] = useState([])
   const [maxBlock, setMaxBlock] = useState(0)
   const [validatorsOnline, setValidatorsOnline] = useState(0)
@@ -15,103 +10,128 @@ export function useValidators() {
   const [synced, setSynced] = useState(0)
   const [isLoading, setIsLoading] = useState(false)
   const [isFirstLod, setFirstLoad] = useState(false)
-  const analytics = useAnalytics()
+  const {setAnalytics} = useAnalytics()
+  useEffect(() => {
+    start()
+  }, [dataList])
 
-  async function getConsensusPublicKeysValue(maxBlockNodeId) {
+  function getConsensusPublicKeysValue(maxBlockNodeId) {
     const {getConsensusPublicKeys} = requester()
     const validatorItem = new ValidatorsListModel()
 
     let maxHeightValidators
     try {
-      maxHeightValidators = (
-        await (
-          await getConsensusPublicKeys(validatorItem.nodeIps[maxBlockNodeId])
-        ).json()
-      )[0].result
+      maxHeightValidators = getConsensusPublicKeys(
+        validatorItem.nodeIps[maxBlockNodeId]
+      )
     } catch (e) {
+      setAnalytics(
+        'Error',
+        'Get consensus public keys value',
+        JSON.stringify(e)
+      )
       maxHeightValidators = []
     }
+
     return maxHeightValidators
   }
 
-  async function setNodeData(nodeList) {
+  function setNodeData(nodeList) {
     if (nodeList.length) {
       let maxBlocks = 0
       let maxBlockNodeId = null
       let newNodeList = []
-      nodeList.forEach((items, index) => {
+      nodeList.forEach((nodeLists, index) => {
         const validatorItem = new ValidatorsListModel()
         validatorItem.ip = validatorItem.nodeIps[index]
         if (
-          items &&
-          items[0] &&
-          items[0].result &&
-          items[1] &&
-          items[1].result
+          nodeLists[0] &&
+          nodeLists[1] &&
+          nodeLists[0].result &&
+          nodeLists[1].result
         ) {
-          validatorItem.connections = items[0] ? items[0].result.length : '-'
-          validatorItem.status = items[1] ? items[1].result.state : '-'
-          validatorItem.address = items[1] ? items[1].result.address : '-'
-          validatorItem.publicKey = items[1] ? items[1].result.publicKey : '-'
-          validatorItem.block = items[2] ? Number(items[2].result) : '-'
-          if (validatorItem.block > maxBlock) {
+          validatorItem.connections = nodeLists[0]
+            ? nodeLists[0].result.length
+            : '-'
+          validatorItem.status = nodeLists[1] ? nodeLists[1].result.state : '-'
+          validatorItem.address = nodeLists[1]
+            ? nodeLists[1].result.address
+            : '-'
+          validatorItem.publicKey = nodeLists[1]
+            ? nodeLists[1].result.publicKey
+            : '-'
+          validatorItem.block = nodeLists[2] ? Number(nodeLists[2].result) : '-'
+          if (validatorItem.block >= maxBlock) {
             maxBlocks = validatorItem.block
             maxBlockNodeId = index
           }
+          if (nodeLists && nodeLists[3] && nodeLists[3].result) {
+            validatorItem.txes = nodeLists[3].result.length
+          }
+          newNodeList.push(validatorItem)
         }
-        if (items && items[3] && items[3].result) {
-          validatorItem.txes = items[3].result.length
-        }
-        newNodeList.push(validatorItem)
       })
 
       let maxHeightValidators = []
-      maxHeightValidators = await getConsensusPublicKeysValue(maxBlockNodeId)
+      maxHeightValidators = getConsensusPublicKeysValue(maxBlockNodeId)
 
-      let validatorsOnlines = 0
-      let synceds = 0
+      maxHeightValidators = Promise.resolve(maxHeightValidators)
+        .then(response => {
+          if (response) {
+            return response.json()
+          }
+        })
+        .then(response => {
+          maxHeightValidators = response[0].result
+          let validatorsOnlines = 0
+          let synceds = 0
 
-      newNodeList = newNodeList.map(x => {
-        x.validatorAtMaxHeight = maxHeightValidators.includes(x.publicKey)
-          ? true
-          : '-'
-        delete x.publicKey
-        if (x.address && x.validatorAtMaxHeight === true) validatorsOnlines += 1
-        if (maxBlock - x.block <= 100) synceds += 1
-        return x
-      })
-
-      setDataList(newNodeList)
-      setMaxBlock(maxBlocks)
-      setConsensusParticipants(maxHeightValidators.length)
-      setValidatorsOnline(validatorsOnlines)
-      setSynced(synceds)
+          newNodeList = newNodeList.map(x => {
+            x.validatorAtMaxHeight = maxHeightValidators.includes(x.publicKey)
+              ? true
+              : '-'
+            delete x.publicKey
+            if (x.address && x.validatorAtMaxHeight === true)
+              validatorsOnlines += 1
+            if (maxBlock - x.block <= 100) synceds += 1
+            return x
+          })
+          setDataList(newNodeList)
+          setMaxBlock(maxBlocks)
+          setConsensusParticipants(maxHeightValidators.length)
+          setValidatorsOnline(validatorsOnlines)
+          setSynced(synceds)
+        })
       return Promise.resolve(newNodeList)
     }
   }
 
-  async function start() {
-    const nodeList = new ValidatorsListModel()
-    const {getPeers} = requester()
-    let promises = nodeList.nodeIps.map(x => getPeers(x))
+  function start() {
     if (!isFirstLod) {
       setIsLoading(true)
       setFirstLoad(true)
     }
-    promises = await Promise.all(promises.map(x => x.catch(e => e)))
-    promises = promises.map(x => (x && x.json ? x.json() : {}))
-    await Promise.all(promises).then(data => {
-      setNodeData(data).then(newData => {
-        start()
-        setIsLoading(false)
+    const nodeList = new ValidatorsListModel()
+    const {getPeers} = requester()
+    const promises = nodeList.nodeIps.map(x => getPeers(x))
+    Promise.all(promises)
+      .then(response => {
+        const array = response.map(x => (x && x.json ? x.json() : {}))
+        return array
       })
-    })
+      .then(response => {
+        Promise.all(response).then(data => {
+          setNodeData(data).then(() => {
+            setIsLoading(false)
+          })
+        })
+      })
   }
 
   function requester() {
     let requestId = 0
     return {
-      async getPeers(nodeUrl) {
+      getPeers(nodeUrl) {
         const data = [
           {
             jsonrpc: '2.0',
@@ -138,10 +158,9 @@ export function useValidators() {
             id: (requestId += 1),
           },
         ]
-
         return r(nodeUrl, data).catch(() => undefined)
       },
-      async getConsensusPublicKeys(nodeUrl) {
+      getConsensusPublicKeys(nodeUrl) {
         const request = [
           {
             jsonrpc: '2.0',
@@ -167,18 +186,14 @@ export function useValidators() {
     })
   }
 
-  function timedFetch(url, options, timeout = 2000) {
+  function timedFetch(url, options) {
     return Promise.race([
       fetch(url, {...options}).catch(error => {
-        analytics.event({
-          category: 'Error',
-          action: 'ValidatorGetPeers',
-          label: error,
-        })
+        setAnalytics('Error', 'Time fetch validators', JSON.stringify(error))
       }),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('timeout')), timeout)
-      ),
+      // new Promise((_, reject) =>
+      //   setTimeout(() => reject(new Error('timeout')), timeout)
+      // ),
     ])
   }
 

@@ -2,6 +2,7 @@ import React, {useEffect} from 'react'
 import {margin, rem} from 'polished'
 import {FiChevronRight} from 'react-icons/fi'
 import {useTranslation} from 'react-i18next'
+import {fetchUnlockWallet} from '../../shared/api/wallet'
 
 import theme from '../../shared/theme'
 import Layout from '../../shared/components/layout'
@@ -96,6 +97,12 @@ export default function Index() {
         })
     }
   }, [result, error, isReady, addError, t, addNotification])
+
+  function unlockWallet() {
+    setShowModal(false)
+    callRpc('fe_unlock', walletPassword, 30)
+    setWalletPassword('')
+  }
 
   return (
     <Layout syncing={syncing} offline={offline}>
@@ -264,9 +271,7 @@ export default function Index() {
             <Box px="4px">
               <Button
                 onClick={() => {
-                  setShowModal(false)
-                  callRpc('fe_unlock', walletPassword, 30)
-                  setWalletPassword('')
+                  unlockWallet()
                 }}
               >
                 {t('Submit')}

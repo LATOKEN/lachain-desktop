@@ -37,7 +37,7 @@ function TableList({dataList = []}) {
             <li title={item.block ? item.block.toString() : 'x'}>
               {item.block || '—'}
             </li>
-            <li title={item.pool ? item.pool.toString() : 'x'}>
+            <li title={item.txes ? item.txes.toString() : 'x'}>
               {item.txes || '—'}
             </li>
             <li

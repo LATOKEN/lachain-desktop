@@ -209,3 +209,6 @@
 .icon--process:before {
   content: '\e910';
 }
+.icon--trash:before {
+  content: '\e913';
+}

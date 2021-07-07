@@ -9,14 +9,15 @@ function TransactionList({dataList = []}) {
   const {t} = useTranslation()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [transactionDetail, setTransactionDetails] = useState(null)
-  const analytics = useAnalytics()
+  const {setAnalytics} = useAnalytics()
 
   function openModal(item) {
-    analytics.event({
-      category: 'Click',
-      action: 'openTransactionViewModal',
-      label: 'openTransactionViewModal',
-    })
+    setAnalytics(
+      'Click',
+      'openTransactionViewModal',
+      'openTransactionViewModal'
+    )
+
     setTransactionDetails(item)
     setIsOpenModal(true)
   }

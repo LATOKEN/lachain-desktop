@@ -35,9 +35,10 @@ export default function Layout({loading, syncing, offline, ...props}) {
   }, [zoomLevel])
 
   const {addError} = useNotificationDispatch()
-
-  const analyics = useAnalytics()
-  analyics.pageview(path)
+  const {setAnalyticBasePath} = useAnalytics()
+  if (path) {
+    setAnalyticBasePath(path)
+  }
   return (
     <main>
       <Sidebar />

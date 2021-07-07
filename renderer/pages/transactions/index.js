@@ -7,7 +7,6 @@ import Loading from '../../shared/components/loading'
 import TransactionList from '../../screens/transactions/components/table-list'
 import {fetchTransactionsDetails, fetchTransactions} from '../../shared/api'
 import {useChainState} from '../../shared/providers/chain-context'
-import {useAnalytics} from '../../shared/hooks/use-analytics'
 
 export default function Index() {
   const {t} = useTranslation()
@@ -15,7 +14,6 @@ export default function Index() {
 
   const [transactionList, setTransactionLst] = useState([])
   const [isLoading, setIsLoading] = useState(false)
-  const analytics = useAnalytics()
 
   useEffect(() => {
     start()
@@ -37,11 +35,7 @@ export default function Index() {
               }
             })
             .catch(error => {
-              analytics.event({
-                category: 'Error',
-                action: 'fetchTransactionsDetails',
-                label: error,
-              })
+              console.log(error)
             })
         })
       }

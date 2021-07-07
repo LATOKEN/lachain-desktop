@@ -1,0 +1,115 @@
+.P-my-tokens-header ul li {
+    list-style : none;
+    padding    : 10px 15px;
+    font-size  : 16px;
+    margin     : 0;
+    transition : 0.3s;
+    position   : relative;
+    cursor     : pointer;
+}
+
+.P-my-tokens-header ul li:before {
+    content          : '';
+    position         : absolute;
+    width            : 0;
+    left             : 50%;
+    transform        : translateX(-50%);
+    bottom           : -2px;
+    height           : 2px;
+    background-color : #5353ec;
+    transition       : 0.3s;
+}
+
+.P-my-tokens-header ul li:hover, .P-my-tokens-header ul li.P-active-tab {
+    color : #5353ec;
+}
+
+.P-my-tokens-header ul li:hover:before, .P-my-tokens-header ul li.P-active-tab:before {
+    width : 100%;
+}
+
+
+.P-my-tokens-header ul {
+    display     : flex;
+    align-items : center;
+    padding     : 0;
+    margin      : 0;
+
+}
+
+.P-my-tokens-header {
+    border-bottom : 1px solid rgba(0, 0, 0, 0.3);
+    margin-bottom : 25px;
+}
+
+
+.P-token-table .P-edit-icon {
+    width : auto;
+}
+
+.P-my-tokens-sections {
+    margin-bottom : 35px;
+}
+
+
+.P-my-tokens-header {
+    display         : flex;
+    align-items     : center;
+    justify-content : space-between;
+}
+
+
+.P-add-token {
+    background-color : #de8e38;
+    width            : 100px;
+    height           : 30px;
+    color            : white;
+    border           : none;
+    border-radius    : 8px;
+    cursor           : pointer
+}
+
+.P-delete-icon {
+    background-color : transparent;
+    border           : none;
+    cursor           : pointer;
+    margin-left      : 15px;
+    transition       : 0.3s;
+}
+
+.P-actions-list {
+    display     : flex;
+    align-items : center;
+}
+
+
+
+.P-delete-content {
+    display     : flex;
+    align-items : center;
+    margin-top: 20px;
+    justify-content: flex-end;
+}
+
+.P-cancel-btn {
+    background-color : transparent;
+    border           : none;
+    cursor           : pointer;
+    margin-right: 20px;
+}
+
+.P-delete-btn {
+    border           : none;
+    background-color : tomato;
+    border-radius    : 8px;
+    height           : 30px;
+    width            : 100px;
+    color: white;
+    cursor: pointer;
+}
+
+.P-empty-token-list{
+    font-weight: 600;
+    text-align: center;
+    margin: 25px 0;
+}

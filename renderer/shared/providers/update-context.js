@@ -167,7 +167,7 @@ function AutoUpdateProvider({children}) {
         // eslint-disable-next-line no-empty
       } catch (e) {}
     },
-    10000,
+    1800000,
     true
   )
 
