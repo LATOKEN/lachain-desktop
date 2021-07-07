@@ -1,0 +1,33 @@
+.P-node-mode ul{
+    padding: 0 ;
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+.P-node-mode h3{
+    margin-top: 25px;
+    margin-bottom: 15px;
+}
+.P-node-mode ul li{
+    list-style: none;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+}
+.P-node-mode ul li + li{
+    margin-left: 15px;
+}
+
+.P-node-mode ul li p{
+    margin: 0;
+
+    margin-left: 10px;
+    font-size: 14px;
+    transition: 0.3s;
+
+}
+
+.P-node-mode ul li:hover p{
+    color: #5353ec;
+}
