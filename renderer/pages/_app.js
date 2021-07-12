@@ -16,7 +16,7 @@ import {SettingsProvider} from '../shared/providers/settings-context'
 import {AutoUpdateProvider} from '../shared/providers/update-context'
 
 // eslint-disable-next-line import/no-extraneous-dependencies
-import 'tui-image-editor/dist/tui-image-editor.css'
+// import 'tui-image-editor/dist/tui-image-editor.css'
 
 export default class MyApp extends App {
   render() {
