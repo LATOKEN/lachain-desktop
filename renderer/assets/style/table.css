@@ -54,3 +54,13 @@
     min-width : 100px;
 }
 
+.P-token-table .table-tr li {
+    max-width : 100%;
+    min-width : 150px;
+}
+.P-token-table .table-tr li:nth-child(4) {
+    max-width : 70px;
+    min-width : 110px;
+
+}
+
