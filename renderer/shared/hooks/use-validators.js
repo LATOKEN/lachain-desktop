@@ -18,7 +18,6 @@ export function useValidators() {
   function getConsensusPublicKeysValue(maxBlockNodeId) {
     const {getConsensusPublicKeys} = requester()
     const validatorItem = new ValidatorsListModel()
-
     let maxHeightValidators
     try {
       maxHeightValidators = getConsensusPublicKeys(

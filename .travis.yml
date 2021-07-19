@@ -19,7 +19,6 @@ addons:
       - jpeg
       - giflib
       - librsvg
-    update: true
 
 matrix:
   include:
