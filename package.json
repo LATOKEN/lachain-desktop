@@ -37,13 +37,15 @@
     },
     "win": {
       "publish": [
-        "github"
+        "github",
+        "release"
       ],
       "icon": "main/static/icons/icon_512_2x.ico"
     },
     "mac": {
       "publish": [
-        "github"
+        "github",
+        "release"
       ],
       "icon": "main/static/icons/icon-512@2x.icns"
     },
@@ -53,7 +55,8 @@
         "AppImage"
       ],
       "publish": [
-        "github"
+        "github",
+        "release"
       ],
       "icon": "main/static/icons/icon-512@2x.icns",
       "maintainer": "Lachain <lachain@latoken.com> (https://latoken.com/lachain/)"
