@@ -75,10 +75,7 @@ deploy:
  skip_cleanup: true
  api_key: $GH_TOKEN
  file_glob: true
- file:
-    - "dist/xyz-x86_64.AppImage"
-    - "dist/xyz-amd64.deb"
-    - "dist/xyz.dmg"
+ file: dist/*
  on:
  tags: true
 #
