@@ -69,6 +69,18 @@ cache:
 
 install:
   - npm ci
+
+deploy:
+ provider: releases
+ skip_cleanup: true
+ api_key: $GH_TOKEN
+ file_glob: true
+ file:
+    - "dist/xyz-x86_64.AppImage"
+    - "dist/xyz-amd64.deb"
+    - "dist/xyz.dmg"
+ on:
+ tags: true
 #
 #before_script:
 #  - if [[ "$TRAVIS_TAG" != "" ]]; then npm --no-git-tag-version version ${TRAVIS_TAG:1}; fi
