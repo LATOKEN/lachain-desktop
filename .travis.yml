@@ -55,11 +55,6 @@ env:
     - ELECTRON_CACHE=$HOME/.cache/electron
     - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
 
-branches:
-  only:
-    - master
-    - /v\d+\.\d+\.\d+/
-
 cache:
   directories:
     - $HOME/.cache/electron
