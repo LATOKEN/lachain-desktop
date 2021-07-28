@@ -72,7 +72,8 @@ deploy:
  file_glob: true
  file: dist/*
  on:
- tags: true
+ all_branches: true
+       condition: $TRAVIS_BRANCH =~ /v\d+\.\d+\.\d+/
 #
 #before_script:
 #  - if [[ "$TRAVIS_TAG" != "" ]]; then npm --no-git-tag-version version ${TRAVIS_TAG:1}; fi
