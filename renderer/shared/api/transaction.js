@@ -1,3 +1,4 @@
+import axios from 'axios'
 import api from './api-client'
 import {useAnalytics} from '../hooks/use-analytics'
 
@@ -9,7 +10,7 @@ import {useAnalytics} from '../hooks/use-analytics'
 
 const {setAnalytics} = useAnalytics()
 export async function fetchTransactionsDetails(address) {
-  const {data} = await api()
+  const response = await api()
     .post('/', {
       method: 'getTransactionPoolByHash',
       params: [address],
@@ -18,7 +19,20 @@ export async function fetchTransactionsDetails(address) {
     .catch(e => {
       setAnalytics('Error', 'Fetch Transactions Details', JSON.stringify(e))
     })
-  return Promise.resolve(data)
+  if (response) {
+    const {data} = response
+    return Promise.resolve(data)
+  }
+}
+
+export function fetchTransactionsTest() {
+  return axios
+    .post('http://localhost:7070', {
+      method: 'getTransactionPool',
+      params: [],
+      id: 1,
+    })
+    .then(resp => resp)
 }
 
 export async function fetchTransactions() {

@@ -102,6 +102,8 @@ function NodeProvider({children}) {
 
   useEffect(() => {
     const localNodeMode = +localStorage.getItem('nodeMode')
+    const walletJson = localStorage.getItem('walletJson')
+    const walletPassword = localStorage.getItem('walletPassword')
     if (
       state.nodeReady &&
       !state.nodeFailed &&
@@ -109,12 +111,16 @@ function NodeProvider({children}) {
       settings.runInternalNode &&
       settings.internalApiKey
     ) {
-      global.ipcRenderer.send(NODE_COMMAND, 'start-local-node', {
-        rpcPort: settings.internalPort,
-        apiKey: settings.internalApiKey,
-        logLevel: settings.logLevel || 'Info',
-        localNodeMode,
-      })
+      if (walletPassword) {
+        global.ipcRenderer.send(NODE_COMMAND, 'start-local-node', {
+          rpcPort: settings.internalPort,
+          apiKey: settings.internalApiKey,
+          logLevel: settings.logLevel || 'Info',
+          localNodeMode,
+          walletJson,
+          walletPassword,
+        })
+      }
     }
   }, [
     settings.logLevel,

@@ -27,4 +27,12 @@
 
 .P-send-money-title h3{
     font-size: 18px;
+    margin: 0;
+}
+.P-send-money-title p{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 15px;
+    margin-top: 10px;
 }

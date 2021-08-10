@@ -19,7 +19,7 @@ const logger = require('./logger')
 
 const nodeBin = 'node'
 const nodeNodeReleasesUrl =
-  'https://api.github.com/repos/LAToken/lachain/releases'
+  'https://api.github.com/repos/LATOKEN/lachain/releases'
 
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
@@ -87,7 +87,6 @@ const getReleaseUrl = async nodeMode => {
   }
 
   const asset = filteredData.assets.filter(x => x.name.startsWith(assetName))
-
   return asset.length ? asset[0].browser_download_url : null
 }
 
@@ -97,6 +96,7 @@ const getRemoteVersion = async () => {
     const {
       data: {tag_name: tag},
     } = await axios.get(nodeNodeReleasesUrl)
+    const {data} = await axios.get(nodeNodeReleasesUrl)
     return semver.clean(tag)
   } catch (e) {
     return null
@@ -321,7 +321,9 @@ function getCurrentVersion(tempNode, nodeMode) {
           const {version} = semver.coerce(
             data.toString().match(/\d+\.\d+\.\d+/g)[0]
           )
+
           logger.info(`NODE VERSION ${version}`)
+
           return semver.valid(version)
             ? resolve(version)
             : reject(
@@ -425,8 +427,9 @@ function encrypt(plaintext, secret) {
   return Buffer.concat([nonce, ciphertext, tag])
 }
 
-function checkConfigs(nodeMode) {
-  if (nodeMode === 1) {
+function checkConfigs(node) {
+  changeNodeMode(+node.localNodeMode)
+  if (node.localNodeMode === 1) {
     if (!fs.existsSync(getNodeConfigFile())) {
       console.info('no config.json file found, creating default config.json')
       fs.writeFileSync(
@@ -435,7 +438,7 @@ function checkConfigs(nodeMode) {
       )
     }
   }
-  if (nodeMode === 2) {
+  if (node.localNodeMode === 2) {
     if (!fs.existsSync(getNodeConfigFile())) {
       console.info('no config.json file found, creating default config.json')
       fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfigDevNet))
@@ -446,17 +449,52 @@ function checkConfigs(nodeMode) {
     console.info('no config.json file found, creating default config.json')
     fs.writeFileSync(getNodeConfigFile(), JSON.stringify(defaultConfigTestNet))
   }
+
+  if (node.walletJson) {
+    if (!fs.existsSync(node.walletJson)) {
+      defaultWalletJson(node.walletPassword)
+    } else {
+      // eslint-disable-next-line global-require,import/no-dynamic-require
+      const json = require(getNodeConfigFile())
+      json.vault.path = node.walletJson
+      json.vault.password = node.walletPassword
+
+      fs.writeFileSync(getNodeConfigFile(), JSON.stringify(json))
+    }
+  } else {
+    defaultWalletJson(node.walletPassword)
+  }
+}
+
+function defaultWalletJson(password) {
   if (!fs.existsSync(getNodeWalletFile())) {
     logger.info('no wallet.json file found, generating default wallet.json')
     // TODO: prompt password
-    const key = keccak('12345')
+    const key = keccak(password)
     const wallet = {
       ecdsaPrivateKey: crypto.randomBytes(32).toString('hex'),
       tpkeKeys: {},
       thresholdSignatureKeys: {},
     }
     const encryptedWallet = encrypt(JSON.stringify(wallet), key)
+    // eslint-disable-next-line global-require,import/no-dynamic-require
+    const json = require(getNodeConfigFile())
+
+    if (json.vault.path !== 'wallet.json') {
+      json.vault.path = 'wallet.json'
+      json.vault.password = password
+      fs.writeFileSync(getNodeConfigFile(), JSON.stringify(json))
+    }
+
     fs.writeFileSync(getNodeWalletFile(), encryptedWallet)
+  } else {
+    // eslint-disable-next-line global-require,import/no-dynamic-require
+    const json = require(getNodeConfigFile())
+    if (json.vault.path !== 'wallet.json') {
+      json.vault.path = 'wallet.json'
+    }
+    json.vault.password = password
+    fs.writeFileSync(getNodeConfigFile(), JSON.stringify(json))
   }
 }
 

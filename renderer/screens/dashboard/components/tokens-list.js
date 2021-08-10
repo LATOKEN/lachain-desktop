@@ -5,7 +5,7 @@ import ModalComponent from '../../../shared/components/modal-component'
 import SendMoneyModal from './send-money-modal'
 import DeleteTokenModal from './delete-token-modal'
 
-function TokensList({tokensList, deleteTokenList}) {
+function TokensList({tokensList, deleteTokenList, updateTokens}) {
   const {t} = useTranslation()
   const [isOpenModal, setIsOpenModal] = useState(false)
   const [isOpenModalDelete, setIsOpenModalDelete] = useState(false)
@@ -77,7 +77,11 @@ function TokensList({tokensList, deleteTokenList}) {
 
       {isOpenModal && (
         <ModalComponent close={closeModal}>
-          <SendMoneyModal tokenData={tokenData} close={closeModal} />
+          <SendMoneyModal
+            updateToken={updateTokens}
+            tokenData={tokenData}
+            close={closeModal}
+          />
         </ModalComponent>
       )}
 
@@ -96,6 +100,7 @@ function TokensList({tokensList, deleteTokenList}) {
 TokensList.propTypes = {
   tokensList: PropTypes.array,
   deleteTokenList: PropTypes.func,
+  updateTokens: PropTypes.func,
 }
 
 export default TokensList

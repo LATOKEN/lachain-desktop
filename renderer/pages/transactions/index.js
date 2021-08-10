@@ -5,7 +5,11 @@ import {Box, PageTitle} from '../../shared/components'
 import theme from '../../shared/theme'
 import Loading from '../../shared/components/loading'
 import TransactionList from '../../screens/transactions/components/table-list'
-import {fetchTransactionsDetails, fetchTransactions} from '../../shared/api'
+import {
+  fetchTransactionsDetails,
+  fetchTransactions,
+  fetchTransactionsTest,
+} from '../../shared/api'
 import {useChainState} from '../../shared/providers/chain-context'
 
 export default function Index() {
