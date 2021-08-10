@@ -33,6 +33,9 @@ import {FlatButton} from '../../shared/components/button'
 import useRpc from '../../shared/hooks/use-rpc'
 import {useIdentityState} from '../../shared/providers/identity-context'
 import {useNotificationDispatch} from '../../shared/providers/notification-context'
+import ModalComponent from '../../shared/components/modal-component'
+import WarningModal from './warning-modal'
+import ChangePasswordModal from './change-password-modal'
 
 export default function Index() {
   const {t} = useTranslation()
@@ -43,6 +46,8 @@ export default function Index() {
   const [isTransferFormOpen, setIsTransferFormOpen] = React.useState(false)
   const [showModal, setShowModal] = React.useState(false)
   const [isWalletLocked, setIsWalletLocked] = React.useState(false)
+  const [isOpenWarning, setOpenWarning] = React.useState(false)
+  const [isOpenPasswordModal, setPasswordModal] = React.useState(false)
   const [walletPassword, setWalletPassword] = React.useState()
   const [isWithdrawStakeFormOpen, setIsWithdrawStakeFormOpen] = React.useState(
     false
@@ -50,12 +55,14 @@ export default function Index() {
   const handleCloseWithdrawStakeForm = () => setIsWithdrawStakeFormOpen(false)
   const handleCloseTransferForm = () => setIsTransferFormOpen(false)
   const handleCloseReceiveForm = () => setIsReceiveFormOpen(false)
+  const [isErrorPassword, setPassword] = React.useState(false)
 
   const [activeWallet, setActiveWallet] = React.useState()
   const {syncing, offline} = useChainState()
   const {isWalletLocked: walletState} = useIdentityState()
 
   const [{result, error, isReady}, callRpc] = useRpc()
+  const fileUpload = React.createRef()
 
   useEffect(() => {
     if (!activeWallet && wallets && wallets.length > 0) {
@@ -99,11 +106,30 @@ export default function Index() {
   }, [result, error, isReady, addError, t, addNotification])
 
   function unlockWallet() {
-    setShowModal(false)
     callRpc('fe_unlock', walletPassword, 30)
     setWalletPassword('')
+    setShowModal(false)
   }
 
+  function uploadWallet() {
+    fileUpload.current.click()
+  }
+
+  function getWalletPath() {
+    localStorage.setItem(
+      'walletJson',
+      fileUpload.current.files[0].path.toString()
+    )
+    setOpenWarning(true)
+
+    // global.ipcRenderer.send('reload')
+  }
+  function openPasswordModal() {
+    setPasswordModal(true)
+  }
+  function closePasswordModal() {
+    setPasswordModal(false)
+  }
   return (
     <Layout syncing={syncing} offline={offline}>
       <Box px={theme.spacings.xxxlarge} py={theme.spacings.large}>
@@ -151,9 +177,34 @@ export default function Index() {
                     >
                       {t('Receive')}
                     </IconLink>
+                    <IconLink
+                      disabled={activeWallet && activeWallet.isStake}
+                      icon={<i className="icon icon--upload" />}
+                      onClick={() => {
+                        uploadWallet()
+                      }}
+                    >
+                      {t('Upload Wallet')}
+                    </IconLink>
+                    <IconLink
+                      disabled={activeWallet && activeWallet.isStake}
+                      onClick={() => {
+                        openPasswordModal()
+                      }}
+                    >
+                      {t('Change password')}
+                    </IconLink>
                   </Actions>
                 </div>
               </Flex>
+              {/* eslint-disable-next-line react/no-string-refs */}
+              <input
+                type="file"
+                hidden
+                ref={fileUpload}
+                accept="application/JSON"
+                onChange={getWalletPath}
+              />
               <div>
                 <WalletList
                   wallets={wallets}
@@ -253,6 +304,9 @@ export default function Index() {
                   }}
                   onChange={e => setWalletPassword(e.target.value)}
                 />
+                {isErrorPassword && (
+                  <p className="P-error-text">{t('Incorrect password')}</p>
+                )}
               </span>
             </Text>
           </Box>
@@ -280,6 +334,16 @@ export default function Index() {
           </Flex>
         </Modal>
       </Box>
+      {isOpenWarning && (
+        <ModalComponent close={() => {}}>
+          <WarningModal />
+        </ModalComponent>
+      )}
+      {isOpenPasswordModal && (
+        <ModalComponent close={closePasswordModal}>
+          <ChangePasswordModal close={closePasswordModal} />
+        </ModalComponent>
+      )}
     </Layout>
   )
 }

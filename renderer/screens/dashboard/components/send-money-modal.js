@@ -4,13 +4,14 @@ import {useTranslation} from 'react-i18next'
 import {useIdentityState} from '../../../shared/providers/identity-context'
 import {BASE_API_URL} from '../../../shared/api/api-client'
 
-function SendMoneyModal({close, tokenData}) {
+function SendMoneyModal({close, tokenData, updateToken}) {
   const {t} = useTranslation()
   const [formData, setFormData] = useState({
     accountToken: '',
     accountAddress: '',
     amount: '',
   })
+
   const identity = useIdentityState()
   const {address} = identity
 
@@ -18,7 +19,7 @@ function SendMoneyModal({close, tokenData}) {
     setFormData({
       accountToken: tokenData.accountToken,
     })
-  }, [])
+  }, [tokenData.accountToken])
 
   function inputChange(e) {
     const {name, value} = e.target
@@ -34,7 +35,14 @@ function SendMoneyModal({close, tokenData}) {
     const web3 = new Web3(Web3.givenProvider || BASE_API_URL)
     web3.eth.sendTransaction(
       {from: address, to: formData.accountAddress, value: formData.amount},
-      function(error, hash) {}
+      function(error, hash) {
+        console.log(hash)
+        console.log(error)
+        if (hash) {
+          close()
+          updateToken()
+        }
+      }
     )
   }
 
@@ -44,20 +52,9 @@ function SendMoneyModal({close, tokenData}) {
       <div className="P-send-money-block">
         <div className="P-send-money-title">
           <h3>{t('Send money')}</h3>
-        </div>
-        <div className="G-input-block">
-          <p>{t('Token')}</p>
-          {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
-          <label>
-            <input
-              disabled
-              type="text"
-              name="accountToken"
-              placeholder="Token"
-              value={formData.accountToken}
-              onChange={inputChange}
-            />
-          </label>
+          <p>
+            {t('Token')}: {formData.accountToken}
+          </p>
         </div>
         <div className="G-input-block">
           <p>{t('Destination')}</p>
@@ -97,6 +94,7 @@ function SendMoneyModal({close, tokenData}) {
 
 SendMoneyModal.propTypes = {
   close: PropTypes.func,
+  updateToken: PropTypes.func,
   tokenData: PropTypes.object,
 }
 

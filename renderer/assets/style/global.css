@@ -39,14 +39,18 @@
     transform        : translate(-50%, -50%) rotate(-45deg);
 }
 
-*{
-    outline: none;
+* {
+    outline : none;
 }
 
 .G-input-block {
     width     : 100%;
     max-width : 100%;
-    padding: 10px 0;
+    padding   : 10px 0;
+}
+
+.G-input-block.G-error input {
+    border-color : red;
 }
 
 .G-input-block label {
@@ -66,48 +70,50 @@
 
 .G-input-block input[type=number]::-webkit-inner-spin-button,
 .G-input-block input[type=number]::-webkit-outer-spin-button {
-    -webkit-appearance: none;
-    margin: 0;
+    -webkit-appearance : none;
+    margin             : 0;
 }
 
 
-.G-input-block p{
-    margin-bottom: 5px;
-    margin-top: 0;
+.G-input-block p {
+    margin-bottom : 5px;
+    margin-top    : 0;
 }
-.G-input-block input.P-error-input{
-    border-color: tomato;
+
+.G-input-block input.P-error-input {
+    border-color : tomato;
 }
 
 
-.G-radio-button{
-    width: 15px;
-    height: 15px;
-    border-radius: 50%;
-    border: 1px solid gray;
-    position: relative;
-    display : block;
+.G-radio-button {
+    width         : 15px;
+    height        : 15px;
+    border-radius : 50%;
+    border        : 1px solid gray;
+    position      : relative;
+    display       : block;
 }
 
-.G-radio-button.G-active-radio:before{
-    opacity: 1;
-    visibility: visible;
-}
-.G-radio-button.G-active-radio{
-    border-color: #5353ec;
+.G-radio-button.G-active-radio:before {
+    opacity    : 1;
+    visibility : visible;
 }
 
-.G-radio-button:before{
-    width: 100%;
-    height: 100%;
-    background-color: #5353ec;
-    position: absolute;
-    content: '';
-    left: 0;
-    top: 0;
-    opacity: 0;
-    visibility: hidden;
-    transition: 0.3s;
-    border-radius: 50%;
-    transform: scale(0.7);
+.G-radio-button.G-active-radio {
+    border-color : #5353ec;
+}
+
+.G-radio-button:before {
+    width            : 100%;
+    height           : 100%;
+    background-color : #5353ec;
+    position         : absolute;
+    content          : '';
+    left             : 0;
+    top              : 0;
+    opacity          : 0;
+    visibility       : hidden;
+    transition       : 0.3s;
+    border-radius    : 50%;
+    transform        : scale(0.7);
 }

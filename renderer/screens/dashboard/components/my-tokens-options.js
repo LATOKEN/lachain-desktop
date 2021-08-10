@@ -122,6 +122,7 @@ function MyTokensOptions() {
         {activeIndex === 1 && (
           <TokensList
             tokensList={tokensList}
+            updateTokens={updateTokensList}
             deleteTokenList={deleteTokenList}
           />
         )}

@@ -18,6 +18,7 @@ export function useValidators() {
   function getConsensusPublicKeysValue(maxBlockNodeId) {
     const {getConsensusPublicKeys} = requester()
     const validatorItem = new ValidatorsListModel()
+
     let maxHeightValidators
     try {
       maxHeightValidators = getConsensusPublicKeys(
@@ -81,6 +82,7 @@ export function useValidators() {
           }
         })
         .then(response => {
+          console.log(response, 'response')
           maxHeightValidators = response[0].result
           let validatorsOnlines = 0
           let synceds = 0
@@ -119,8 +121,10 @@ export function useValidators() {
         return array
       })
       .then(response => {
+        console.log(response, 'response')
         Promise.all(response).then(data => {
           setNodeData(data).then(() => {
+            console.log(data, 'aaaaaaaaaaaa')
             setIsLoading(false)
           })
         })

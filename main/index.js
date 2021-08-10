@@ -363,6 +363,9 @@ app.on('before-quit', async () => {
   }
   mainWindow.forceClose = true
 })
+app.on('testCall', async () => {
+  mainWindow = null
+})
 
 app.on('activate', showMainWindow)
 
@@ -378,7 +381,6 @@ app.on('window-all-closed', () => {
 
 ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
   logger.info(`new node command`, command, data)
-  console.log(command, '---------------------------')
   switch (command) {
     case 'init-local-node': {
       downlodNodeMode(data)
@@ -386,7 +388,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
     }
     case 'start-local-node': {
       logger.info('RECEIVED: start-local-node', data)
-      checkConfigs(data.localNodeMode)
+      checkConfigs(data)
       startNode(
         data.rpcPort,
         data.apiKey,
@@ -697,6 +699,10 @@ ipcMain.on(IMAGE_SEARCH_PICK, (_event, message) => {
 
 ipcMain.on('reload', () => {
   loadRoute(mainWindow, 'dashboard')
+})
+
+ipcMain.on('close-app', () => {
+  app.quit()
 })
 
 ipcMain.on('showMainWindow', () => {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, {useEffect} from 'react'
 import PropTypes from 'prop-types'
 import {useTranslation} from 'react-i18next'
 
@@ -13,6 +13,8 @@ import {DnaSignInDialog, DnaSendDialog, DnaLinkHandler} from './dna-link'
 import {useNotificationDispatch} from '../providers/notification-context'
 import {useAnalytics} from '../hooks/use-analytics'
 import {usePath} from '../hooks/use-path'
+import ModalComponent from './modal-component'
+import WalletPasswordModal from '../../pages/wallets/wallet-password-modal'
 
 global.getZoomLevel = global.getZoomLevel || {}
 
@@ -21,6 +23,8 @@ const AVAILABLE_TIMEOUT = global.isDev ? 0 : 1000 * 5
 export default function Layout({loading, syncing, offline, ...props}) {
   const debouncedSyncing = useDebounce(syncing, AVAILABLE_TIMEOUT)
   const debouncedOffline = useDebounce(offline, AVAILABLE_TIMEOUT)
+  const [isOpenModalWallet, setOpenModalWallet] = React.useState(false)
+
   const {path} = usePath()
 
   const [zoomLevel, setZoomLevel] = React.useState(
@@ -39,15 +43,33 @@ export default function Layout({loading, syncing, offline, ...props}) {
   if (path) {
     setAnalyticBasePath(path)
   }
+
+  function closeModalWallet() {
+    setOpenModalWallet(false)
+  }
+
+  React.useEffect(() => {
+    const walletPassword = localStorage.getItem('walletPassword')
+    if (!walletPassword) {
+      setOpenModalWallet(true)
+    }
+  }, [])
   return (
     <main>
       <Sidebar />
+      {isOpenModalWallet && (
+        <ModalComponent close={() => {}}>
+          <WalletPasswordModal close={closeModalWallet} />
+        </ModalComponent>
+      )}
       {loading && <LoadingApp />}
       {!loading && debouncedSyncing && !debouncedOffline && <SyncingApp />}
       {!loading && debouncedOffline && !debouncedSyncing && <OfflineApp />}
-      {!loading && !debouncedOffline && !debouncedSyncing && (
-        <NormalApp {...props} />
-      )}
+      {}
+      {!loading &&
+        !debouncedOffline &&
+        !debouncedSyncing &&
+        !isOpenModalWallet && <NormalApp {...props} />}
 
       {!debouncedOffline && !loading && (
         <DnaLinkHandler>

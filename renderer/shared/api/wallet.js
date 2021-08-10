@@ -96,3 +96,20 @@ export async function fetchUnlockWallet(password) {
     })
   return data.result
 }
+
+/**
+ * Change password
+ * * */
+
+export async function changePassword(oldPassword, newPassword) {
+  const {data} = await api()
+    .post('/', {
+      method: `fe_changePassword`,
+      params: {currentPassword: oldPassword, newPassword},
+      id: 1,
+    })
+    .catch(e => {
+      setAnalytics('Error', 'Change password', JSON.stringify(e))
+    })
+  return data.result
+}

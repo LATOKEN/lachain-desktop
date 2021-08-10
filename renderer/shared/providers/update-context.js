@@ -22,7 +22,7 @@ const NODE_UPDATE_FAIL = 'NODE_UPDATE_FAIL'
 const initialState = {
   checkStarted: false,
   uiCurrentVersion: global.appVersion,
-  nodeCurrentVersion: '0.0.0-test0',
+  nodeCurrentVersion: 'Fetching...',
   showExternalUpdateModal: false,
 }
 

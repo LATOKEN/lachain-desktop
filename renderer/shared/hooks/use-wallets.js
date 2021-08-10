@@ -90,6 +90,8 @@ async function fetchTxs({address, wallets}) {
 async function fetchData(address) {
   const wallets = await fetchWallets(address)
   const txs = await fetchTxs({address, wallets})
+
+  console.log(wallets, 'wallets')
   return {wallets, txs}
 }
 
