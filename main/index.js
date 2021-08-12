@@ -489,6 +489,7 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
 })
 
 function downlodNodeMode(nodeMode) {
+  logger.error('downlodNodeMode-nodeMode', nodeMode)
   getCurrentVersion(false, nodeMode)
     .then(version => {
       sendMainWindowMsg(NODE_EVENT, 'node-ready', version)
@@ -577,7 +578,7 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
           await updateNode()
           sendMainWindowMsg(NODE_EVENT, 'node-ready')
           sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
-            nodeCurrentVersion: await getCurrentVersion(false),
+            nodeCurrentVersion: await getCurrentVersion(false, data),
             isInternalNode: true,
           })
           logger.info('node updated')

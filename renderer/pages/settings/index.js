@@ -38,8 +38,8 @@ function Settings() {
   return (
     <SettingsLayout>
       {global.isDev && <></>}
-      <ExportPK />
-      {runInternalNode && !useExternalNode && <ImportPK />}
+      {/*<ExportPK />*/}
+      {/*{runInternalNode && !useExternalNode && <ImportPK />}*/}
       <LocaleSwitcher />
     </SettingsLayout>
   )

@@ -24,15 +24,17 @@ const nodeNodeReleasesUrl =
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
 let nodeModeData = null
-
+let globalNodeMode = 1 //default testNet
 function changeNodeMode(mode) {
   switch (mode) {
     case 1: {
       nodeModeData = path.join(appDataPath('userData'), 'testNet')
+        globalNodeMode = 1
       break
     }
     case 2: {
       nodeModeData = path.join(appDataPath('userData'), 'devNet')
+        globalNodeMode = 2
       break
     }
     default: {
@@ -64,7 +66,7 @@ const getReleaseUrl = async nodeMode => {
   if (data && data.length) {
     for (let i = 0; i < data.length; i += 1) {
       if (nodeMode && nodeMode === 2) {
-        if (data[i].tag_name.indexOf('stable') < 0) {
+        if ((data[i].tag_name.indexOf('stable') < 0) ) {
           filteredData = data[i]
           break
         }
@@ -93,12 +95,13 @@ const getReleaseUrl = async nodeMode => {
 const getRemoteVersion = async () => {
   logger.info('getRemoteVersion')
   try {
-    const {
-      data: {tag_name: tag},
-    } = await axios.get(nodeNodeReleasesUrl)
+    // const {
+    //   data: {tag_name: tag},
+    // } = await axios.get(nodeNodeReleasesUrl)
     const {data} = await axios.get(nodeNodeReleasesUrl)
-    return semver.clean(tag)
+    return semver.clean(data[0].tag_name)
   } catch (e) {
+    logger.info('getRemoteVersion error', e.toString())
     return null
   }
 }
@@ -149,6 +152,9 @@ async function downloadNode(onProgress, onFinish, onError, nodeMode) {
     onErrorCb = onError
     return downloadingPromiseGlobal
   }
+    if(!nodeMode){
+        nodeMode = globalNodeMode
+    }
   changeNodeMode(+nodeMode)
   downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
     downloading = true
@@ -308,6 +314,10 @@ async function stopNode(node) {
 }
 
 function getCurrentVersion(tempNode, nodeMode) {
+  if(!nodeMode){
+    nodeMode = globalNodeMode
+  }
+    logger.error('getCurrentVersion-nodeMode', nodeMode)
   changeNodeMode(+nodeMode)
 
   return new Promise((resolve, reject) => {

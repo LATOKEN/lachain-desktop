@@ -157,9 +157,9 @@ function NodeSettings() {
             ...margin(rem(theme.spacings.small12, theme.fontSizes.base), 0),
           }}
         >
-          <Button onClick={() => setConfirmModalShow(true)} danger>
-            Purge local node
-          </Button>
+          {/*<Button onClick={() => setConfirmModalShow(true)} danger>*/}
+            {/*Purge local node*/}
+          {/*</Button>*/}
         </div>
         <Flex align="center">
           <Box>
