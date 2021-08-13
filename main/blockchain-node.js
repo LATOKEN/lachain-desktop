@@ -24,17 +24,14 @@ const nodeNodeReleasesUrl =
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
 let nodeModeData = null
-let globalNodeMode = 1 //default testNet
 function changeNodeMode(mode) {
   switch (mode) {
     case 1: {
       nodeModeData = path.join(appDataPath('userData'), 'testNet')
-        globalNodeMode = 1
       break
     }
     case 2: {
       nodeModeData = path.join(appDataPath('userData'), 'devNet')
-        globalNodeMode = 2
       break
     }
     default: {
@@ -66,7 +63,7 @@ const getReleaseUrl = async nodeMode => {
   if (data && data.length) {
     for (let i = 0; i < data.length; i += 1) {
       if (nodeMode && nodeMode === 2) {
-        if ((data[i].tag_name.indexOf('stable') < 0) ) {
+        if (data[i].tag_name.indexOf('stable') < 0) {
           filteredData = data[i]
           break
         }
@@ -152,9 +149,7 @@ async function downloadNode(onProgress, onFinish, onError, nodeMode) {
     onErrorCb = onError
     return downloadingPromiseGlobal
   }
-    if(!nodeMode){
-        nodeMode = globalNodeMode
-    }
+
   changeNodeMode(+nodeMode)
   downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
     downloading = true
@@ -314,10 +309,7 @@ async function stopNode(node) {
 }
 
 function getCurrentVersion(tempNode, nodeMode) {
-  if(!nodeMode){
-    nodeMode = globalNodeMode
-  }
-    logger.error('getCurrentVersion-nodeMode', nodeMode)
+  logger.error('getCurrentVersion-nodeMode', nodeMode)
   changeNodeMode(+nodeMode)
 
   return new Promise((resolve, reject) => {

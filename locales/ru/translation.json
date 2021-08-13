@@ -1,7 +1,7 @@
 {
   "Something went wrong": "Что-то пошло не так",
   "An error occurred on client": "Произошла ошибка на стороне клиента",
-  "Go to My Account": "Перейти в раздел 'Моя Идена'",
+  "Go to My Account": "Перейти в раздел 'Мой аккаунт'",
   "Profile": "Профиль",
   "Invite": "Приглашение",
   "New flip": "Новый флип",
@@ -143,13 +143,13 @@
   "Once it's fully paid you'll continue to mine coins.": "Как только Вы полностью выплатите его, майнинг монет возобновится.",
   "Total score for": "Общие очки для",
   "all validations": "всех валидаций",
-  "My Account": "Моя Idena",
+  "My Account": "Мой аккаунт",
   "Contacts": "Контакты",
   "Flip deleted": "Флип удален",
   "You can activate it again afterwards.": "Вы можете снова включить его в последствии.",
   "In order to withdraw the stake you have to terminate your identity": "In order to withdraw the stake you have to terminate your identity",
   "You need to get Verified status to be able to terminate your identity and withdraw the stake": "You need to get Verified status to be able to terminate your identity and withdraw the stake",
-  "Locked": "Locked",
+  "Locked": "Блокирован",
   "You need to get Verified status to get the locked funds into the normal wallet": "You need to get Verified status to get the locked funds into the normal wallet",
   "wallet": "wallet",
   "address": "address",
@@ -208,5 +208,11 @@
   "Keep your app opened": "Keep your app opened",
   "Waiting for the end of long session": "Waiting for the end of long session",
   "Validate": "Validate",
-  "Please wait. The network is reaching consensus about validated identities": "Please wait. The network is reaching consensus about validated identities"
+  "Please wait. The network is reaching consensus about validated identities": "Please wait. The network is reaching consensus about validated identities",
+  "Validators": "Валидаторы",
+  "Transactions": "Транзакции",
+  "Node version": "Версия нода",
+  "Client version": "Версия клиента",
+  "Tokens": "Токены",
+  "History": "История"
 }
