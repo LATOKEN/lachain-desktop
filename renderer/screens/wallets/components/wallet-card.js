@@ -129,16 +129,6 @@ function WalletCard({wallet, main, onSend, onReceive, onWithdrawStake}) {
                   >
                     {t('Send')}
                   </WalletMenuItem>
-                  <WalletMenuItem
-                    onClick={async () => {
-                      setIsMenuOpen(false)
-                      onReceive(wallet)
-                    }}
-                    disabled={isStake}
-                    icon={<i className="icon icon--deposit" />}
-                  >
-                    {t('Receive')}
-                  </WalletMenuItem>
                   {isStake && <Divider m={theme.spacings.small} />}
 
                   {isStake && (

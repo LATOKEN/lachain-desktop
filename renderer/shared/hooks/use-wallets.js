@@ -34,7 +34,11 @@ async function fetchWallets(address) {
     accounts.map(account =>
       fetchBalance(account.address).then(resp => ({
         ...account,
-        balance: resp && (account.isStake ? resp.stake : resp.balance),
+        balance:
+          resp &&
+          (account.isStake
+            ? formatAmount(resp.stake)
+            : formatAmount(resp.balance)),
         name: account.isStake ? 'Stake' : 'Main',
       }))
     )
@@ -95,8 +99,22 @@ async function fetchData(address) {
   return {wallets, txs}
 }
 
+function formatAmountTotal(amount) {
+  return amount.toFixed(8).toString()
+}
+
+function formatAmount(amount) {
+  let amountValue
+  amountValue = +amount
+  amountValue = amountValue.toFixed(8)
+  amountValue = +amountValue
+  return amountValue.toString()
+}
+
 function totalBalance(wallets) {
-  return wallets.reduce((acc, curr) => acc + parseFloat(curr.balance), 0)
+  return formatAmountTotal(
+    wallets.reduce((acc, curr) => acc + parseFloat(curr.balance), 0)
+  )
 }
 
 export function useWallets() {

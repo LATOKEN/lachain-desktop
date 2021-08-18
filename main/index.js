@@ -68,6 +68,7 @@ let nodeDownloadPromise = null
 let searchWindow
 let tray
 let expressPort = 3051
+let nodeMode
 
 const nodeUpdater = new NodeUpdater(logger, version => {
   sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
@@ -488,8 +489,9 @@ ipcMain.on(NODE_COMMAND, async (_event, command, data) => {
   }
 })
 
-function downlodNodeMode(nodeMode) {
-  getCurrentVersion(false, nodeMode)
+function downlodNodeMode(nodeData) {
+  logger.error('downlodNodeMode-nodeMode', nodeData)
+  getCurrentVersion(false, nodeData)
     .then(version => {
       sendMainWindowMsg(NODE_EVENT, 'node-ready', version)
     })
@@ -526,7 +528,7 @@ function downlodNodeMode(nodeMode) {
         onProgress,
         onFinish,
         onError,
-        nodeMode
+        nodeData
       )
         .then()
         .finally(() => {
@@ -562,7 +564,8 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
     case 'start-checking': {
       await nodeUpdater.checkForUpdates(
         data.nodeCurrentVersion,
-        data.isInternalNode
+        data.isInternalNode,
+        nodeMode
       )
       break
     }
@@ -577,7 +580,7 @@ ipcMain.on(AUTO_UPDATE_COMMAND, async (event, command, data) => {
           await updateNode()
           sendMainWindowMsg(NODE_EVENT, 'node-ready')
           sendMainWindowMsg(AUTO_UPDATE_EVENT, 'node-updated', {
-            nodeCurrentVersion: await getCurrentVersion(false),
+            nodeCurrentVersion: await getCurrentVersion(false, nodeMode),
             isInternalNode: true,
           })
           logger.info('node updated')
@@ -707,6 +710,11 @@ ipcMain.on('close-app', () => {
 
 ipcMain.on('showMainWindow', () => {
   showMainWindow()
+})
+
+ipcMain.on('update/nodeMode', (event, command, data) => {
+  // eslint-disable-next-line prefer-destructuring
+  nodeMode = data.nodeMode
 })
 
 function sendMainWindowMsg(channel, message, data) {

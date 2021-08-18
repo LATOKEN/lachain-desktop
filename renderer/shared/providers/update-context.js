@@ -150,6 +150,10 @@ function AutoUpdateProvider({children}) {
   })
 
   useEffect(() => {
+    const nodeMode = localStorage.getItem('nodeMode')
+    global.ipcRenderer.send('update/nodeMode', 'update-node-mode', {
+      nodeMode,
+    })
     global.ipcRenderer.send(AUTO_UPDATE_COMMAND, 'start-checking', {
       isInternalNode: !settings.useExternalNode,
     })

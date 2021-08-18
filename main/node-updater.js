@@ -19,7 +19,7 @@ class NodeUpdater extends events.EventEmitter {
     this.timeout = 0
   }
 
-  async checkForUpdates(currentVersion, isInternalNode) {
+  async checkForUpdates(currentVersion, isInternalNode, nodeMode) {
     this.logger.info(
       `start checking updates, internal node: ${isInternalNode}, current version: ${currentVersion}`
     )
@@ -30,10 +30,10 @@ class NodeUpdater extends events.EventEmitter {
       clearTimeout(this.timeout)
     }
 
-    return this.doUpdateCheck()
+    return this.doUpdateCheck(nodeMode)
   }
 
-  async doUpdateCheck() {
+  async doUpdateCheck(nodeMode) {
     try {
       const remoteVersion = await getRemoteVersion()
       if (this.isInternalNode && !nodeExists()) {
@@ -44,7 +44,7 @@ class NodeUpdater extends events.EventEmitter {
       this.logger.info('got remote version', remoteVersion)
       console.log('got remote version', remoteVersion)
 
-      this.currentVersion = await getCurrentVersion(false)
+      this.currentVersion = await getCurrentVersion(false, nodeMode)
       this.currentVersionUpdated(this.currentVersion)
 
       if (semver.lt(this.currentVersion, remoteVersion)) {
@@ -53,7 +53,7 @@ class NodeUpdater extends events.EventEmitter {
 
         if (this.isInternalNode) {
           if (!this.downloadPromise) {
-            promiseTimeout(5000, getCurrentVersion(true))
+            promiseTimeout(5000, getCurrentVersion(true, nodeMode))
               .then(version => {
                 this.logger.info('got local temp version', version)
                 if (semver.lt(version, remoteVersion)) {
@@ -73,7 +73,10 @@ class NodeUpdater extends events.EventEmitter {
     } catch (e) {
       this.logger.error('error while checking update', e.toString())
     } finally {
-      this.timeout = setTimeout(() => this.doUpdateCheck(), checkingInterval)
+      this.timeout = setTimeout(
+        () => this.doUpdateCheck(nodeMode),
+        checkingInterval
+      )
     }
 
     return false

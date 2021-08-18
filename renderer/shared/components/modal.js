@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import {FiX} from 'react-icons/fi'
 import {transparentize, cover, backgrounds} from 'polished'
 import Router from 'next/router'
+import {useTranslation} from 'react-i18next'
 import theme, {rem} from '../theme'
 import useClickOutside from '../hooks/use-click-outside'
 import {
@@ -18,6 +19,7 @@ import {Absolute} from './position'
 export function GlobalModals() {
   const {showExternalUpdateModal} = useAutoUpdateState()
   const {hideExternalNodeUpdateModal} = useAutoUpdateDispatch()
+  const {t} = useTranslation()
 
   return (
     <>
@@ -30,7 +32,7 @@ export function GlobalModals() {
         <Box m="0 0 18px">
           <SubHeading>Cannot update remote node</SubHeading>
           <Text>
-            Please, run built-in at the{' '}
+            {t('Please, run built-in at the')}{' '}
             <FlatButton
               color={theme.colors.primary}
               onClick={() => {
@@ -40,10 +42,10 @@ export function GlobalModals() {
             >
               <span>settings</span>
             </FlatButton>{' '}
-            page to enjoy automatic updates.
+            {t('Page to enjoy automatic updates')}
           </Text>
           <Text css={{marginTop: 10}}>
-            Otherwise, please update your remote node manually.
+            {t('Otherwise, please update your remote node manually')}
           </Text>
         </Box>
         <Flex align="center" justify="flex-end">
@@ -53,7 +55,7 @@ export function GlobalModals() {
                 hideExternalNodeUpdateModal()
               }}
             >
-              Okay, got it
+              {t('Okay, got it')}
             </Button>
           </Box>
         </Flex>

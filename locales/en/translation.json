@@ -227,5 +227,22 @@
   "Keep your app opened": "Keep your app opened",
   "Waiting for the end of long session": "Waiting for the end of long session",
   "Validate": "Validate",
-  "Please wait. The network is reaching consensus about validated identities": "Please wait. The network is reaching consensus about validated identities"
+  "Please wait. The network is reaching consensus about validated identities": "Please wait. The network is reaching consensus about validated identities",
+  "Synchronizing": "Synchronizing",
+  "Synchronizing blocks": "Synchronizing blocks",
+  "Peers connected": "Peers connected",
+  "Out Of": "out of",
+  "Please check you local clock. The time must be synchronized with internet time in order to have connections with other peers.": "Please check you local clock. The time must be synchronized with internet time in order to have connections with other peers.",
+  "Please wait":"Please wait",
+  "Downloading Node": "Downloading Node",
+  "Version": "Version",
+  "Your":"Your",
+  "Node Is Offline": "node is offline",
+  "External": "external",
+  "Run the built-in node": "Run the built-in node",
+  "If you have already node running, please check your connection": "If you have already node running, please check your connection",
+  "Lachain Node is starting": "Lachain Node is starting",
+  "Your built-in node is failed": "Your built-in node is failed",
+  "Restart built-in node": "Restart built-in node",
+  "If problem still exists, restart your app or check your connection": "If problem still exists, restart your app or check your connection"
 }
