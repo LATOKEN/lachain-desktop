@@ -83,7 +83,7 @@ export default function ChangePasswordModal({close}) {
             <input
               type="password"
               name="oldPassword"
-              placeholder="Password"
+              placeholder={t('Old password')}
               value={formData.oldPassword}
               onChange={inputChange}
             />
@@ -104,7 +104,7 @@ export default function ChangePasswordModal({close}) {
             <input
               type="password"
               name="newPassword"
-              placeholder="New Password"
+              placeholder={t('New password')}
               value={formData.newPassword}
               onChange={inputChange}
             />
@@ -121,7 +121,7 @@ export default function ChangePasswordModal({close}) {
             <input
               type="password"
               name="confirmPassword"
-              placeholder="Confirm Password"
+              placeholder={t('Confirm password')}
               value={formData.confirmPassword}
               onChange={inputChange}
             />
@@ -132,12 +132,12 @@ export default function ChangePasswordModal({close}) {
         )}
         {errorData.isConfirm && (
           <p className="P-error-text">
-            {t('New password and confirm password does not match.')}
+            {t('New password and confirm password does not match')}
           </p>
         )}
         {errorData.isValidatePassword && (
           <p className="P-error-text">
-            {t('You have to enter at least 8 digit.')}
+            {t('You have to enter at least 8 digits')}
           </p>
         )}
         <div className="P-wallet-brn">

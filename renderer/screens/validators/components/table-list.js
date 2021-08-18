@@ -10,14 +10,14 @@ function TableList({dataList = []}) {
       <div className="table-header">
         <ul className="table-tr">
           <li title={t('ip')}>{t('ip')}</li>
-          <li title={t('connections')}> {t('connections')}</li>
-          <li title={t('status')}> {t('status')}</li>
-          <li title={t('address')}> {t('address')}</li>
-          <li title={t('block')}> {t('block')}</li>
-          <li title={t('pool')}> {t('pool')}</li>
-          <li title={t('validatorAtMaxHeight')}>
+          <li title={t('Connections')}> {t('Connections')}</li>
+          <li title={t('Status')}> {t('Status')}</li>
+          <li title={t('Address text')}> {t('Address text')}</li>
+          <li title={t('Block')}> {t('Block')}</li>
+          <li title={t('Pool')}> {t('Pool')}</li>
+          <li title={t('Validator At Max Height')}>
             {' '}
-            {t('validatorAtMaxHeight')}
+            {t('Validator At Max Height')}
           </li>
         </ul>
       </div>

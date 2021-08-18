@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import {useTranslation} from 'react-i18next'
 
 function ListInformation({
   maxBlock,
@@ -8,14 +9,17 @@ function ListInformation({
   synced,
   nodes,
 }) {
+  const {t} = useTranslation()
+
   return (
     <div className="information-table">
       <p>
-        Current block: <strong>{maxBlock}</strong>; online validators:{' '}
+        {t('Current block')}: <strong>{maxBlock}</strong>;{' '}
+        {t('Online validators')}:{' '}
         <strong>
           {validatorsOnline}/{consensusParticipants}
         </strong>
-        ; online nodes :{' '}
+        ; {t('Online nodes')} :{' '}
         <strong>
           {synced}/{nodes}
         </strong>

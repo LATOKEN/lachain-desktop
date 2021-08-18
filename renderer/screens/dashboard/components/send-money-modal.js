@@ -33,6 +33,8 @@ function SendMoneyModal({close, tokenData, updateToken}) {
     // eslint-disable-next-line global-require
     const Web3 = require('web3')
     const web3 = new Web3(Web3.givenProvider || BASE_API_URL)
+    // transfer
+    // web3 contract
     web3.eth.sendTransaction(
       {from: address, to: formData.accountAddress, value: formData.amount},
       function(error, hash) {
@@ -63,7 +65,7 @@ function SendMoneyModal({close, tokenData, updateToken}) {
             <input
               type="text"
               name="accountAddress"
-              placeholder="Destination"
+              placeholder={t('Destination')}
               value={formData.accountAddress}
               onChange={inputChange}
             />
@@ -76,7 +78,7 @@ function SendMoneyModal({close, tokenData, updateToken}) {
             <input
               type="number"
               name="amount"
-              placeholder="Amount"
+              placeholder={t('Amount')}
               value={formData.amount}
               onChange={inputChange}
             />

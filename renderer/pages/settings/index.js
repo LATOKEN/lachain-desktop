@@ -21,7 +21,7 @@ import SettingsLayout from './layout'
 import {importKey} from '../../shared/api'
 import {useNodeDispatch} from '../../shared/providers/node-context'
 import {
-  useSettingsState,
+  // useSettingsState,
   useSettingsDispatch,
 } from '../../shared/providers/settings-context'
 import {AVAILABLE_LANGS} from '../../i18n'
@@ -34,16 +34,17 @@ const {setAnalytics} = useAnalytics()
 function Settings() {
   // const {t} = useTranslation()
   // const {addNotification} = useNotificationDispatch()
-  const {runInternalNode, useExternalNode} = useSettingsState()
+  // const {runInternalNode, useExternalNode} = useSettingsState()
   return (
     <SettingsLayout>
       {global.isDev && <></>}
-      {/*<ExportPK />*/}
-      {/*{runInternalNode && !useExternalNode && <ImportPK />}*/}
       <LocaleSwitcher />
     </SettingsLayout>
   )
 }
+// inside SettingsLayout
+// {/*<ExportPK />*/}
+// {/*{runInternalNode && !useExternalNode && <ImportPK />}*/}
 
 // eslint-disable-next-line react/prop-types
 function Section({title, children}) {

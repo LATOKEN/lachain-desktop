@@ -148,7 +148,10 @@ function NodeSettings() {
   })
 
   const [revealApiKey, setRevealApiKey] = useState(false)
-
+  // {/*<Button onClick={() => setConfirmModalShow(true)} danger>*/}
+  // {/*Purge local node*/}
+  // {/*</Button>*/}
+  //  first Div
   return (
     <SettingsLayout>
       <Box py={theme.spacings.large}>
@@ -156,11 +159,7 @@ function NodeSettings() {
           style={{
             ...margin(rem(theme.spacings.small12, theme.fontSizes.base), 0),
           }}
-        >
-          {/*<Button onClick={() => setConfirmModalShow(true)} danger>*/}
-            {/*Purge local node*/}
-          {/*</Button>*/}
-        </div>
+        />
         <Flex align="center">
           <Box>
             <Switcher

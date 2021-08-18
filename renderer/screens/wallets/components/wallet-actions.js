@@ -77,6 +77,19 @@ RowStatus.propTypes = {
 // eslint-disable-next-line react/prop-types
 function WalletTransfer({transactions = []}) {
   const {t} = useTranslation(['translation', 'error'])
+  function formatAmount(amount) {
+    let amountValue
+    amountValue = String(amount)
+    amountValue = +amountValue.substring(1)
+    return amountValue.toString()
+  }
+  function formatFee(fee) {
+    let feeValue
+    feeValue = +fee
+    feeValue *= 1000000000
+    feeValue = feeValue.toFixed(8)
+    return feeValue.toString()
+  }
   return (
     <div>
       <Table>
@@ -88,7 +101,7 @@ function WalletTransfer({transactions = []}) {
               {t('Amount, LA')}
             </TableHeaderCol>
             <TableHeaderCol className="text-right">
-              {t('Fee, LA')}
+              {t('Fee, LA')} (gwei)
             </TableHeaderCol>
             <TableHeaderCol>{t('Date')}</TableHeaderCol>
             <TableHeaderCol>{t('Blockchain transaction ID')}</TableHeaderCol>
@@ -131,17 +144,19 @@ function WalletTransfer({transactions = []}) {
                     color:
                       tx.signAmount < 0
                         ? theme.colors.danger
-                        : theme.colors.text,
+                        : theme.colors.primary,
                   }}
                 >
                   {(tx.type === 'kill' && t('See in Explorer...')) ||
-                    (tx.amount === '0' ? '\u2013' : tx.signAmount)}
+                    (tx.amount === '0'
+                      ? '\u2013'
+                      : formatAmount(tx.signAmount))}
                 </div>
               </TableCol>
 
               <TableCol className="text-right">
                 {((!tx.isMining || tx.maxFee === '0') &&
-                  (tx.usedFee === '0' ? '\u2013' : tx.usedFee)) || (
+                  (tx.usedFee === '0' ? '\u2013' : formatFee(tx.usedFee))) || (
                   <div>
                     <div> {tx.maxFee} </div>
                     <TableHint>{t('Fee limit')}</TableHint>
@@ -158,7 +173,7 @@ function WalletTransfer({transactions = []}) {
 
               <TableCol>
                 {(tx.isMining && t('Mining...')) || (
-                  <div>
+                  <div style={{color: theme.colors.success}}>
                     <div> {t('Confirmed')}</div>
                     <TableHint style={{...ellipsis(rem(130))}}>
                       {tx.isMining ? '' : tx.hash}

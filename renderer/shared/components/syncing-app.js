@@ -1,4 +1,5 @@
 import {rem} from 'polished'
+import {useTranslation} from 'react-i18next'
 import theme from '../theme'
 import {useChainState} from '../providers/chain-context'
 import {useIdentityState} from '../providers/identity-context'
@@ -19,6 +20,8 @@ import Link from './link'
 import {BlockText} from './typo'
 
 export default function SyncingApp() {
+  const {t} = useTranslation()
+
   return (
     <>
       <GlobalModals />
@@ -27,7 +30,7 @@ export default function SyncingApp() {
           <div>
             <Spinner size={24} />
           </div>
-          <div>Synchronizing...</div>
+          <div>{t('Synchronizing')}...</div>
         </div>
         <div>
           <SyncingIdentity />
@@ -75,6 +78,8 @@ function SyncingIdentity() {
   const {currentBlock, highestBlock, wrongTime} = useChainState()
   const {address} = useIdentityState()
   const [{result: peers}] = usePoll(useRpc('net_peers'), 1000)
+  const {t} = useTranslation()
+
   return (
     <section>
       <section>
@@ -89,10 +94,11 @@ function SyncingIdentity() {
         </div>
       </section>
       <section>
-        <h2>Synchronizing blocks</h2>
+        <h2>{t('Synchronizing blocks')}</h2>
         <div>
           <h3>
-            {parseInt(currentBlock, 16)} out of {parseInt(highestBlock, 16)}
+            {parseInt(currentBlock, 16)} {t('Out Of')}
+            {parseInt(highestBlock, 16)}
           </h3>
           <div>
             <span>Peers connected:</span> {(peers || []).length}
@@ -102,8 +108,9 @@ function SyncingIdentity() {
       </section>
       {wrongTime && (
         <section>
-          Please check you local clock. The time must be synchronized with
-          internet time in order to have connections with other peers.
+          {t(
+            'Please check you local clock. The time must be synchronized with internet time in order to have connections with other peers.'
+          )}
         </section>
       )}
       <style jsx>{`
@@ -259,12 +266,14 @@ function Spinner() {
 }
 
 export function LoadingApp() {
+  const {t} = useTranslation()
+
   return (
     <>
       <GlobalModals />
       <section>
         <div>
-          <h3>Please wait...</h3>
+          <h3>{t('Please wait')}...</h3>
         </div>
         <style jsx>{`
           section {
@@ -295,6 +304,8 @@ export function OfflineApp() {
   const {useExternalNode, runInternalNode} = useSettingsState()
   const {nodeProgress} = useAutoUpdateState()
   const {toggleRunInternalNode, toggleUseExternalNode} = useSettingsDispatch()
+  const {t} = useTranslation()
+
   return (
     <>
       <GlobalModals />
@@ -309,10 +320,12 @@ export function OfflineApp() {
                 <Flex width="100%">
                   <img src="/static/idena_white.svg" alt="logo" />
                   <Flex direction="column" justify="space-between" flex="1">
-                    <h2>Downloading Node...</h2>
+                    <h2>{t('Downloading Node')}...</h2>
 
                     <Flex justify="space-between">
-                      <div className="gray">Version {nodeProgress.version}</div>
+                      <div className="gray">
+                        {t('Version')} {nodeProgress.version}
+                      </div>
                       <div>
                         {(
                           nodeProgress.transferred /
@@ -339,7 +352,10 @@ export function OfflineApp() {
             )}
           {(useExternalNode || !runInternalNode) && (
             <>
-              <h2>Your {useExternalNode ? 'external' : ''} node is offline</h2>
+              <h2>
+                {t('Your')} {useExternalNode ? t('External') : ''}
+                {t('node is offline')}
+              </h2>
               <br />
               <Box>
                 <Button
@@ -352,14 +368,16 @@ export function OfflineApp() {
                     }
                   }}
                 >
-                  Run the built-in node
+                  {t('Run the built-in node')}
                 </Button>
               </Box>
               <br />
               <BlockText color="white">
-                If you have already node running, please check your connection{' '}
+                {t(
+                  'If you have already node running, please check your connection'
+                )}{' '}
                 <Link color={theme.colors.primary} href="/settings/node">
-                  settings
+                  {t('Settings')}
                 </Link>
               </BlockText>
             </>
@@ -367,23 +385,25 @@ export function OfflineApp() {
           {!useExternalNode &&
             runInternalNode &&
             (nodeReady || (!nodeReady && !nodeFailed && !nodeProgress)) && (
-              <h3>Lachain Node is starting...</h3>
+              <h3>{t('Lachain Node is starting')}...</h3>
             )}
           {nodeFailed && !useExternalNode && (
             <>
-              <h2>Your built-in node is failed</h2>
+              <h2>{t('Your built-in node is failed')}</h2>
               <br />
               <Box>
                 <Button variant="primary" onClick={tryRestartNode}>
-                  Restart built-in node
+                  {t('Restart built-in node')}
                 </Button>
               </Box>
               <br />
               <BlockText color="white">
-                If problem still exists, restart your app or check your
-                connection{' '}
+                {t(
+                  'If problem still exists, restart your app or check your\n' +
+                    '                connection'
+                )}{' '}
                 <Link color={theme.colors.primary} href="/settings/node">
-                  settings
+                  {t('Settings')}
                 </Link>{' '}
               </BlockText>
             </>

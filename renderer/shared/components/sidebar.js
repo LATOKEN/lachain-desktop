@@ -56,22 +56,23 @@ function NodeStatus() {
     currentBlock,
     highestBlock,
   } = useChainState()
+  const {t} = useTranslation()
 
   const [{result: peers}] = usePoll(useRpc('net_peers'), 3000)
 
   let bg = theme.colors.white01
   let color = theme.colors.muted
-  let text = 'Getting node status...'
+  let text = t('Getting node status...')
 
   if (!loading) {
     if (offline) {
       bg = theme.colors.danger02
       color = theme.colors.danger
-      text = 'Offline'
+      text = t('Offline')
     } else {
       bg = syncing ? theme.colors.warning02 : theme.colors.success02
       color = syncing ? theme.colors.warning : theme.colors.success
-      text = syncing ? 'Synchronizing' : 'Synchronized'
+      text = syncing ? t('Synchronizing') : t('Synchronized')
     }
   }
 
@@ -90,19 +91,18 @@ function NodeStatus() {
             {offline
               ? null
               : [
-                  !offline ? `Peers: ${(peers || []).length}` : '',
+                  !offline ? `${t('Peers')}: ${(peers || []).length}` : '',
                   syncing
-                    ? `Blocks: ${parseInt(currentBlock, 16)} out of ${parseInt(
-                        highestBlock,
-                        16
-                      )}`
-                    : `Current block: ${parseInt(currentBlock, 16)}`,
-                ].map((t, idx) => (
+                    ? `${t('Blocks')}: ${parseInt(currentBlock, 16)} ${t(
+                        'Out of'
+                      )} ${parseInt(highestBlock, 16)}`
+                    : `${t('Current block')}: ${parseInt(currentBlock, 16)}`,
+                ].map((k, idx) => (
                   <div
                     key={idx}
                     style={{whiteSpace: 'pre-wrap', wordBreak: 'break-word'}}
                   >
-                    {t}
+                    {k}
                   </div>
                 ))}
           </div>
@@ -281,11 +281,11 @@ function ActionPanel() {
     >
       {currentPeriod !== EpochPeriod.None && (
         <Block title={t('Current phase')}>
-          {mapToFriendlyPeriod(currentPeriod)}
+          {t(mapToFriendlyPeriod(currentPeriod))}
         </Block>
       )}
       <Block title={t('Wallet state')}>
-        {isWalletLocked ? 'Locked' : 'Unlocked'}
+        {isWalletLocked ? t('Locked') : t('Unlocked')}
       </Block>
     </Box>
   )
@@ -368,6 +368,7 @@ UpdateButton.propTypes = {
 export function Version() {
   const autoUpdate = useAutoUpdateState()
   const {uiUpdate, nodeUpdate} = useAutoUpdateDispatch()
+  const {t} = useTranslation()
 
   return (
     <>
@@ -382,14 +383,14 @@ export function Version() {
             fontWeight={500}
             css={{lineHeight: rem(20)}}
           >
-            Client version: {global.appVersion}
+            {t('Client version')}: {global.appVersion}
           </Text>
           <Text
             color={theme.colors.white05}
             fontWeight={500}
             css={{lineHeight: rem(20)}}
           >
-            Node version: {autoUpdate.nodeCurrentVersion}
+            {t('Node version')}: {autoUpdate.nodeCurrentVersion}
           </Text>
         </Flex>
       </Box>
@@ -408,7 +409,7 @@ export function Version() {
         )}
         {autoUpdate.uiCanUpdate ? (
           <UpdateButton
-            text="Update Client Version"
+            text={t('Update Client Version')}
             version={autoUpdate.uiRemoteVersion}
             onClick={uiUpdate}
           />
@@ -418,7 +419,7 @@ export function Version() {
         (!autoUpdate.nodeProgress ||
           autoUpdate.nodeProgress.percentage === 100) ? (
           <UpdateButton
-            text="Update Node Version"
+            text={t('Update Node Version')}
             version={autoUpdate.nodeRemoteVersion}
             onClick={nodeUpdate}
           />

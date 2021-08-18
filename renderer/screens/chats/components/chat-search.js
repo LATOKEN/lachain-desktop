@@ -1,11 +1,13 @@
 import React from 'react'
+import {useTranslation} from 'react-i18next'
 import {AddIcon} from '../../../shared/components'
 import theme from '../../../shared/theme'
 
 export default function Search() {
+  const {t} = useTranslation()
   return (
     <div>
-      <input type="search" placeholder="Search" />
+      <input type="search" placeholder={t('Search')} />
       <AddIcon />
       <style jsx>{`
         div {

@@ -24,14 +24,17 @@ const nodeNodeReleasesUrl =
 const getBinarySuffix = () => (process.platform === 'win32' ? '.exe' : '')
 
 let nodeModeData = null
+let globalNodeMode = 1 // default testNet
 function changeNodeMode(mode) {
   switch (mode) {
     case 1: {
       nodeModeData = path.join(appDataPath('userData'), 'testNet')
+      globalNodeMode = 1
       break
     }
     case 2: {
       nodeModeData = path.join(appDataPath('userData'), 'devNet')
+      globalNodeMode = 2
       break
     }
     default: {
@@ -96,7 +99,19 @@ const getRemoteVersion = async () => {
     //   data: {tag_name: tag},
     // } = await axios.get(nodeNodeReleasesUrl)
     const {data} = await axios.get(nodeNodeReleasesUrl)
-    return semver.clean(data[0].tag_name)
+    let dataVersion = null
+    for (let i = 0; i < data.length; i += 1) {
+      if (globalNodeMode && globalNodeMode === 2) {
+        if (data[i].tag_name.indexOf('stable') < 0) {
+          dataVersion = data[i].tag_name
+          break
+        }
+      } else if (data[i].tag_name.indexOf('stable') > 0) {
+        dataVersion = data[i].tag_name
+        break
+      }
+    }
+    return semver.clean(dataVersion)
   } catch (e) {
     logger.info('getRemoteVersion error', e.toString())
     return null
@@ -135,7 +150,6 @@ async function purgeNode(nodeMode) {
   })
 }
 
-
 let downloading
 let onProgressCb
 let onFinishCb
@@ -150,8 +164,11 @@ async function downloadNode(onProgress, onFinish, onError, nodeMode) {
     onErrorCb = onError
     return downloadingPromiseGlobal
   }
-
-  changeNodeMode(+nodeMode)
+  let node = nodeMode
+  if (!nodeMode) {
+    node = globalNodeMode
+  }
+  changeNodeMode(+node)
   downloadingPromiseGlobal = new Promise(async (resolve, reject) => {
     downloading = true
     onProgressCb = onProgress
@@ -159,7 +176,7 @@ async function downloadNode(onProgress, onFinish, onError, nodeMode) {
     onErrorCb = onError
     logger.info('DOWNLOADING THE NODE')
     try {
-      const url = await getReleaseUrl(nodeMode)
+      const url = await getReleaseUrl(node)
       const version = await getRemoteVersion()
 
       if (!fs.existsSync(nodeModeData)) {
@@ -310,8 +327,12 @@ async function stopNode(node) {
 }
 
 function getCurrentVersion(tempNode, nodeMode) {
-  logger.error('getCurrentVersion-nodeMode', nodeMode)
-  changeNodeMode(+nodeMode)
+  let nodeM = nodeMode
+  if (!nodeMode) {
+    nodeM = globalNodeMode
+  }
+  logger.error('getCurrentVersion-nodeMode', nodeM)
+  changeNodeMode(+nodeM)
 
   return new Promise((resolve, reject) => {
     const node = tempNode ? getTempNodeFile() : getNodeFile()

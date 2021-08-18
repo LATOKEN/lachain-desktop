@@ -170,15 +170,6 @@ export default function Index() {
                     </IconLink>
                     <IconLink
                       disabled={activeWallet && activeWallet.isStake}
-                      icon={<i className="icon icon--deposit" />}
-                      onClick={() => {
-                        setIsReceiveFormOpen(!isReceiveFormOpen)
-                      }}
-                    >
-                      {t('Receive')}
-                    </IconLink>
-                    <IconLink
-                      disabled={activeWallet && activeWallet.isStake}
                       icon={<i className="icon icon--upload" />}
                       onClick={() => {
                         uploadWallet()

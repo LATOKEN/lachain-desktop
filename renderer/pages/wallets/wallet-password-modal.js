@@ -1,6 +1,5 @@
 import React from 'react'
 import {useTranslation} from 'react-i18next'
-import PropTypes from 'prop-types'
 
 export default function WalletPasswordModal() {
   const {t} = useTranslation()
@@ -31,7 +30,7 @@ export default function WalletPasswordModal() {
     <div className="P-wallet-modal">
       <div className="P-wallet-modal-block">
         <div className="P-wallet-title">
-          <h3>{t('Enter and save the password for the wallet.')}</h3>
+          <h3>{t('Enter and save the password for the wallet')}</h3>
         </div>
         <div className={`G-input-block ${isValidate ? 'G-error' : ''}`}>
           <p>{t('Password')}</p>
@@ -40,7 +39,7 @@ export default function WalletPasswordModal() {
             <input
               type="password"
               name="accountAddress"
-              placeholder="Password"
+              placeholder={t('Password')}
               value={password}
               onChange={changeInput}
             />

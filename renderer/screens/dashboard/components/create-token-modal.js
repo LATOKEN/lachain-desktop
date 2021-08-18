@@ -47,21 +47,21 @@ function CreateTokenModal({close, updateTokens}) {
               type="text"
               className={`${iValidate ? 'P-error-input' : ''} `}
               name="accountToken"
-              placeholder="Token"
+              placeholder={t('Token')}
               value={formData.accountToken}
               onChange={inputChange}
             />
           </label>
         </div>
         <div className="G-input-block">
-          <p>{t('Address')}</p>
+          <p>{t('Address text')}</p>
           {/* eslint-disable-next-line jsx-a11y/label-has-associated-control,jsx-a11y/label-has-for */}
           <label>
             <input
               type="text"
               className={`${iValidate ? 'P-error-input' : ''} `}
               name="accountAddress"
-              placeholder="Address"
+              placeholder={t('Address text')}
               value={formData.accountAddress}
               onChange={inputChange}
             />
