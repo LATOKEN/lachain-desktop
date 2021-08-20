@@ -35,7 +35,7 @@ function MyTokensOptions() {
   function setTokenData(data) {
     if (address) {
       createBalanceApi(data).then(dataResult => {
-        if (dataResult.result === '0x') {
+        if (dataResult && dataResult.result === '0x') {
           data.amount = 0
         } else {
           // eslint-disable-next-line no-restricted-properties,no-shadow
@@ -60,7 +60,7 @@ function MyTokensOptions() {
       if (tokens && tokens.length) {
         tokens.forEach(item => {
           createBalanceApi(item).then(data => {
-            if (data.result === '0x') {
+            if (data && data.result === '0x') {
               item.amount = 0
             } else {
               // eslint-disable-next-line no-restricted-properties,no-shadow

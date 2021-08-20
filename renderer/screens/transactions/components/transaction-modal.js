@@ -18,7 +18,7 @@ function TransactionModal({close, transactionDetails}) {
           </li>
           <li>
             <p>{t('Status')}:</p>
-            <p>{transactionDetails.status}</p>
+            <p>Pending</p>
           </li>
           <li>
             <p>{t('Block')}:</p>

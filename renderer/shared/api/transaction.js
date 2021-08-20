@@ -9,6 +9,7 @@ import {useAnalytics} from '../hooks/use-analytics'
  */
 
 const {setAnalytics} = useAnalytics()
+
 export async function fetchTransactionsDetails(address) {
   const response = await api()
     .post('/', {
@@ -36,7 +37,7 @@ export function fetchTransactionsTest() {
 }
 
 export async function fetchTransactions() {
-  const {data} = await api()
+  const response = await api()
     .post('/', {
       method: 'getTransactionPool',
       params: [],
@@ -45,5 +46,8 @@ export async function fetchTransactions() {
     .catch(e => {
       setAnalytics('Error', 'Fetch Transaction list', JSON.stringify(e))
     })
-  return data
+  if (response) {
+    const {data} = response
+    return data
+  }
 }

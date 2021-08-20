@@ -77,7 +77,7 @@
   "No contacts found...": "Контактов не найдено...",
   "Search": "Поиск",
   "Activate invite": "Активировать приглашение",
-  "Online mining status": "Статус 'майнинг'",
+  "Online mining ": "Статус 'майнинг'",
   "Activate mining status": "Активировать статус 'майнинг'",
   "Deactivate mining status": "Деактивировать статус 'майнинг'",
   "Submit the form to start mining. Your node has to be online\n                unless you deactivate your status. Otherwise penalties might be\n                charged after being offline more than 1 hour.": "Используйте эту форму для начала майнинга. Ваш узел (нода) должен быть онлайн\n                если вы не деактивировали статус 'майнинг'. В противном случае могут быть начислены штрафы\n                после нахождения узла оффлайн дольше 1 часа.",

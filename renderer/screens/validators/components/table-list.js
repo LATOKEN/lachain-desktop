@@ -9,46 +9,13 @@ function TableList({dataList = []}) {
     <div className="table-block P-validators-table">
       <div className="table-header">
         <ul className="table-tr">
-          <li title={t('ip')}>{t('ip')}</li>
-          <li title={t('Connections')}> {t('Connections')}</li>
-          <li title={t('Status')}> {t('Status')}</li>
-          <li title={t('Address text')}> {t('Address text')}</li>
-          <li title={t('Block')}> {t('Block')}</li>
-          <li title={t('Pool')}> {t('Pool')}</li>
-          <li title={t('Validator At Max Height')}>
-            {' '}
-            {t('Validator At Max Height')}
-          </li>
+          <li title={t('Validators')}>{t('Validators')}</li>
         </ul>
       </div>
       <div className="table-body">
         {dataList.map((item, index) => (
           <ul key={index} className="table-tr">
-            <li title={item.ip ? item.ip.toString() : 'x'}>{item.ip || '—'}</li>
-            <li title={item.connection ? item.connection.toString() : 'x'}>
-              {item.connections || '—'}
-            </li>
-            <li title={item.status ? item.status.toString() : 'x'}>
-              {item.status || '—'}
-            </li>
-            <li title={item.address ? item.address.toString() : 'x'}>
-              {item.address || '—'}
-            </li>
-            <li title={item.block ? item.block.toString() : 'x'}>
-              {item.block || '—'}
-            </li>
-            <li title={item.txes ? item.txes.toString() : 'x'}>
-              {item.txes || '—'}
-            </li>
-            <li
-              title={
-                item.validatorAtMaxHeight
-                  ? item.validatorAtMaxHeight.toString()
-                  : 'x'
-              }
-            >
-              {item.validatorAtMaxHeight.toString() || '—'}
-            </li>
+            <li>{item || '—'}</li>
           </ul>
         ))}
       </div>

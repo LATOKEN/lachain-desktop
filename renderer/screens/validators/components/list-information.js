@@ -2,27 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import {useTranslation} from 'react-i18next'
 
-function ListInformation({
-  maxBlock,
-  validatorsOnline,
-  consensusParticipants,
-  synced,
-  nodes,
-}) {
+function ListInformation({cycleStage}) {
   const {t} = useTranslation()
 
   return (
     <div className="information-table">
       <p>
-        {t('Current block')}: <strong>{maxBlock}</strong>;{' '}
-        {t('Online validators')}:{' '}
-        <strong>
-          {validatorsOnline}/{consensusParticipants}
-        </strong>
-        ; {t('Online nodes')} :{' '}
-        <strong>
-          {synced}/{nodes}
-        </strong>
+        {t('Cycle stage')}: <strong>{cycleStage}</strong>
       </p>
       <style jsx>{`
         .information-table {
@@ -34,11 +20,7 @@ function ListInformation({
 }
 
 ListInformation.propTypes = {
-  maxBlock: PropTypes.number,
-  validatorsOnline: PropTypes.number,
-  consensusParticipants: PropTypes.number,
-  synced: PropTypes.number,
-  nodes: PropTypes.number,
+  cycleStage: PropTypes.number,
 }
 
 export default ListInformation
