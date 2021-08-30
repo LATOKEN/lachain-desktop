@@ -2,7 +2,6 @@ import React, {useEffect} from 'react'
 import {margin, rem} from 'polished'
 import {FiChevronRight} from 'react-icons/fi'
 import {useTranslation} from 'react-i18next'
-import {fetchUnlockWallet} from '../../shared/api/wallet'
 
 import theme from '../../shared/theme'
 import Layout from '../../shared/components/layout'

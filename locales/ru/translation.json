@@ -209,6 +209,7 @@
   "Validate": "Validate",
   "Please wait. The network is reaching consensus about validated identities": "Please wait. The network is reaching consensus about validated identities",
   "Validators": "Валидаторы",
+  "Validator": "Валидатор",
   "Transactions": "Транзакции",
   "Node version": "Версия нода",
   "Client version": "Версия клиента",
@@ -269,7 +270,7 @@
   "Getting node status...": "Получение статуса node ...",
   "Synchronized": "Синхронизировано",
   "Offline": "Не в сети",
-  "Peers": "Сверстники",
+  "Peer": "Пир",
   "Out of": "снаружи",
   "Blocks":"Блоки",
   "Current phase": "Текущая фаза",
@@ -287,5 +288,7 @@
   "Unlock wallet": "Разблокировать кошелек",
   "Unlock wallet for 30 sec to make changes.": "Разблокируйте кошелек на 30 секунд, чтобы внести изменения.",
   "You still need apikey to access private functionality.": "Вам нужен ключ API для доступа к частным функциям.",
-  "Send LA’s": "Отправить LA"
+  "Send LA’s": "Отправить LA",
+  "Height": "Высота",
+  "Transaction Pool": "Пул транзакций"
 }

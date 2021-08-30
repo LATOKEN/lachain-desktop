@@ -8,7 +8,7 @@ function DeleteTokenModal({close, deleteToken}) {
   return (
     <div className="P-send-money-modal">
       <div className="P-send-money-block">
-        <h3>{t('Are you sure you want to delete this Token?')}</h3>
+        <h3>{t('Are you sure you want to delete this Token')}</h3>
       </div>
       <div className="P-delete-content">
         <button type="button" className="P-cancel-btn" onClick={close}>

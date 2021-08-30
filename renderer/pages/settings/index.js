@@ -58,139 +58,139 @@ function Section({title, children}) {
   )
 }
 
-function ExportPK() {
-  const {t} = useTranslation()
-  const [{result: pk}, callRpc] = useRpc()
-  const [password, setPassword] = React.useState()
-  const [showDialog, setShowDialog] = React.useState()
-  React.useEffect(() => setShowDialog(!!pk), [pk])
-  return (
-    <Section title={t('Export private key')}>
-      <Text css={{marginBottom: 10}}>
-        {t('Create a new password to export your private key')}
-      </Text>
-      <form
-        onSubmit={e => {
-          e.preventDefault()
-          callRpc('dna_exportKey', password)
-        }}
-      >
-        <Label>{t('New password')}</Label>
-        <Flex align="center">
-          <Input
-            value={password}
-            type="password"
-            style={{
-              ...margin(0, theme.spacings.normal, 0, 0),
-              width: rem(300),
-            }}
-            disabled={showDialog}
-            onChange={e => setPassword(e.target.value)}
-          />
-          <Button type="submit" disabled={!password}>
-            {t('Export')}
-          </Button>
-        </Flex>
-      </form>
-      <PkDialog show={showDialog} onHide={() => setShowDialog(false)}>
-        <Box
-          css={{
-            ...margin(rem(theme.spacings.medium24)),
-            textAlign: 'center',
-          }}
-        >
-          <QRCode value={pk} />
-        </Box>
-        <Box>
-          <Field
-            id="pk"
-            label={t('Encrypted private key')}
-            defaultValue={pk}
-            readonly
-            disabled
-            allowCopy
-          />
-        </Box>
-      </PkDialog>
-    </Section>
-  )
-}
-
-const analytics = useAnalytics()
-
-function ImportPK() {
-  const {t} = useTranslation('error')
-  const [password, setPassword] = React.useState()
-  const [key, setKey] = React.useState()
-  const {addError, addNotification} = useNotificationDispatch()
-  const {importNodeKey} = useNodeDispatch()
-
-  const submit = async () => {
-    try {
-      const {error} = await importKey(key, password)
-      if (error) {
-        addError({
-          title: t('error:Error while importing key'),
-          body: error.message,
-        })
-      } else {
-        importNodeKey()
-        addNotification({
-          title: 'Success',
-          body: t(
-            'translation:Key was imported, please, wait, while node is restarting'
-          ),
-        })
-        setKey('')
-        setPassword('')
-      }
-    } catch (e) {
-      setAnalytics('Error', 'importPK', JSON.stringify(e))
-
-      addError({
-        title: t('error:Error while importing key'),
-        body: t(
-          'error:Internal node is not available, try again in a few seconds'
-        ),
-      })
-    }
-  }
-
-  return (
-    <Section title={t('translation:Import private key')}>
-      <form
-        onSubmit={async e => {
-          e.preventDefault()
-          await submit()
-        }}
-      >
-        <Label htmlFor="key">{t('translation:Encrypted private key')}</Label>
-        <Input
-          value={key}
-          type="text"
-          style={{
-            ...margin(0, theme.spacings.normal, theme.spacings.normal, 0),
-            width: rem(300),
-          }}
-          onChange={e => setKey(e.target.value)}
-        />
-        <Label htmlFor="password">{t('translation:Password')}</Label>
-        <Input
-          value={password}
-          type="password"
-          style={{
-            ...margin(0, theme.spacings.normal, 0, 0),
-            width: rem(300),
-          }}
-          onChange={e => setPassword(e.target.value)}
-        />
-        <Button type="submit" disabled={!password || !key}>
-          {t('translation:Import')}
-        </Button>
-      </form>
-    </Section>
-  )
-}
+// function ExportPK() {
+//   const {t} = useTranslation()
+//   const [{result: pk}, callRpc] = useRpc()
+//   const [password, setPassword] = React.useState()
+//   const [showDialog, setShowDialog] = React.useState()
+//   React.useEffect(() => setShowDialog(!!pk), [pk])
+//   return (
+//     <Section title={t('Export private key')}>
+//       <Text css={{marginBottom: 10}}>
+//         {t('Create a new password to export your private key')}
+//       </Text>
+//       <form
+//         onSubmit={e => {
+//           e.preventDefault()
+//           callRpc('dna_exportKey', password)
+//         }}
+//       >
+//         <Label>{t('New password')}</Label>
+//         <Flex align="center">
+//           <Input
+//             value={password}
+//             type="password"
+//             style={{
+//               ...margin(0, theme.spacings.normal, 0, 0),
+//               width: rem(300),
+//             }}
+//             disabled={showDialog}
+//             onChange={e => setPassword(e.target.value)}
+//           />
+//           <Button type="submit" disabled={!password}>
+//             {t('Export')}
+//           </Button>
+//         </Flex>
+//       </form>
+//       <PkDialog show={showDialog} onHide={() => setShowDialog(false)}>
+//         <Box
+//           css={{
+//             ...margin(rem(theme.spacings.medium24)),
+//             textAlign: 'center',
+//           }}
+//         >
+//           <QRCode value={pk} />
+//         </Box>
+//         <Box>
+//           <Field
+//             id="pk"
+//             label={t('Encrypted private key')}
+//             defaultValue={pk}
+//             readonly
+//             disabled
+//             allowCopy
+//           />
+//         </Box>
+//       </PkDialog>
+//     </Section>
+//   )
+// }
+//
+// const analytics = useAnalytics()
+//
+// function ImportPK() {
+//   const {t} = useTranslation('error')
+//   const [password, setPassword] = React.useState()
+//   const [key, setKey] = React.useState()
+//   const {addError, addNotification} = useNotificationDispatch()
+//   const {importNodeKey} = useNodeDispatch()
+//
+//   const submit = async () => {
+//     try {
+//       const {error} = await importKey(key, password)
+//       if (error) {
+//         addError({
+//           title: t('error:Error while importing key'),
+//           body: error.message,
+//         })
+//       } else {
+//         importNodeKey()
+//         addNotification({
+//           title: 'Success',
+//           body: t(
+//             'translation:Key was imported, please, wait, while node is restarting'
+//           ),
+//         })
+//         setKey('')
+//         setPassword('')
+//       }
+//     } catch (e) {
+//       setAnalytics('Error', 'importPK', JSON.stringify(e))
+//
+//       addError({
+//         title: t('error:Error while importing key'),
+//         body: t(
+//           'error:Internal node is not available, try again in a few seconds'
+//         ),
+//       })
+//     }
+//   }
+//
+//   return (
+//     <Section title={t('translation:Import private key')}>
+//       <form
+//         onSubmit={async e => {
+//           e.preventDefault()
+//           await submit()
+//         }}
+//       >
+//         <Label htmlFor="key">{t('translation:Encrypted private key')}</Label>
+//         <Input
+//           value={key}
+//           type="text"
+//           style={{
+//             ...margin(0, theme.spacings.normal, theme.spacings.normal, 0),
+//             width: rem(300),
+//           }}
+//           onChange={e => setKey(e.target.value)}
+//         />
+//         <Label htmlFor="password">{t('translation:Password')}</Label>
+//         <Input
+//           value={password}
+//           type="password"
+//           style={{
+//             ...margin(0, theme.spacings.normal, 0, 0),
+//             width: rem(300),
+//           }}
+//           onChange={e => setPassword(e.target.value)}
+//         />
+//         <Button type="submit" disabled={!password || !key}>
+//           {t('translation:Import')}
+//         </Button>
+//       </form>
+//     </Section>
+//   )
+// }
 
 // eslint-disable-next-line react/prop-types
 function PkDialog({children, onHide, ...props}) {

@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useState} from 'react'
 import {getValidatorsList, getCycleStage} from '../api/validators'
 
 export function useValidators() {
@@ -12,7 +12,7 @@ export function useValidators() {
    * * */
   const [cycleStage, setCycleStage] = useState()
   /**
-   * loading page  to get  validation list
+   * loading page  for get  validation list
    * * */
 
   const [isLoading, setIsLoading] = useState(false)

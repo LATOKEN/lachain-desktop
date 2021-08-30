@@ -37,6 +37,34 @@ function SettingsLayout({children}) {
               >
                 {t('Node')}
               </ToolbarItem>
+
+              <ToolbarItem
+                key="validators"
+                onClick={() => {
+                  router.push('/settings/validators')
+                }}
+                isCurrent={router.pathname === '/settings/validators'}
+              >
+                {t('Validators')}
+              </ToolbarItem>
+              <ToolbarItem
+                key="peer"
+                onClick={() => {
+                  router.push('/settings/peer')
+                }}
+                isCurrent={router.pathname === '/settings/peer'}
+              >
+                {t('Peer')}
+              </ToolbarItem>
+              <ToolbarItem
+                key="transactions"
+                onClick={() => {
+                  router.push('/settings/transactions')
+                }}
+                isCurrent={router.pathname === '/settings/transactions'}
+              >
+                {t('Transaction Pool')}
+              </ToolbarItem>
             </Flex>
           </Toolbar>
         </Box>

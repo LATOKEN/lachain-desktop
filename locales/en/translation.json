@@ -244,5 +244,6 @@
   "Lachain Node is starting": "Lachain Node is starting",
   "Your built-in node is failed": "Your built-in node is failed",
   "Restart built-in node": "Restart built-in node",
-  "If problem still exists, restart your app or check your connection": "If problem still exists, restart your app or check your connection"
+  "If problem still exists, restart your app or check your connection": "If problem still exists, restart your app or check your connection",
+  "Peers height": "Peers height"
 }

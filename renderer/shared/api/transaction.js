@@ -26,16 +26,6 @@ export async function fetchTransactionsDetails(address) {
   }
 }
 
-export function fetchTransactionsTest() {
-  return axios
-    .post('http://localhost:7070', {
-      method: 'getTransactionPool',
-      params: [],
-      id: 1,
-    })
-    .then(resp => resp)
-}
-
 export async function fetchTransactions() {
   const response = await api()
     .post('/', {

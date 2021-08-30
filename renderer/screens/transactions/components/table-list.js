@@ -44,7 +44,16 @@ function TransactionList({dataList = []}) {
                 item.transaction.from ? item.transaction.from.toString() : 'x'
               }
             >
-              {item.transaction.from || '—'}
+              <a
+                href="#"
+                onClick={() => {
+                  global.openExternal(
+                    `https://blockscout-dev.dev3.nekotal.tech/address/${item.transaction.from}`
+                  )
+                }}
+              >
+                {item.transaction.from || '—'}
+              </a>
             </li>
             <li
               title={item.transaction.to ? item.transaction.to.toString() : 'x'}

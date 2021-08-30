@@ -9,7 +9,7 @@ function TableList({dataList = []}) {
     <div className="table-block P-validators-table">
       <div className="table-header">
         <ul className="table-tr">
-          <li title={t('Validators')}>{t('Validators')}</li>
+          <li title={t('Validator')}>{t('Validator')}</li>
         </ul>
       </div>
       <div className="table-body">
