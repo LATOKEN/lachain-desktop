@@ -1,18 +1,14 @@
 import React from 'react'
-import {useTranslation} from 'react-i18next'
 
 import theme from '../../shared/theme'
-import Layout from '../../shared/components/layout'
 import TableList from '../../screens/validators/components/table-list'
-import {Box, PageTitle} from '../../shared/components'
-import {useChainState} from '../../shared/providers/chain-context'
+import {Box} from '../../shared/components'
 import {useInterval} from '../../shared/hooks/use-interval'
 import {useValidators} from '../../shared/hooks/use-validators'
 import ListInformation from '../../screens/validators/components/list-information'
+import SettingsLayout from './layout'
 
 export default function Index() {
-  const {t} = useTranslation()
-  const {syncing, offline} = useChainState()
   const {
     validatorsList,
     cycleStage,
@@ -30,12 +26,11 @@ export default function Index() {
   )
 
   return (
-    <Layout syncing={syncing} offline={offline}>
-      <Box px={theme.spacings.xxxlarge} py={theme.spacings.large}>
-        <PageTitle>{t('Validators')}</PageTitle>
+    <SettingsLayout>
+      <Box py={theme.spacings.xxxlarge}>
         <TableList dataList={validatorsList} />
         <ListInformation cycleStage={cycleStage} />
       </Box>
-    </Layout>
+    </SettingsLayout>
   )
 }

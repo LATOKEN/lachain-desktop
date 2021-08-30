@@ -1,23 +1,18 @@
 import React, {useEffect, useState} from 'react'
-import {useTranslation} from 'react-i18next'
-import Layout from '../../shared/components/layout'
-import {Box, PageTitle} from '../../shared/components'
+import {Box} from '../../shared/components'
 import theme from '../../shared/theme'
 import Loading from '../../shared/components/loading'
 import TransactionList from '../../screens/transactions/components/table-list'
 import {fetchTransactionsDetails, fetchTransactions} from '../../shared/api'
-import {useChainState} from '../../shared/providers/chain-context'
+import SettingsLayout from './layout'
 
 export default function Index() {
-  const {t} = useTranslation()
-  const {syncing, offline} = useChainState()
-
   const [transactionList, setTransactionLst] = useState([])
   const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     start()
-  }, [start])
+  }, [])
 
   async function start() {
     fetchTransactions().then(resultData => {
@@ -50,9 +45,8 @@ export default function Index() {
   }
 
   return (
-    <Layout syncing={syncing} offline={offline}>
-      <Box px={theme.spacings.xxxlarge} py={theme.spacings.large}>
-        <PageTitle>{t('Transactions')}</PageTitle>
+    <SettingsLayout>
+      <Box py={theme.spacings.xxxlarge}>
         {isLoading ? (
           <div>
             <Loading color={theme.colors.text} />
@@ -62,6 +56,6 @@ export default function Index() {
           <TransactionList dataList={transactionList} />
         ) : null}
       </Box>
-    </Layout>
+    </SettingsLayout>
   )
 }
