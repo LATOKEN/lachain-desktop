@@ -1,24 +1,23 @@
-import axios from 'axios'
 import api from './api-client'
 import {useAnalytics} from '../hooks/use-analytics'
 
 /**
- * Get  transaction lit
+ * Get  validators lit
  *
  * @returns {string[]} Accounts
  */
 
 const {setAnalytics} = useAnalytics()
 
-export async function fetchTransactionsDetails(address) {
+export async function getValidatorsList() {
   const response = await api()
     .post('/', {
-      method: 'getTransactionPoolByHash',
-      params: [address],
+      method: 'bcn_validators',
+      params: [],
       id: 1,
     })
     .catch(e => {
-      setAnalytics('Error', 'Fetch Transactions Details', JSON.stringify(e))
+      setAnalytics('Error', 'Get Validation List', JSON.stringify(e))
     })
   if (response) {
     const {data} = response
@@ -26,18 +25,18 @@ export async function fetchTransactionsDetails(address) {
   }
 }
 
-export async function fetchTransactions() {
+export async function getCycleStage() {
   const response = await api()
     .post('/', {
-      method: 'getTransactionPool',
+      method: 'bcn_cycle',
       params: [],
       id: 1,
     })
     .catch(e => {
-      setAnalytics('Error', 'Fetch Transaction list', JSON.stringify(e))
+      setAnalytics('Error', 'Get Cycle Stages', JSON.stringify(e))
     })
   if (response) {
     const {data} = response
-    return data
+    return Promise.resolve(data)
   }
 }

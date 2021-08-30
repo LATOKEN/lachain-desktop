@@ -342,9 +342,14 @@ function getCurrentVersion(tempNode, nodeMode) {
       })
       nodeVersion.stderr.on('data', data => {
         if (data) {
-          const {version} = semver.coerce(
-            data.toString().match(/\d+\.\d+\.\d+/g)[0]
-          )
+          let dataString = data.toString()
+          dataString = dataString.match(/\d+\.\d+\.\d+/g)
+          if (!dataString) {
+            return reject(
+              new Error(`cannot resolve node version, stderr: null`)
+            )
+          }
+          const {version} = semver.coerce(dataString[0])
 
           logger.info(`NODE VERSION ${version}`)
 
@@ -352,7 +357,7 @@ function getCurrentVersion(tempNode, nodeMode) {
             ? resolve(version)
             : reject(
                 new Error(
-                  `cannot resolve node version, stderr: ${data.toString()}`
+                  `cannot resolve node version, stderr: ${dataString.toString()}`
                 )
               )
         }

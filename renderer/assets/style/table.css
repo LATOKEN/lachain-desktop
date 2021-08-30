@@ -64,3 +64,6 @@
 
 }
 
+.P-peers-table .table-tr li:last-child{
+    max-width: 150px;
+}

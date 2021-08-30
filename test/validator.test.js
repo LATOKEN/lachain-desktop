@@ -2,26 +2,25 @@ import axios from 'axios'
 
 jest.mock('axios')
 
-async function fetchTransactionsTest() {
+async function fetchValidators() {
   // eslint-disable-next-line no-return-await
   return await axios.post('http://localhost:7070', {
-    method: 'getTransactionPool',
+    method: 'bcn_validators',
     params: [],
     id: 1,
-    key: 'nf5vlhha1njosy9qeb4goqyy9ctjbfqmo',
   })
 }
-
-test('Fetch transaction', async () => {
-  const transaction = []
+test('Fetch Validators', async () => {
+  const validator = []
   const responseData = {
     jsonrpc: '',
-    result: transaction,
+    result: validator,
     id: '',
   }
+
   axios.post.mockResolvedValue(responseData)
   // eslint-disable-next-line no-return-await
-  return await fetchTransactionsTest().then(data => {
+  return await fetchValidators().then(data => {
     expect(data).toEqual(responseData)
   })
 })

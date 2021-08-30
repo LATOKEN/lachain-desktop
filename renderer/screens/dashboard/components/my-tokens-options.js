@@ -7,7 +7,6 @@ import ModalComponent from '../../../shared/components/modal-component'
 import CreateTokenModal from './create-token-modal'
 
 import {useIdentityState} from '../../../shared/providers/identity-context'
-import {BASE_API_URL} from '../../../shared/api/api-client'
 
 function MyTokensOptions() {
   const {t} = useTranslation()
@@ -35,12 +34,11 @@ function MyTokensOptions() {
   function setTokenData(data) {
     if (address) {
       createBalanceApi(data).then(dataResult => {
-        if (dataResult.result === '0x') {
+        if (dataResult && dataResult.result === '0x') {
           data.amount = 0
         } else {
           // eslint-disable-next-line no-restricted-properties,no-shadow
-          const amount = parseInt(data.result, 16) / Math.pow(10, 18)
-          data.amount = amount.toFixed(15)
+          data.amount = parseInt(data.result, 16) / Math.pow(10, 18)
         }
         const tokens = JSON.parse(localStorage.getItem('TokensList'))
         if (tokens) {
@@ -60,12 +58,11 @@ function MyTokensOptions() {
       if (tokens && tokens.length) {
         tokens.forEach(item => {
           createBalanceApi(item).then(data => {
-            if (data.result === '0x') {
+            if (data && data.result === '0x') {
               item.amount = 0
             } else {
               // eslint-disable-next-line no-restricted-properties,no-shadow
-              const amount = parseInt(data.result, 16) / Math.pow(10, 18)
-              item.amount = amount.toFixed(15)
+              item.amount = parseInt(data.result, 16) / Math.pow(10, 18)
             }
           })
         })
